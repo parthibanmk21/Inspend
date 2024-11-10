@@ -112,7 +112,12 @@ fun SignInScreen(
                 com.example.inspend.components.Button(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Create my account",
-                    onClick = { }
+                    onClick = { 
+                        navController.navigate("setsecuritypin") {
+                            launchSingleTop = true
+                            popUpTo("welcome") { inclusive = true }
+                        }
+                    }
                 )
 
                 // Divider with "or"

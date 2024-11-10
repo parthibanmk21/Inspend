@@ -68,7 +68,7 @@ fun ResetPasswordScreen(
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ){
                     Text(
-                        text = "Reset your password",
+                        text = "Verify your Email",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Grey700

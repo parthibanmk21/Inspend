@@ -19,6 +19,7 @@ import com.example.inspend.components.AppBar
 import com.example.inspend.components.Button
 import com.example.inspend.components.Numpad
 import com.example.inspend.components.OtpInputField
+import com.example.inspend.ui.theme.Brand500
 import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
@@ -40,6 +41,15 @@ fun VerifyOTPScreen(
             timeLeft--
         }
         canResend = true
+    }
+
+    LaunchedEffect(otpValue) {
+        if (otpValue.length == 4) {
+            navController.navigate("forgotpassword") {
+                launchSingleTop = true
+                popUpTo("resetpassword") { inclusive = true }
+            }
+        }
     }
 
     Column(
@@ -74,7 +84,7 @@ fun VerifyOTPScreen(
             ){
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(40.dp)
                 ) {
                     Column(
                         modifier = Modifier
@@ -130,7 +140,7 @@ fun VerifyOTPScreen(
                         } else {
                             Text(
                                 text = "Resend OTP in ${timeLeft}s",
-                                color = Color(0xFF868EA1),
+                                color = Brand500,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium
                             )

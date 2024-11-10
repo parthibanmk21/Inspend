@@ -231,6 +231,25 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
+                    composable(
+                        route = "setsecuritypin",
+                        enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        SetSecurityPINScreen(
+                            navController = navController
+                        )
+                    }
                 }
             }
         }

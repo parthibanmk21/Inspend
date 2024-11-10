@@ -24,7 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 fun OtpInputField(
     otpText: String,
     onOtpTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false
 ) {
     BasicTextField(
         value = otpText,
@@ -55,7 +56,11 @@ fun OtpInputField(
                             )
                             .border(
                                 width = 1.dp,
-                                color = if (char.isEmpty()) Color(0xFFD5D9E2) else Color(0xFF526077),
+                                color = when {
+                                    isError -> Color(0xFFB91C1C)
+                                    char.isEmpty() -> Color(0xFFD5D9E2)
+                                    else -> Color(0xFF526077)
+                                },
                                 shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
                             ),
                         contentAlignment = Alignment.Center
@@ -64,7 +69,7 @@ fun OtpInputField(
                             text = char,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF526077),
+                            color = if (isError) Color(0xFFB91C1C) else Color(0xFF526077),
                             textAlign = TextAlign.Center
                         )
                     }
