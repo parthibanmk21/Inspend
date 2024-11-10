@@ -31,7 +31,7 @@ fun ResetPasswordScreen(
             .fillMaxSize()
             .padding(top = 24.dp)
             .background(Color(0xFFECEEF2)),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         // AppBar
         AppBar(
@@ -97,7 +97,7 @@ fun ResetPasswordScreen(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Send me the code",
                     onClick = { 
-                        navController.navigate("resetotp") {
+                        navController.navigate("verifyotp") {
                             launchSingleTop = true
                         }
                     }

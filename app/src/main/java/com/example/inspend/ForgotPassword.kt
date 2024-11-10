@@ -31,15 +31,15 @@ fun ForgotPasswordScreen(
             .fillMaxSize()
             .padding(top = 24.dp)
             .background(Color(0xFFECEEF2)),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         // AppBar
         AppBar(
             title = "Create New Password",
             onBackClick = { 
-                navController.navigate("resetotp") {
+                navController.navigate("verifyotp") {
                     launchSingleTop = true
-                    popUpTo("resetotp") { inclusive = true }
+                    popUpTo("verifyotp") { inclusive = true }
                 }
             }
         )

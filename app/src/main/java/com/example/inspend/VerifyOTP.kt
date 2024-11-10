@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ResetOTPScreen(
+fun VerifyOTPScreen(
     navController: NavController
 ) {
     var otpValue by remember { mutableStateOf("") }
@@ -47,7 +47,7 @@ fun ResetOTPScreen(
             .fillMaxHeight()
             .padding(top = 24.dp)
             .background(Color(0xFFECEEF2)),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         AppBar(
             title = "Verify OTP",
@@ -213,14 +213,14 @@ fun ResetOTPScreen(
 }
 
 @Preview(
-    name = "Reset OTP Screen",
+    name = "Verify OTP Screen",
     showBackground = true,
     device = "id:pixel_5"
 )
 @Composable
-fun ResetOTPScreenPreview() {
+fun VerifyOTPScreenPreview() {
     InspendTheme {
-        ResetOTPScreen(
+        VerifyOTPScreen(
             navController = rememberNavController()
         )
     }

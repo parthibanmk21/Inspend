@@ -178,7 +178,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(
-                        route = "resetotp",
+                        route = "verifyotp",
                         enterTransition = {
                             if (navigationOrder.value > 4) {
                                 slideIntoContainer(
@@ -200,7 +200,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     ) {
-                        ResetOTPScreen(
+                        VerifyOTPScreen(
                             navController = navController
                         )
                     }
