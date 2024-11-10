@@ -23,6 +23,7 @@ import com.example.inspend.components.PasswordField
 import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import androidx.compose.foundation.clickable
+import com.example.inspend.ui.theme.BGdefault
 
 @Composable
 fun LogInScreen(
@@ -32,7 +33,7 @@ fun LogInScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 24.dp)
-            .background(Color(0xFFECEEF2))
+            .background(BGdefault)
     ) {
         // AppBar
         AppBar(
@@ -92,7 +93,7 @@ fun LogInScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(69.dp),
+                        .wrapContentHeight(),
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
@@ -114,7 +115,13 @@ fun LogInScreen(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 0.15.sp,
-                            modifier = Modifier.wrapContentWidth()
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .clickable { 
+                                    navController.navigate("resetpassword") {
+                                        launchSingleTop = true
+                                    }
+                                }
                         )
                     }
                 }

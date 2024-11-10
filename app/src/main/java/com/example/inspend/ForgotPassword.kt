@@ -2,91 +2,80 @@ package com.example.inspend
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.clickable
 import com.example.inspend.components.AppBar
-import com.example.inspend.components.ButtonType
-import com.example.inspend.components.IconPosition
-import com.example.inspend.components.InputField
+import com.example.inspend.components.Button
 import com.example.inspend.components.PasswordField
-import com.example.inspend.ui.theme.BGdefault
 import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
 
 @Composable
-fun SignInScreen(
+fun ForgotPasswordScreen(
     navController: NavController
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 24.dp)
-            .background(BGdefault)
+            .background(Color(0xFFECEEF2)),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // AppBar
         AppBar(
-            title = "Sign up",
-            onBackClick = {
-                navController.navigate("welcome") {
+            title = "Create New Password",
+            onBackClick = { 
+                navController.navigate("resetotp") {
                     launchSingleTop = true
-                    popUpTo("welcome") { inclusive = true }
+                    popUpTo("resetotp") { inclusive = true }
                 }
             }
         )
 
-        // Wrapper Column for both SignIn Content and Login Row
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 0.dp),
+                .fillMaxHeight()
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // SignIn Column Content
+            // Content Column
             Column(
                 modifier = Modifier
+                    .wrapContentHeight()
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                Text(
-                    text = "Create your account",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Grey700
-                )
-
-                // Name Input
-                var name by remember { mutableStateOf("") }
-                InputField(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    label = "Name",
-                    placeholder = "Enter your name",
-                    value = name,
-                    onValueChange = { name = it }
-                )
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                ){
+                    Text(
+                        text = "Create new password",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Grey700
+                    )
 
-                // Email Input
-                var email by remember { mutableStateOf("") }
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Email",
-                    placeholder = "eg. sammy123@domain.com",
-                    value = email,
-                    onValueChange = { email = it }
-                )
+                    Text(
+                        text = "Your new password must be different from previous used passwords.",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Grey400
+                    )
+                }
 
                 // Password Input
                 var password by remember { mutableStateOf("") }
@@ -108,48 +97,14 @@ fun SignInScreen(
                     onValueChange = { confirmPassword = it }
                 )
 
-                // SignIn Button
-                com.example.inspend.components.Button(
+                // Reset Button
+                Button(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Create my account",
+                    text = "Reset Password",
                     onClick = { }
-                )
-
-                // Divider with "or"
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Divider(
-                        modifier = Modifier.weight(1f),
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                        thickness = 2.dp
-                    )
-                    Text(
-                        text = "or",
-                        color = Color(0xFF526077).copy(alpha = 0.75f),
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                    Divider(
-                        modifier = Modifier.weight(1f),
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                        thickness = 2.dp
-                    )
-                }
-
-                // Google SignIn Button
-                com.example.inspend.components.Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Continue with Google",
-                    onClick = { },
-                    type = ButtonType.SECONDARY,
-                    icon = painterResource(id = R.drawable.google),
-                    iconPosition = IconPosition.LEFT
                 )
             }
 
-            // Login Row
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,10 +132,10 @@ fun SignInScreen(
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.15.sp,
                         modifier = Modifier.wrapContentWidth()
-                            .clickable { 
+                            .clickable {
                                 navController.navigate("login") {
                                     launchSingleTop = true
-                                    popUpTo("welcome") { inclusive = true }
+                                    popUpTo("login") { inclusive = true }
                                 }
                             }
                     )
@@ -190,17 +145,16 @@ fun SignInScreen(
     }
 }
 
-@Preview
-//    (
-//    name = "Sign In Screen",
-//    showBackground = true,
-//    device = "id:pixel_5"
-//)
+@Preview(
+    name = "Forgot Password Screen",
+    showBackground = true,
+    device = "id:pixel_5"
+)
 @Composable
-fun SignInScreenPreview() {
+fun ForgotPasswordScreenPreview() {
     InspendTheme {
-        SignInScreen(
+        ForgotPasswordScreen(
             navController = rememberNavController()
         )
     }
-}
+} 

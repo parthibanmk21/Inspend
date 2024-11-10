@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.inspend.R
+import com.example.inspend.ui.theme.Brand100
 
 @Composable
 fun PasswordField(
@@ -117,22 +118,31 @@ fun PasswordField(
 
                 IconButton(
                     onClick = { isPasswordVisible = !isPasswordVisible },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (isPasswordVisible) 
-                                R.drawable.eyeclose
+                    modifier = Modifier
+                        .size(48.dp),
+//                        .background(
+//                            color = Brand100,
+//                            shape = androidx.compose.foundation.shape.CircleShape
+//                        ),
+                    content = {
+                        Icon(
+                            painter = painterResource(
+                                id = if (isPasswordVisible) 
+                                    R.drawable.eyeopen
+                                else 
+                                    R.drawable.eyeclose
+                            ),
+                            contentDescription = if (isPasswordVisible) 
+                                "Hide password" 
                             else 
-                                R.drawable.eyeopen
-                        ),
-                        contentDescription = if (isPasswordVisible) 
-                            "Hide password" 
-                        else 
-                            "Show password",
-                        tint = Color(0xFF526077)
-                    )
-                }
+                                "Show password",
+                            tint = if (isPasswordVisible) 
+                                Color(0xFF526077)
+                            else 
+                                Color(0xFFB1BBC8)
+                        )
+                    }
+                )
             }
         }
     }

@@ -3,7 +3,7 @@ package com.example.inspend.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val Brand50 = Color(0xFFF1F6FE)
-val Brand100 = Color(0xFFE3ECFB)
+val Brand100 = Color(0xFFEBF2F9)
 val Brand200 = Color(0xFFC0D8F7)
 val Brand300 = Color(0xFF89B9F0)
 val Brand400 = Color(0xFF4994E7)

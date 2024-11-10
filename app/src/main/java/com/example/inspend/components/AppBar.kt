@@ -3,19 +3,18 @@ package com.example.inspend.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.inspend.R
 import com.example.inspend.ui.theme.BGdefault
+import com.example.inspend.ui.theme.Brand100
 import com.example.inspend.ui.theme.Grey700
 
 @Composable
@@ -36,6 +35,11 @@ fun AppBar(
         // Leading Icon
         Box(
             modifier = Modifier
+                .background(
+                    color = BGdefault,
+                    shape = androidx.compose.foundation.shape.CircleShape
+                )
+                .clip(shape)
                 .size(48.dp)
                 .clickable { onBackClick() },
             contentAlignment = Alignment.Center

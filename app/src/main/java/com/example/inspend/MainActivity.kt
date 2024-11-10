@@ -35,6 +35,12 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import com.example.inspend.ui.theme.BGdefault
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +60,9 @@ class MainActivity : ComponentActivity() {
             InspendTheme {
                 val navController = rememberNavController()
 
+                // Track navigation order
+                val navigationOrder = remember { mutableStateOf(0) }
+
                 NavHost(
                     navController = navController,
                     startDestination = "welcome"
@@ -61,15 +70,20 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = "welcome",
                         enterTransition = {
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
-                            )
+                            if (navigationOrder.value > 0) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                null
+                            }
                         },
                         exitTransition = {
+                            navigationOrder.value++
                             slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
                             )
                         }
                     ) {
@@ -85,15 +99,23 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = "login",
                         enterTransition = {
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
-                            )
+                            if (navigationOrder.value > 1) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
                         },
                         exitTransition = {
+                            navigationOrder.value++
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(0)
                             )
                         }
                     ) {
@@ -104,19 +126,108 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = "signin",
                         enterTransition = {
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
-                            )
+                            if (navigationOrder.value > 2) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
                         },
                         exitTransition = {
+                            navigationOrder.value++
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(0)
                             )
                         }
                     ) {
                         SignInScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "resetpassword",
+                        enterTransition = {
+                            if (navigationOrder.value > 3) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        ResetPasswordScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "resetotp",
+                        enterTransition = {
+                            if (navigationOrder.value > 4) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        ResetOTPScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "forgotpassword",
+                        enterTransition = {
+                            if (navigationOrder.value > 5) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        ForgotPasswordScreen(
                             navController = navController
                         )
                     }
@@ -133,7 +244,7 @@ fun WelcomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFECEEF2))
+                .background(BGdefault)
                 .padding(horizontal = 16.dp, vertical = 40.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
