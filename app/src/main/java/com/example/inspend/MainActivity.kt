@@ -250,6 +250,11 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
+                    composable("transactiontype") {
+                        TransactionTypeScreen(
+                            navController = navController
+                        )
+                    }
                 }
             }
         }

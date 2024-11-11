@@ -179,12 +179,12 @@ fun SetSecurityPINScreen(
             ) {
                 BiometricDialog(
                     onEnableClick = {
-                        navController.navigate("home") {
+                        navController.navigate("transactiontype") {
                             popUpTo("welcome") { inclusive = true }
                         }
                     },
                     onSkipClick = {
-                        navController.navigate("home") {
+                        navController.navigate("transactiontype") {
                             popUpTo("welcome") { inclusive = true }
                         }
                     }
