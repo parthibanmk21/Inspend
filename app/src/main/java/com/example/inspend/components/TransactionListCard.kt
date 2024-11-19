@@ -36,7 +36,7 @@ fun TransactionListCard(
                 color = Color.White,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(8.dp),
+            .padding(0.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -63,11 +63,11 @@ fun TransactionListCard(
                     modifier = Modifier
                         .wrapContentWidth()
                         .height(42.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = transaction.name,
-                        fontSize = 14.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1F274B),
                         lineHeight = 20.sp
@@ -124,7 +124,8 @@ fun TransactionListCard(
 @Composable
 fun TransactionListCardPreview() {
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Income Transaction

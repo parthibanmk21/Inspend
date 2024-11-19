@@ -1,11 +1,14 @@
 package com.example.inspend
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -20,6 +23,7 @@ fun HomePage(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top = 24.dp)
             .background(BGdefault)
     ) {
         // Home AppBar
@@ -39,7 +43,7 @@ fun HomePage(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
                 .padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Balance Card
             BalanceCard(
@@ -69,10 +73,24 @@ fun HomePage(
                 )
             )
 
-            TransactionList(
-                date = "Today",
-                transactions = sampleTransactions
-            )
+            Column(
+                modifier = Modifier
+//                    .padding(16.dp)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .border(
+                        width = 1.5.dp,
+                        color = Color(0xFFE0E2EB),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            ) {
+                TransactionList(
+                    date = "Today",
+                    transactions = sampleTransactions
+                )
+            }
         }
     }
 }

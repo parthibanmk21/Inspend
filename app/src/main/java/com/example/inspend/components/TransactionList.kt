@@ -1,6 +1,9 @@
 package com.example.inspend.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,8 +23,10 @@ fun TransactionList(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 12.dp)
+            .background(Color.White)
             .wrapContentHeight(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Title
         Text(
@@ -81,7 +86,17 @@ fun TransactionListPreview() {
     )
 
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = Color(0xFFE0E2EB),
+                shape = RoundedCornerShape(8.dp)
+            )
     ) {
         TransactionList(
             date = "Today",

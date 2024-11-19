@@ -179,44 +179,44 @@ fun VerifyOTPScreen(
 //                text = "Verify",
 //                onClick = { }
 //            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .border(width = 1.dp, color = Color(0xFFD5D9E2))
-                    .padding(top = 24.dp, bottom = 32.dp),
-                contentAlignment = Alignment.Center
-            )
-            {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Already have an account? ",
-                        color = Color(0xFF868EA1).copy(alpha = 0.75f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = 0.15.sp,
-                        modifier = Modifier.wrapContentWidth()
-                    )
-                    Text(
-                        text = "Log in",
-                        color = Color(0xFF1F274B).copy(alpha = 0.75f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 0.15.sp,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .clickable {
-                                navController.navigate("login") {
-                                    launchSingleTop = true
-                                    popUpTo("login") { inclusive = true }
-                                }
-                            }
-                    )
-                }
-            }
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .wrapContentHeight()
+//                    .border(width = 1.dp, color = Color(0xFFD5D9E2))
+//                    .padding(top = 24.dp, bottom = 32.dp),
+//                contentAlignment = Alignment.Center
+//            )
+//            {
+//                Row(
+//                    horizontalArrangement = Arrangement.Center,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text(
+//                        text = "Already have an account? ",
+//                        color = Color(0xFF868EA1).copy(alpha = 0.75f),
+//                        fontSize = 14.sp,
+//                        fontWeight = FontWeight.Medium,
+//                        letterSpacing = 0.15.sp,
+//                        modifier = Modifier.wrapContentWidth()
+//                    )
+//                    Text(
+//                        text = "Log in",
+//                        color = Color(0xFF1F274B).copy(alpha = 0.75f),
+//                        fontSize = 14.sp,
+//                        fontWeight = FontWeight.SemiBold,
+//                        letterSpacing = 0.15.sp,
+//                        modifier = Modifier
+//                            .wrapContentWidth()
+//                            .clickable {
+//                                navController.navigate("login") {
+//                                    launchSingleTop = true
+//                                    popUpTo("login") { inclusive = true }
+//                                }
+//                            }
+//                    )
+//                }
+//            }
         }
 
     }

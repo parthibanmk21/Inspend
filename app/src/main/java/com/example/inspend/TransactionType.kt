@@ -23,18 +23,15 @@ import com.example.inspend.ui.theme.InspendTheme
 fun TransactionTypeScreen(
     navController: NavController
 ) {
-    var selectedCard by remember { mutableStateOf<String?>(null) }
-    var amounts by remember { mutableStateOf(mapOf<String, String>()) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BGdefault)
-            .padding(top = 24.dp, bottom = 16.dp)
+            .padding(top = 24.dp)
     ) {
         AppBar(
             title = "Transaction Type",
-            onBackClick = { 
+            onBackClick = {
                 navController.navigateUp()
             }
         )
@@ -45,50 +42,41 @@ fun TransactionTypeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text(
+                text = "Select Transaction Type",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Grey700
+            )
 
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(0.dp)
-            ){
-                Text(
-                    text = "Your transaction type’s",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Grey700
-                )
+            Text(
+                text = "Choose how you want to record this transaction.",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                color = Grey400
+            )
 
-                Text(
-                    text = "Don’t worry no can see these number except you.",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Grey400
-                )
-            }
-
-            // Payment Cards
+            // Single Payment Card
             PaymentCard(
                 title = "Wallet",
-                amount = amounts["Wallet"] ?: "",
-                onAmountChange = { newAmount ->
-                    amounts = amounts.toMutableMap().apply {
-                        put("Wallet", newAmount)
-                    }
-                }
+                onAmountChange = { }
             )
-            Column (
+
+            // Add spacer to push button to bottom
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Primary Button
+            Button(
+                text = "Continue",
+                onClick = {
+                    navController.navigate("home") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                },
                 modifier = Modifier
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom
-            ){
-                //Button
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = "Continue",
-                    onClick = { }
-                )
-            }
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
         }
     }
 }
