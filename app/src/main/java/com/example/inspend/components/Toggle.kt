@@ -23,7 +23,7 @@ fun Toggle(
     modifier: Modifier = Modifier
 ) {
     val toggleWidth = 52.dp
-    val toggleHeight = 32.dp
+    val toggleHeight = 26.dp
     val knobSize = 16.dp
     
     Box(
@@ -48,7 +48,7 @@ fun Toggle(
                 shape = CircleShape
             )
             .clickable(enabled = enabled) { onCheckedChange(!isChecked) }
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
         Box(
             modifier = Modifier

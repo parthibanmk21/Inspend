@@ -28,17 +28,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
 import androidx.compose.foundation.clickable
 import com.example.inspend.ui.theme.Brand500
-import com.example.inspend.ui.theme.Brand800
-import com.example.inspend.ui.theme.Grey500
 import com.example.inspend.ui.theme.Grey600
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
 import com.example.inspend.ui.theme.BGdefault
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
@@ -252,6 +245,11 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("transactiontype") {
                         TransactionTypeScreen(
+                            navController = navController
+                        )
+                    }
+                    composable("home") {
+                        HomePage(
                             navController = navController
                         )
                     }
