@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,10 +32,10 @@ fun TransactionList(
         // Title
         Text(
             text = "Transaction",
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF394371),
-            lineHeight = 24.sp
+            lineHeight = 18.sp
         )
 
         // Transaction List Column
@@ -42,23 +43,31 @@ fun TransactionList(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             // Date
             Text(
                 text = date,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF666A87),
+                color = Grey300,
                 lineHeight = 14.sp
             )
 
             // Transaction Card
-            transactions.forEach { transaction ->
-                TransactionListCard(
-                    transaction = transaction
-                )
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ){
+                transactions.forEach { transaction ->
+                    TransactionListCard(
+                        transaction = transaction
+                    )
+                }
             }
+
         }
     }
 }

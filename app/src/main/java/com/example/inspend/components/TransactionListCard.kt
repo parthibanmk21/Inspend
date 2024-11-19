@@ -31,7 +31,8 @@ fun TransactionListCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .wrapContentHeight()
+            .padding(vertical = 4.dp)
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(8.dp)
@@ -62,21 +63,21 @@ fun TransactionListCard(
                 Column(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .height(42.dp),
-                    verticalArrangement = Arrangement.Center
+                        .wrapContentHeight(),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = transaction.name,
-                        fontSize = 18.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1F274B),
-                        lineHeight = 20.sp
+                        lineHeight = 16.sp
                     )
                     Text(
                         text = transaction.dateTime,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFFAAADBE),
+                        color = Grey300,
                         lineHeight = 14.sp
                     )
                 }
@@ -86,29 +87,30 @@ fun TransactionListCard(
         Column(
             modifier = Modifier
                 .wrapContentWidth()
-                .height(46.dp),
+                .wrapContentHeight(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.End
         ) {
             // Amount
             Row(
-                modifier = Modifier.height(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .wrapContentHeight(),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (transaction.isCredit) "+" else "-",
+                    text = if (transaction.isCredit) "+$" else "-$",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (transaction.isCredit) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
-                    lineHeight = 20.sp
+                    lineHeight = 16.sp
                 )
                 Text(
                     text = transaction.amount,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (transaction.isCredit) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
-                    lineHeight = 20.sp
+                    lineHeight = 16.sp
                 )
             }
 

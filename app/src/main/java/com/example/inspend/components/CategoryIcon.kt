@@ -26,7 +26,7 @@ fun CategoryIcon(
 ) {
     Box(
         modifier = modifier
-            .size(48.dp)
+            .size(40.dp)
             .background(
                 color = Color(0xFFECEEF2),
                 shape = CircleShape
