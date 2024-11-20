@@ -64,29 +64,60 @@ fun LogInScreen(
 
                 // Email Input
                 var email by remember { mutableStateOf("") }
+                var emailError by remember { mutableStateOf("") }
                 InputField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Email",
                     placeholder = "eg. sammy123@domain.com",
                     value = email,
-                    onValueChange = { email = it }
+                    onValueChange = { 
+                        email = it
+                        emailError = ""
+                    },
+                    isError = emailError.isNotEmpty()
                 )
 
                 // Password Input
                 var password by remember { mutableStateOf("") }
+                var passwordError by remember { mutableStateOf("") }
                 PasswordField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Password",
                     placeholder = "Enter your password",
                     value = password,
-                    onValueChange = { password = it }
+                    onValueChange = { 
+                        password = it
+                        passwordError = ""
+                    },
+                    isError = passwordError.isNotEmpty()
                 )
 
                 // Login Button using custom component
                 com.example.inspend.components.Button(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Log in",
-                    onClick = { }
+                    onClick = { 
+                        // Validate inputs
+                        var hasError = false
+                        
+                        if (email.isBlank()) {
+                            emailError = "Email is required"
+                            hasError = true
+                        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            emailError = "Invalid email format"
+                            hasError = true
+                        }
+                        
+                        if (password.isBlank()) {
+                            passwordError = "Password is required"
+                            hasError = true
+                        }
+                        
+                        // Only proceed if there are no errors
+                        if (!hasError) {
+                            // Add your login logic here
+                        }
+                    }
                 )
 
                 // Forget Password Row
@@ -97,7 +128,13 @@ fun LogInScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate("resetpassword") {
+                                    launchSingleTop = true
+                                }
+                            },
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -117,11 +154,6 @@ fun LogInScreen(
                             letterSpacing = 0.15.sp,
                             modifier = Modifier
                                 .wrapContentWidth()
-                                .clickable { 
-                                    navController.navigate("resetpassword") {
-                                        launchSingleTop = true
-                                    }
-                                }
                         )
                     }
                 }
@@ -166,7 +198,8 @@ fun LogInScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .border(width = 1.dp, color = Color(0xFFD5D9E2))
-                    .padding(top = 24.dp, bottom = 32.dp),
+                    .padding(top = 24.dp, bottom = 32.dp)
+                    .clickable { navController.navigate("signin") },
                 contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -189,7 +222,6 @@ fun LogInScreen(
                         letterSpacing = 0.15.sp,
                         modifier = Modifier
                             .wrapContentWidth()
-                            .clickable { navController.navigate("signin") }
                     )
                 }
             }

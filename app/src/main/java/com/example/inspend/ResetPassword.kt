@@ -59,13 +59,13 @@ fun ResetPasswordScreen(
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ){
                     Text(
                         text = "Verify your Email",
@@ -77,7 +77,7 @@ fun ResetPasswordScreen(
                     Text(
                         text = "We will send an OTP Verification to Your Email.",
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.Medium,
                         color = Grey400
                     )
                 }
@@ -146,7 +146,13 @@ fun ResetPasswordScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .border(width = 1.dp, color = Color(0xFFD5D9E2))
-                    .padding(top = 24.dp, bottom = 32.dp),
+                    .padding(top = 24.dp, bottom = 32.dp)
+                    .clickable {
+                        navController.navigate("login") {
+                            launchSingleTop = true
+                            popUpTo("login") { inclusive = true }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             )
             {
@@ -169,12 +175,6 @@ fun ResetPasswordScreen(
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.15.sp,
                         modifier = Modifier.wrapContentWidth()
-                            .clickable {
-                                navController.navigate("login") {
-                                    launchSingleTop = true
-                                    popUpTo("login") { inclusive = true }
-                                }
-                            }
                     )
                 }
             }

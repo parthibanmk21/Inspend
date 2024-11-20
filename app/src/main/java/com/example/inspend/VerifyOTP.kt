@@ -21,6 +21,7 @@ import com.example.inspend.components.Numpad
 import com.example.inspend.components.OtpInputField
 import com.example.inspend.ui.theme.Brand500
 import com.example.inspend.ui.theme.Grey400
+import com.example.inspend.ui.theme.Grey500
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
 import kotlinx.coroutines.delay
@@ -114,34 +115,54 @@ fun VerifyOTPScreen(
                         onOtpTextChange = { otpValue = it },
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (canResend) {
-                            Text(
-                                text = "Resend OTP",
-                                color = Grey700,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier
-                                    .clickable {
-                                        timeLeft = 59
-                                        canResend = false
-                                        scope.launch {
-                                            while (timeLeft > 0) {
-                                                delay(1000)
-                                                timeLeft--
+                    Column (
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (canResend) {
+                                Text(
+                                    text = "Resend OTP",
+                                    color = Grey700,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier
+                                        .clickable {
+                                            timeLeft = 59
+                                            canResend = false
+                                            scope.launch {
+                                                while (timeLeft > 0) {
+                                                    delay(1000)
+                                                    timeLeft--
+                                                }
+                                                canResend = true
                                             }
-                                            canResend = true
                                         }
-                                    }
-                            )
-                        } else {
+                                )
+                            } else {
+                                Text(
+                                    text = "Resend OTP in ${timeLeft}s",
+                                    color = Brand500,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                        Column (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navController.navigate("resetpassword") },
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
                             Text(
-                                text = "Resend OTP in ${timeLeft}s",
-                                color = Brand500,
+                                text = "Wrong Email?",
+                                color = Grey500,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium
                             )

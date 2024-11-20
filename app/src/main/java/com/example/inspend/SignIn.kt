@@ -30,6 +30,15 @@ import com.example.inspend.ui.theme.InspendTheme
 fun SignInScreen(
     navController: NavController
 ) {
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+    var confirmPasswordError by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,43 +78,55 @@ fun SignInScreen(
                 )
 
                 // Name Input
-                var name by remember { mutableStateOf("") }
                 InputField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Name",
                     placeholder = "Enter your name",
                     value = name,
-                    onValueChange = { name = it }
+                    onValueChange = { 
+                        name = it
+                        nameError = ""
+                    },
+                    isError = nameError.isNotEmpty()
                 )
 
                 // Email Input
-                var email by remember { mutableStateOf("") }
                 InputField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Email",
                     placeholder = "eg. sammy123@domain.com",
                     value = email,
-                    onValueChange = { email = it }
+                    onValueChange = { 
+                        email = it
+                        emailError = ""
+                    },
+                    isError = emailError.isNotEmpty()
                 )
 
                 // Password Input
-                var password by remember { mutableStateOf("") }
                 PasswordField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Password",
                     placeholder = "Enter your password",
                     value = password,
-                    onValueChange = { password = it }
+                    onValueChange = { 
+                        password = it
+                        passwordError = ""
+                    },
+                    isError = passwordError.isNotEmpty()
                 )
 
                 // Confirm Password Input
-                var confirmPassword by remember { mutableStateOf("") }
                 PasswordField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Confirm Password",
                     placeholder = "Re-enter your password",
                     value = confirmPassword,
-                    onValueChange = { confirmPassword = it }
+                    onValueChange = { 
+                        confirmPassword = it
+                        confirmPasswordError = ""
+                    },
+                    isError = confirmPasswordError.isNotEmpty()
                 )
 
                 // SignIn Button
@@ -113,9 +134,44 @@ fun SignInScreen(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Create my account",
                     onClick = { 
-                        navController.navigate("setsecuritypin") {
-                            launchSingleTop = true
-                            popUpTo("welcome") { inclusive = true }
+                        // Validate inputs
+                        var hasError = false
+                        
+                        if (name.isBlank()) {
+                            nameError = "Name is required"
+                            hasError = true
+                        }
+                        
+                        if (email.isBlank()) {
+                            emailError = "Email is required"
+                            hasError = true
+                        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            emailError = "Invalid email format"
+                            hasError = true
+                        }
+                        
+                        if (password.isBlank()) {
+                            passwordError = "Password is required"
+                            hasError = true
+                        } else if (password.length < 6) {
+                            passwordError = "Password must be at least 6 characters"
+                            hasError = true
+                        }
+                        
+                        if (confirmPassword.isBlank()) {
+                            confirmPasswordError = "Please confirm your password"
+                            hasError = true
+                        } else if (password != confirmPassword) {
+                            confirmPasswordError = "Passwords do not match"
+                            hasError = true
+                        }
+                        
+                        // Only navigate if there are no errors
+                        if (!hasError) {
+                            navController.navigate("setsecuritypin") {
+                                launchSingleTop = true
+                                popUpTo("welcome") { inclusive = true }
+                            }
                         }
                     }
                 )
@@ -160,7 +216,13 @@ fun SignInScreen(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .border(width = 1.dp, color = Color(0xFFD5D9E2))
-                    .padding(top = 24.dp, bottom = 32.dp),
+                    .padding(top = 24.dp, bottom = 32.dp)
+                    .clickable {
+                        navController.navigate("login") {
+                            launchSingleTop = true
+                            popUpTo("welcome") { inclusive = true }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -182,12 +244,6 @@ fun SignInScreen(
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.15.sp,
                         modifier = Modifier.wrapContentWidth()
-                            .clickable { 
-                                navController.navigate("login") {
-                                    launchSingleTop = true
-                                    popUpTo("welcome") { inclusive = true }
-                                }
-                            }
                     )
                 }
             }
