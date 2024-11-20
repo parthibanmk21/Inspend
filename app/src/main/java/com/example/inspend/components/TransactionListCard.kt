@@ -116,7 +116,7 @@ fun TransactionListCard(
 
             // Bank Chip
             BankChip(
-                type = transaction.bankType
+                type = BankType.WALLET
             )
         }
     }

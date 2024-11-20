@@ -412,7 +412,9 @@ fun WelcomeScreen(
 
             // New User Text
             Row(
-                modifier = Modifier.width(328.dp),
+                modifier = Modifier
+                    .width(328.dp)
+                    .clickable { onCreateAccountClick() },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {

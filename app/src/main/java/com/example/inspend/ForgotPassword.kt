@@ -60,7 +60,7 @@ fun ForgotPasswordScreen(
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ){
                     Text(
                         text = "Create new password",
@@ -72,7 +72,8 @@ fun ForgotPasswordScreen(
                     Text(
                         text = "Your new password must be different from previous used passwords.",
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 18.sp,
                         color = Grey400
                     )
                 }

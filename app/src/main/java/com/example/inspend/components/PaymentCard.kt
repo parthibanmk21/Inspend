@@ -44,28 +44,41 @@ fun PaymentCard(
                 color = Color(0xFFD5D9E2),
                 shape = RoundedCornerShape(12.dp)
             )
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
+            Row (
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.wallet),
+                        contentDescription = "Wallet",
+                        tint = Grey500,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Text(
+                        text = title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Grey500,
+                        lineHeight = 28.sp
+                    )
+                }
+                // Disabled - Checked
+                Toggle(
+                    isChecked = true,
+                    onCheckedChange = { },
+                    enabled = false
+                )
+            }
         // Icon and Title
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.wallet),
-                contentDescription = "Wallet",
-                tint = Grey500,
-                modifier = Modifier.size(24.dp)
-            )
-            Text(
-                text = title,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Medium,
-                color = Grey500,
-                lineHeight = 28.sp
-            )
-        }
+
 
         // Amount Input
         BasicTextField(
@@ -103,7 +116,9 @@ fun PaymentCard(
                     
                     // Amount field with placeholder
                     Box(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
                         if (amount.isEmpty()) {
                             Text(
@@ -124,7 +139,7 @@ fun PaymentCard(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { 
+                .clickable {
                     onAmountChange("")
                 }
         )

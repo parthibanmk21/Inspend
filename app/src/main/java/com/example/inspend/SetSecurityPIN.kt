@@ -86,7 +86,7 @@ fun SetSecurityPINScreen(
                 )
                 {
                     Column (
-                        verticalArrangement = Arrangement.spacedBy(0.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ){
                         Text(
                             text = if (isPinConfirmation) "Confirm your PIN" else "Set Security PIN",
@@ -101,7 +101,8 @@ fun SetSecurityPINScreen(
                             else
                                 "Add a PIN number to make your account more secure.",
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
+                            fontWeight = FontWeight.Medium,
+                            lineHeight = 18.sp,
                             color = Grey400
                         )
                     }

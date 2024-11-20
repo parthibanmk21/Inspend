@@ -35,35 +35,52 @@ fun TransactionTypeScreen(
                 navController.navigateUp()
             }
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "Select Transaction Type",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Grey700
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ){
+                Text(
+                    text = "Your transaction type",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Grey700
+                )
 
-            Text(
-                text = "Choose how you want to record this transaction.",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                color = Grey400
-            )
+                Text(
+                    text = "Don’t worry no can see these number except you.",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 18.sp,
+                    color = Grey400
+                )
+            }
 
-            // Single Payment Card
-            PaymentCard(
-                title = "Wallet",
-                onAmountChange = { }
-            )
-
-            // Add spacer to push button to bottom
-            Spacer(modifier = Modifier.weight(1f))
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ){
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ){
+                    // Single Payment Card
+                    PaymentCard(
+                        title = "Wallet",
+                        onAmountChange = { }
+                    )
+                }
+            }
+//            // Add spacer to push button to bottom
+//            Spacer(modifier = Modifier.weight(1f))
 
             // Primary Button
             Button(

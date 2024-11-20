@@ -89,7 +89,7 @@ fun VerifyOTPScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(0.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ){
                         Text(
                             text = "Verify OTP",
@@ -101,7 +101,8 @@ fun VerifyOTPScreen(
                         Text(
                             text = "Enter the code we sent to the email id {your email id}",
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
+                            fontWeight = FontWeight.Medium,
+                            lineHeight = 18.sp,
                             color = Grey400
                         )
                     }

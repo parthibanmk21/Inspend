@@ -65,7 +65,7 @@ fun ResetPasswordScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ){
                     Text(
                         text = "Verify your Email",
