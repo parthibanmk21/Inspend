@@ -2,7 +2,6 @@ package com.example.inspend.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -30,6 +29,7 @@ fun PaymentCard(
     title: String,
     amount: String = "",
     onAmountChange: (String) -> Unit = {},
+    isError: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -41,7 +41,7 @@ fun PaymentCard(
             )
             .border(
                 width = 1.dp,
-                color = Color(0xFFD5D9E2),
+                color = if (isError) Color(0xFFB91C1C) else Color(0xFFD5D9E2),
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(horizontal = 14.dp, vertical = 12.dp),
@@ -139,9 +139,6 @@ fun PaymentCard(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    onAmountChange("")
-                }
         )
     }
 }

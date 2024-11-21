@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.clickable
 import com.example.inspend.components.AppBar
 import com.example.inspend.components.ButtonType
@@ -22,17 +21,13 @@ import com.example.inspend.components.IconPosition
 import com.example.inspend.components.InputField
 import com.example.inspend.components.PasswordField
 import com.example.inspend.ui.theme.BGdefault
-import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.coroutines.tasks.await
 
 @Composable
@@ -290,10 +285,10 @@ fun SignInScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.weight(1f),
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                        thickness = 2.dp
+                        thickness = 2.dp,
+                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
                     )
                     Text(
                         text = "or",
@@ -301,10 +296,10 @@ fun SignInScreen(
                         fontSize = 14.sp,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.weight(1f),
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                        thickness = 2.dp
+                        thickness = 2.dp,
+                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
                     )
                 }
 
@@ -442,10 +437,10 @@ fun SignInScreenPreview() {
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                            thickness = 2.dp
+                            thickness = 2.dp,
+                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
                         )
                         Text(
                             text = "or",
@@ -453,10 +448,10 @@ fun SignInScreenPreview() {
                             fontSize = 14.sp,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier.weight(1f),
-                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
-                            thickness = 2.dp
+                            thickness = 2.dp,
+                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
                         )
                     }
 

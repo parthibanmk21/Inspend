@@ -18,11 +18,15 @@ import com.example.inspend.ui.theme.BGdefault
 import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TransactionTypeScreen(
     navController: NavController
 ) {
+    var amount by remember { mutableStateOf("") }
+    var amountError by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,24 +74,41 @@ fun TransactionTypeScreen(
                 Column (
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ){
-                    // Single Payment Card
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     PaymentCard(
                         title = "Wallet",
-                        onAmountChange = { }
+                        amount = amount,
+                        onAmountChange = { 
+                            amount = it
+                            amountError = false
+                        },
+                        isError = amountError
                     )
+                    
+                    if (amountError) {
+                        Text(
+                            text = "Wallet amount can't be empty",
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
                 }
             }
-//            // Add spacer to push button to bottom
-//            Spacer(modifier = Modifier.weight(1f))
 
-            // Primary Button
             Button(
                 text = "Continue",
                 onClick = {
-                    navController.navigate("home") {
-                        popUpTo("welcome") { inclusive = true }
+                    if (amount.isBlank()) {
+                        amountError = true
+                    } else {
+                        navController.navigate("home") {
+                            popUpTo("welcome") { inclusive = true }
+                        }
                     }
                 },
                 modifier = Modifier
