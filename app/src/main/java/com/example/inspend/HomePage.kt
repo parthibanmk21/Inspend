@@ -26,14 +26,15 @@ fun HomePage(
             .padding(top = 24.dp)
             .background(BGdefault)
     ) {
-        // Home AppBar
+        // Home AppBar with NavController
         AppBar(
             type = AppBarType.HOME,
             title = "Name",
             subtitle = "Welcome back",
             onProfileClick = {
                 // Handle profile click
-            }
+            },
+            navController = navController
         )
 
         // Scrollable Content

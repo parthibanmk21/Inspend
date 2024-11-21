@@ -26,6 +26,7 @@ import com.example.inspend.ui.theme.BGdefault
 import com.example.inspend.ui.theme.Brand100
 import com.example.inspend.ui.theme.Grey600
 import com.example.inspend.ui.theme.Grey700
+import androidx.navigation.NavController
 
 enum class AppBarType {
     DEFAULT, HOME
@@ -38,7 +39,8 @@ fun AppBar(
     subtitle: String = "",
     onBackClick: () -> Unit = {},
     onProfileClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
 ) {
     when (type) {
         AppBarType.DEFAULT -> DefaultAppBar(
@@ -50,7 +52,8 @@ fun AppBar(
             title = title,
             subtitle = subtitle,
             onProfileClick = onProfileClick,
-            modifier = modifier
+            modifier = modifier,
+            navController = navController
         )
     }
 }
@@ -97,70 +100,128 @@ private fun HomeAppBar(
     title: String,
     subtitle: String,
     onProfileClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(89.dp)
-            .background(Color.White)
-            .drawBehind {
-                val borderWidth = 1.5.dp.toPx() // Thickness of the bottom border
-                val y = size.height - borderWidth / 2 // Position at the bottom
-                drawLine(
-                    color = Color(0xFFE0E2EB), // Border color
-                    start = androidx.compose.ui.geometry.Offset(0f, y), // Start from leftmost edge
-                    end = androidx.compose.ui.geometry.Offset(size.width, y), // End at rightmost edge
-                    strokeWidth = borderWidth
-                )
+            modifier = modifier
+                .fillMaxWidth()
+                .height(89.dp)
+                .background(Color.White)
+                .drawBehind {
+                    val borderWidth = 1.5.dp.toPx() // Thickness of the bottom border
+                    val y = size.height - borderWidth / 2 // Position at the bottom
+                    drawLine(
+                        color = Color(0xFFE0E2EB), // Border color
+                        start = androidx.compose.ui.geometry.Offset(
+                            0f,
+                            y
+                        ), // Start from leftmost edge
+                        end = androidx.compose.ui.geometry.Offset(
+                            size.width,
+                            y
+                        ), // End at rightmost edge
+                        strokeWidth = borderWidth
+                    )
+                }
+                .padding(horizontal = 16.dp), // Padding for the content inside the Row
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row (
+                modifier = Modifier
+                ,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                // Profile Button
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = Color(0xFFECEEF2),
+                            shape = CircleShape
+                        )
+                        .clickable(onClick = onProfileClick),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.user),
+                        contentDescription = "Profile",
+                        tint = Grey600,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                // User Info
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = title,  // User name
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,  // Made bolder for name
+                        color = Color(0xFF3A4252),
+                        lineHeight = 20.sp,
+                        letterSpacing = 0.1.sp
+                    )
+                    Text(
+                        text = subtitle,  // Welcome back
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF8695AA),
+                        lineHeight = 14.sp,
+                        letterSpacing = 0.5.sp
+                    )
+                }
             }
-            .padding(horizontal = 16.dp), // Padding for the content inside the Row
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Profile Button
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .background(
-                    color = Color(0xFFECEEF2),
-                    shape = CircleShape
-                )
-                .clickable(onClick = onProfileClick),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.user),
-                contentDescription = "Profile",
-                tint = Grey600,
-                modifier = Modifier.size(24.dp)
-            )
+
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = Color(0xFFFFFFFF),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.notification),
+                        contentDescription = "Notifications",
+                        tint = Grey600,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = Color(0xFFFFFFFF),
+                            shape = CircleShape
+                        )
+                        .clickable {
+                            // Navigate to welcome screen on logout
+                            navController?.navigate("welcome") {
+                                popUpTo(0) // Clear the entire back stack
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = "Logout",
+                        tint = Grey600,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
         }
 
-        // User Info
-        Column(
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = title,  // User name
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,  // Made bolder for name
-                color = Color(0xFF3A4252),
-                lineHeight = 20.sp,
-                letterSpacing = 0.1.sp
-            )
-            Text(
-                text = subtitle,  // Welcome back
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF8695AA),
-                lineHeight = 14.sp,
-                letterSpacing = 0.5.sp
-            )
-        }
 
-
-    }
 }
 
 @Preview(showBackground = true)
