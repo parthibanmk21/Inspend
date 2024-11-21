@@ -24,7 +24,6 @@ import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import androidx.compose.foundation.clickable
 import com.example.inspend.ui.theme.BGdefault
-import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import com.example.inspend.ui.theme.InspendTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -78,31 +77,61 @@ fun LogInScreen(
                     color = Grey700
                 )
 
-                // Email Input
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Email",
-                    placeholder = "eg. sammy123@domain.com",
-                    value = email,
-                    onValueChange = { 
-                        email = it
-                        emailError = ""
-                    },
-                    isError = emailError.isNotEmpty()
-                )
+                // Email Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    InputField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Email",
+                        placeholder = "eg. sammy123@domain.com",
+                        value = email,
+                        onValueChange = { 
+                            email = it
+                            emailError = ""
+                        },
+                        isError = emailError.isNotEmpty()
+                    )
+                    
+                    if (emailError.isNotEmpty()) {
+                        Text(
+                            text = "Incorrect Email",
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
-                // Password Input
-                PasswordField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Password",
-                    placeholder = "Enter your password",
-                    value = password,
-                    onValueChange = { 
-                        password = it
-                        passwordError = ""
-                    },
-                    isError = passwordError.isNotEmpty()
-                )
+                // Password Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    PasswordField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Password",
+                        placeholder = "Enter your password",
+                        value = password,
+                        onValueChange = { 
+                            password = it
+                            passwordError = ""
+                        },
+                        isError = passwordError.isNotEmpty()
+                    )
+                    
+                    if (passwordError.isNotEmpty()) {
+                        Text(
+                            text = "Incorrect Password",
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
                 // Login Button using custom component
                 com.example.inspend.components.Button(
@@ -139,13 +168,14 @@ fun LogInScreen(
                                     // Show appropriate error message
                                     when {
                                         e.message?.contains("no user record") == true -> {
-                                            Toast.makeText(context, "Email not found", Toast.LENGTH_SHORT).show()
+                                            emailError = "Incorrect Email"
                                         }
                                         e.message?.contains("password is invalid") == true -> {
-                                            Toast.makeText(context, "Incorrect password", Toast.LENGTH_SHORT).show()
+                                            passwordError = "Incorrect Password"
                                         }
                                         else -> {
-                                            Toast.makeText(context, "Login failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                            emailError = "Login failed"
+                                            passwordError = "Please try again"
                                         }
                                     }
                                 }
