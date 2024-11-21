@@ -13,13 +13,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.inspend.components.*
 import com.example.inspend.ui.theme.BGdefault
 import com.example.inspend.ui.theme.InspendTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun HomePage(
@@ -29,16 +31,41 @@ fun HomePage(
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
     
-    // State for user name
+    // State for user name and transactions
     var userName by remember { mutableStateOf("") }
+    var transactions by remember { mutableStateOf<List<TransactionData>>(emptyList()) }
     
-    // Fetch user name when component is first created
+    // Fetch user data and transactions when component is first created
     LaunchedEffect(Unit) {
         try {
             val userId = auth.currentUser?.uid
             if (userId != null) {
+                // Fetch user name
                 val userDoc = db.collection("users").document(userId).get().await()
                 userName = userDoc.getString("name") ?: ""
+
+                // Fetch transactions
+                val transactionDocs = db.collection("users")
+                    .document(userId)
+                    .collection("transactions")
+                    .orderBy("dateTime", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+
+                transactions = transactionDocs.mapNotNull { doc ->
+                    try {
+                        TransactionData(
+                            type = CategoryType.valueOf(doc.getString("type") ?: "INCOME"),
+                            name = doc.getString("name") ?: "",
+                            dateTime = formatDateTime(doc.getLong("dateTime") ?: 0),
+                            amount = doc.getString("amount") ?: "0",
+                            isCredit = doc.getBoolean("isCredit") ?: true,
+                            bankType = BankType.valueOf(doc.getString("bankType") ?: "WALLET")
+                        )
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
             }
         } catch (e: Exception) {
             // Handle error silently or show a toast
@@ -54,11 +81,9 @@ fun HomePage(
         // Home AppBar with user name
         AppBar(
             type = AppBarType.HOME,
-            title = userName,  // Use the fetched user name
+            title = userName,
             subtitle = "Welcome back",
-            onProfileClick = {
-                // Handle profile click
-            },
+            onProfileClick = { },
             navController = navController
         )
 
@@ -73,52 +98,39 @@ fun HomePage(
         ) {
             // Balance Card
             BalanceCard(
-                balance = "25,000.00",
-                onVisibilityToggle = {
-                    // Handle visibility toggle
-                }
+                balance = transactions.firstOrNull()?.amount ?: "0.00",
+                onVisibilityToggle = { }
             )
 
             // Transaction List
-            val sampleTransactions = listOf(
-                TransactionData(
-                    type = CategoryType.INCOME,
-                    name = "Salary",
-                    dateTime = "10:00 AM",
-                    amount = "5,000",
-                    isCredit = true,
-                    bankType = BankType.TRUST
-                ),
-                TransactionData(
-                    type = CategoryType.EXPENSE,
-                    name = "Groceries",
-                    dateTime = "2:30 PM",
-                    amount = "150",
-                    isCredit = false,
-                    bankType = BankType.REVOLUT
-                )
-            )
-
-            Column(
-                modifier = Modifier
-//                    .padding(16.dp)
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(8.dp)
+            if (transactions.isNotEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .border(
+                            width = 1.5.dp,
+                            color = Color(0xFFE0E2EB),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
+                    TransactionList(
+                        date = "Today",
+                        transactions = transactions
                     )
-                    .border(
-                        width = 1.5.dp,
-                        color = Color(0xFFE0E2EB),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-            ) {
-                TransactionList(
-                    date = "Today",
-                    transactions = sampleTransactions
-                )
+                }
             }
         }
     }
+}
+
+// Helper function to format timestamp to readable time
+private fun formatDateTime(timestamp: Long): String {
+    val date = Date(timestamp)
+    val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    return format.format(date)
 }
 
 @Preview(
