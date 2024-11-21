@@ -252,11 +252,11 @@ fun SignInScreen(
 }
 
 @Preview
-//    (
-//    name = "Sign In Screen",
-//    showBackground = true,
-//    device = "id:pixel_5"
-//)
+    (
+    name = "Sign In Screen",
+    showBackground = true,
+    device = "id:pixel_5"
+)
 @Composable
 fun SignInScreenPreview() {
     InspendTheme {
