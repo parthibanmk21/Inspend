@@ -177,14 +177,14 @@ private fun HomeAppBar(
             }
 
             Row (
-                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
                         .background(
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFFECEEF2),
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -200,7 +200,7 @@ private fun HomeAppBar(
                     modifier = Modifier
                         .size(48.dp)
                         .background(
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFFECEEF2),
                             shape = CircleShape
                         )
                         .clickable {

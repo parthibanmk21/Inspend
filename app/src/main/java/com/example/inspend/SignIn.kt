@@ -293,11 +293,7 @@ fun SignInScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignInScreenPreview() {
-    // Create a dummy NavController for preview
-    val previewNavController = rememberNavController()
-    
     InspendTheme {
-        // Create a preview-safe version of the screen
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -312,60 +308,128 @@ fun SignInScreenPreview() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = 0.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "Create your account",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Grey700
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "Create your account",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Grey700
+                    )
 
-                // Preview version of input fields
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Name",
-                    placeholder = "Enter your name",
-                    value = "",
-                    onValueChange = { },
-                    isError = false
-                )
+                    // Input fields
+                    InputField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Name",
+                        placeholder = "Enter your name",
+                        value = "",
+                        onValueChange = { },
+                        isError = false
+                    )
 
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Email",
-                    placeholder = "eg. sammy123@domain.com",
-                    value = "",
-                    onValueChange = { },
-                    isError = false
-                )
+                    InputField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Email",
+                        placeholder = "eg. sammy123@domain.com",
+                        value = "",
+                        onValueChange = { },
+                        isError = false
+                    )
 
-                PasswordField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Password",
-                    placeholder = "Enter your password",
-                    value = "",
-                    onValueChange = { },
-                    isError = false
-                )
+                    PasswordField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Password",
+                        placeholder = "Enter your password",
+                        value = "",
+                        onValueChange = { },
+                        isError = false
+                    )
 
-                PasswordField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Confirm Password",
-                    placeholder = "Re-enter your password",
-                    value = "",
-                    onValueChange = { },
-                    isError = false
-                )
+                    PasswordField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Confirm Password",
+                        placeholder = "Re-enter your password",
+                        value = "",
+                        onValueChange = { },
+                        isError = false
+                    )
 
-                com.example.inspend.components.Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Create my account",
-                    onClick = { }
-                )
+                    com.example.inspend.components.Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Create my account",
+                        onClick = { }
+                    )
 
-                // Preview of other UI elements...
+                    // Divider with "or"
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Divider(
+                            modifier = Modifier.weight(1f),
+                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
+                            thickness = 2.dp
+                        )
+                        Text(
+                            text = "or",
+                            color = Color(0xFF526077).copy(alpha = 0.75f),
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                        Divider(
+                            modifier = Modifier.weight(1f),
+                            color = Color(0xFFD5D9E2).copy(alpha = 0.5f),
+                            thickness = 2.dp
+                        )
+                    }
+
+                    // Google SignIn Button
+                    com.example.inspend.components.Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Continue with Google",
+                        onClick = { },
+                        type = ButtonType.SECONDARY,
+                        icon = painterResource(id = R.drawable.google),
+                        iconPosition = IconPosition.LEFT
+                    )
+                }
+
+                // Login Row at bottom
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .border(width = 1.dp, color = Color(0xFFD5D9E2))
+                        .padding(top = 24.dp, bottom = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Already have an account? ",
+                            color = Color(0xFF868EA1).copy(alpha = 0.75f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.15.sp
+                        )
+                        Text(
+                            text = "Log in",
+                            color = Color(0xFF1F274B).copy(alpha = 0.75f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.15.sp
+                        )
+                    }
+                }
             }
         }
     }
