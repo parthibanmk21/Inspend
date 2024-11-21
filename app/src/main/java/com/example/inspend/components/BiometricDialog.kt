@@ -1,12 +1,14 @@
 package com.example.inspend.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,69 +23,73 @@ import com.example.inspend.ui.theme.*
 
 @Composable
 fun BiometricDialog(
-    onEnableClick: () -> Unit,
-    onSkipClick: () -> Unit
+    onDismiss: (Boolean) -> Unit
 ) {
-    Box(
+    Card(
         modifier = Modifier
             .width(328.dp)
-            .background(
-                color = BGdefault,
-                shape = RoundedCornerShape(16.dp)
-            )
             .border(
                 width = 1.dp,
                 color = Color(0xFFD5D9E2),
                 shape = RoundedCornerShape(16.dp)
             )
-            .padding(horizontal = 16.dp, vertical = 32.dp)
+            .background(
+                color = Color(0xFFECEEF2),
+                shape = RoundedCornerShape(16.dp)
+            ),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
+            // Dialog Top
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.biometric),
-                    contentDescription = "Fingerprint",
-                    tint = Grey700,
+                    contentDescription = "Biometric",
+                    tint = Color(0xFF526077),
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Text(
                     text = "Use Biometric?",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Grey700
+                    color = Color(0xFF393F71),
+                    letterSpacing = 0.sp
                 )
-                
+
                 Text(
-                    text = "Add fingerprint authentication to make your account more secure.",
+                    text = "Would you like to enable the biometric instead of using your passcode?",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
+                    color = Color(0xFF526077),
                     letterSpacing = 0.15.sp,
-                    color = Grey400,
                     textAlign = TextAlign.Center
                 )
             }
-            
+
+            // Dialog Bottom
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    text = "Enable Biometric Login",
-                    onClick = onEnableClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Yes, enable Biometric",
+                    onClick = { onDismiss(true) }
                 )
-                
+
                 Button(
-                    text = "Skip",
-                    onClick = onSkipClick,
-                    type = ButtonType.SECONDARY,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Not Now",
+                    onClick = { onDismiss(false) },
+                    type = ButtonType.SECONDARY
                 )
             }
         }
@@ -106,8 +112,7 @@ fun BiometricDialogPreview() {
         contentAlignment = Alignment.Center
     ) {
         BiometricDialog(
-            onEnableClick = { },
-            onSkipClick = { }
+            onDismiss = { }
         )
     }
 }
@@ -119,7 +124,6 @@ fun BiometricDialogPreview() {
 @Composable
 fun BiometricDialogComponentPreview() {
     BiometricDialog(
-        onEnableClick = { },
-        onSkipClick = { }
+        onDismiss = { }
     )
 } 

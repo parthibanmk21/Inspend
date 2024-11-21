@@ -25,11 +25,25 @@ import com.example.inspend.ui.theme.BGdefault
 import com.example.inspend.ui.theme.Grey400
 import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun SignInScreen(
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -166,11 +180,36 @@ fun SignInScreen(
                             hasError = true
                         }
                         
-                        // Only navigate if there are no errors
                         if (!hasError) {
-                            navController.navigate("setsecuritypin") {
-                                launchSingleTop = true
-                                popUpTo("welcome") { inclusive = true }
+                            coroutineScope.launch {
+                                try {
+                                    // Create user in Firebase Auth
+                                    val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                                    val userId = authResult.user?.uid ?: throw Exception("Failed to create user")
+
+                                    // Store additional user data in Firestore
+                                    val userData = hashMapOf(
+                                        "name" to name,
+                                        "email" to email
+                                    )
+
+                                    // Save user data to Firestore
+                                    db.collection("users").document(userId)
+                                        .set(userData)
+                                        .await()
+
+                                    // Navigate to PIN setup
+                                    navController.navigate("setsecuritypin") {
+                                        launchSingleTop = true
+                                        popUpTo("welcome") { inclusive = true }
+                                    }
+                                } catch (e: FirebaseAuthUserCollisionException) {
+                                    Toast.makeText(context, "Email already in use", Toast.LENGTH_SHORT).show()
+                                } catch (e: FirebaseAuthWeakPasswordException) {
+                                    Toast.makeText(context, "Password is too weak", Toast.LENGTH_SHORT).show()
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "Sign up failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
@@ -251,17 +290,83 @@ fun SignInScreen(
     }
 }
 
-@Preview
-    (
-    name = "Sign In Screen",
-    showBackground = true,
-    device = "id:pixel_5"
-)
+@Preview(showBackground = true)
 @Composable
 fun SignInScreenPreview() {
+    // Create a dummy NavController for preview
+    val previewNavController = rememberNavController()
+    
     InspendTheme {
-        SignInScreen(
-            navController = rememberNavController()
-        )
+        // Create a preview-safe version of the screen
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 24.dp)
+                .background(BGdefault)
+        ) {
+            AppBar(
+                title = "Sign up",
+                onBackClick = { }
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Create your account",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Grey700
+                )
+
+                // Preview version of input fields
+                InputField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Name",
+                    placeholder = "Enter your name",
+                    value = "",
+                    onValueChange = { },
+                    isError = false
+                )
+
+                InputField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Email",
+                    placeholder = "eg. sammy123@domain.com",
+                    value = "",
+                    onValueChange = { },
+                    isError = false
+                )
+
+                PasswordField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Password",
+                    placeholder = "Enter your password",
+                    value = "",
+                    onValueChange = { },
+                    isError = false
+                )
+
+                PasswordField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Confirm Password",
+                    placeholder = "Re-enter your password",
+                    value = "",
+                    onValueChange = { },
+                    isError = false
+                )
+
+                com.example.inspend.components.Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Create my account",
+                    onClick = { }
+                )
+
+                // Preview of other UI elements...
+            }
+        }
     }
 }

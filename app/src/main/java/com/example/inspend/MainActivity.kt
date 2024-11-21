@@ -34,10 +34,15 @@ import androidx.compose.animation.core.tween
 import com.example.inspend.ui.theme.BGdefault
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize Firebase
+        FirebaseApp.initializeApp(this)
+        
         enableEdgeToEdge()
 
         // Enable edge-to-edge display
