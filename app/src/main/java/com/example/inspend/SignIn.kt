@@ -91,57 +91,117 @@ fun SignInScreen(
                     color = Grey700
                 )
 
-                // Name Input
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Name",
-                    placeholder = "Enter your name",
-                    value = name,
-                    onValueChange = { 
-                        name = it
-                        nameError = ""
-                    },
-                    isError = nameError.isNotEmpty()
-                )
+                // Name Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    InputField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Name",
+                        placeholder = "Enter your name",
+                        value = name,
+                        onValueChange = { 
+                            name = it
+                            nameError = ""
+                        },
+                        isError = nameError.isNotEmpty()
+                    )
+                    
+                    if (nameError.isNotEmpty()) {
+                        Text(
+                            text = nameError,
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
-                // Email Input
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Email",
-                    placeholder = "eg. sammy123@domain.com",
-                    value = email,
-                    onValueChange = { 
-                        email = it
-                        emailError = ""
-                    },
-                    isError = emailError.isNotEmpty()
-                )
+                // Email Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    InputField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Email",
+                        placeholder = "eg. sammy123@domain.com",
+                        value = email,
+                        onValueChange = { 
+                            email = it
+                            emailError = ""
+                        },
+                        isError = emailError.isNotEmpty()
+                    )
+                    
+                    if (emailError.isNotEmpty()) {
+                        Text(
+                            text = emailError,
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
-                // Password Input
-                PasswordField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Password",
-                    placeholder = "Enter your password",
-                    value = password,
-                    onValueChange = { 
-                        password = it
-                        passwordError = ""
-                    },
-                    isError = passwordError.isNotEmpty()
-                )
+                // Password Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    PasswordField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Password",
+                        placeholder = "Enter your password",
+                        value = password,
+                        onValueChange = { 
+                            password = it
+                            passwordError = ""
+                        },
+                        isError = passwordError.isNotEmpty()
+                    )
+                    
+                    if (passwordError.isNotEmpty()) {
+                        Text(
+                            text = passwordError,
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
-                // Confirm Password Input
-                PasswordField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Confirm Password",
-                    placeholder = "Re-enter your password",
-                    value = confirmPassword,
-                    onValueChange = { 
-                        confirmPassword = it
-                        confirmPasswordError = ""
-                    },
-                    isError = confirmPasswordError.isNotEmpty()
-                )
+                // Confirm Password Input with Error
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    PasswordField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = "Confirm Password",
+                        placeholder = "Re-enter your password",
+                        value = confirmPassword,
+                        onValueChange = { 
+                            confirmPassword = it
+                            confirmPasswordError = ""
+                        },
+                        isError = confirmPasswordError.isNotEmpty()
+                    )
+                    
+                    if (confirmPasswordError.isNotEmpty()) {
+                        Text(
+                            text = confirmPasswordError,
+                            color = Color(0xFFB91C1C),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.1.sp,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
 
                 // SignIn Button
                 com.example.inspend.components.Button(
@@ -203,12 +263,22 @@ fun SignInScreen(
                                         launchSingleTop = true
                                         popUpTo("welcome") { inclusive = true }
                                     }
-                                } catch (e: FirebaseAuthUserCollisionException) {
-                                    Toast.makeText(context, "Email already in use", Toast.LENGTH_SHORT).show()
-                                } catch (e: FirebaseAuthWeakPasswordException) {
-                                    Toast.makeText(context, "Password is too weak", Toast.LENGTH_SHORT).show()
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Sign up failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    when {
+                                        e.message?.contains("email address is already in use") == true -> {
+                                            emailError = "Email already exists"
+                                        }
+                                        e.message?.contains("password is invalid") == true -> {
+                                            passwordError = "Password is too weak"
+                                        }
+                                        e.message?.contains("malformed or has expired") == true -> {
+                                            emailError = "Invalid email format"
+                                        }
+                                        else -> {
+                                            emailError = "Sign up failed"
+                                            passwordError = "Please try again"
+                                        }
+                                    }
                                 }
                             }
                         }
