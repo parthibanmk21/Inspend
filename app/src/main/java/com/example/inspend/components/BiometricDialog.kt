@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -32,12 +33,9 @@ fun BiometricDialog(
                 width = 1.dp,
                 color = Color(0xFFD5D9E2),
                 shape = RoundedCornerShape(16.dp)
-            )
-            .background(
-                color = Color(0xFFECEEF2),
-                shape = RoundedCornerShape(16.dp)
             ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = BGdefault)
     ) {
         Column(
             modifier = Modifier

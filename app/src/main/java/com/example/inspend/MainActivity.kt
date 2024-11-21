@@ -438,7 +438,6 @@ fun WelcomeScreen(
                     letterSpacing = 0.15.sp,
                     modifier = Modifier
                         .wrapContentWidth()
-                        .clickable { onCreateAccountClick() }
                 )
             }
         }
