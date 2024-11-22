@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.example.inspend.ui.theme.InspendTheme
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,9 +32,10 @@ import com.example.inspend.ui.theme.Grey600
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import com.example.inspend.ui.theme.BGdefault
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,27 +44,37 @@ class MainActivity : ComponentActivity() {
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
         
+        // Handle back press to minimize app
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    moveTaskToBack(true)
+                }
+            }
+        )
+        
         enableEdgeToEdge()
-
-        // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Set the status bar color
-        window.statusBarColor = android.graphics.Color.parseColor("#434E61") // Dark color
-
-        // Set the status bar icon color to light
-        WindowCompat.getInsetsController(window, window.decorView)?.isAppearanceLightStatusBars = false
+        window.statusBarColor = android.graphics.Color.parseColor("#434E61")
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
 
         setContent {
             InspendTheme {
                 val navController = rememberNavController()
-
-                // Track navigation order
-                val navigationOrder = remember { mutableStateOf(0) }
+                val navigationOrder = remember { mutableIntStateOf(0) }
+                
+                // Check if user is already logged in
+                val auth = FirebaseAuth.getInstance()
+                val startDestination = if (auth.currentUser != null) {
+                    "home"  // User is logged in, go to home
+                } else {
+                    "welcome"  // User is not logged in, go to welcome
+                }
 
                 NavHost(
                     navController = navController,
-                    startDestination = "welcome"
+                    startDestination = startDestination
                 ) {
                     composable(
                         route = "welcome",
@@ -254,6 +265,10 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("home") {
+                        BackHandler {
+                            moveTaskToBack(true)
+                        }
+                        
                         HomePage(
                             navController = navController
                         )
