@@ -122,6 +122,15 @@ fun HomePage(
                     )
                 }
             }
+
+            // Add Transaction Button
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Add Transaction",
+                onClick = { 
+                    navController.navigate("addtransaction")
+                }
+            )
         }
     }
 }
@@ -207,6 +216,13 @@ fun HomePagePreview() {
                         transactions = sampleTransactions
                     )
                 }
+                
+                // Add Transaction Button in preview
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Add Transaction",
+                    onClick = { }
+                )
             }
         }
     }
