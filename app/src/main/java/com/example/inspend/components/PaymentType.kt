@@ -47,7 +47,7 @@ fun PaymentType(
         Icon(
             painter = painterResource(id = icon),
             contentDescription = name,
-            tint = Color(0xFF526077),
+            tint = Color.Unspecified,
             modifier = Modifier.size(24.dp)
         )
 

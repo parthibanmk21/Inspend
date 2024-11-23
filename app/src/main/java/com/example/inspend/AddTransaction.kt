@@ -2,6 +2,7 @@ package com.example.inspend
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,9 @@ import com.example.inspend.ui.theme.*
 private fun AddTransactionContent(
     onBackClick: () -> Unit = {}
 ) {
+    // Add state for bottom sheet
+    var showPaymentMethodSheet by remember { mutableStateOf(false) }
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,6 +131,8 @@ private fun AddTransactionContent(
 
                 // Payment Method Dropdown
                 Column(
+                    modifier = Modifier
+                        .clickable { showPaymentMethodSheet = true },
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
@@ -345,6 +351,67 @@ private fun AddTransactionContent(
                     text = "Add Transaction",
                     onClick = { }
                 )
+            }
+        }
+
+        // Add the bottom sheet at the end of the content
+        if (showPaymentMethodSheet) {
+            CustomBottomSheet(
+                onDismiss = { showPaymentMethodSheet = false }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "Select Payment Method",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF526077),
+                        lineHeight = 24.sp
+                    )
+                    
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        PaymentType(
+                            icon = R.drawable.wallet,
+                            name = "Wallet",
+                            balance = "1,000",
+                            isSelected = true,
+                            onClick = { 
+                                showPaymentMethodSheet = false
+                            }
+                        )
+                        PaymentType(
+                            icon = R.drawable.trust,
+                            name = "Trust",
+                            balance = "1,000",
+                            isSelected = false,
+                            onClick = { 
+                                showPaymentMethodSheet = false
+                            }
+                        )
+                        PaymentType(
+                            icon = R.drawable.dbs,
+                            name = "DBS",
+                            balance = "1,000",
+                            isSelected = false,
+                            onClick = { 
+                                showPaymentMethodSheet = false
+                            }
+                        )
+                        PaymentType(
+                            icon = R.drawable.revolut,
+                            name = "Revolut",
+                            balance = "1,000",
+                            isSelected = false,
+                            onClick = { 
+                                showPaymentMethodSheet = false
+                            }
+                        )
+                    }
+                }
             }
         }
     }
