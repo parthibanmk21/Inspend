@@ -24,6 +24,11 @@ import com.example.inspend.components.*
 import com.example.inspend.ui.theme.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import android.app.TimePickerDialog
+import android.app.DatePickerDialog
+import androidx.compose.ui.platform.LocalContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -51,6 +56,51 @@ private fun AddTransactionContent(
             PaymentMethodOption(R.drawable.trust, "Trust", "1,000"),
             PaymentMethodOption(R.drawable.dbs, "DBS", "1,000"),
             PaymentMethodOption(R.drawable.revolut, "Revolut", "1,000")
+        )
+    }
+
+    // Add context for dialogs
+    val context = LocalContext.current
+    
+    // Get current date and time
+    val currentDateTime = remember { LocalDateTime.now() }
+    
+    // States for date and time
+    var selectedDate by remember { mutableStateOf(currentDateTime) }
+    var selectedTime by remember { mutableStateOf(currentDateTime) }
+    
+    // Date formatter
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd MMM yyyy") }
+    val timeFormatter = remember { DateTimeFormatter.ofPattern("hh:mm a") }
+    
+    // Date Picker Dialog
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            R.style.CustomPickerDialog,  // Use our custom theme
+            { _, year, month, dayOfMonth ->
+                selectedDate = selectedDate.withYear(year)
+                    .withMonth(month + 1)
+                    .withDayOfMonth(dayOfMonth)
+            },
+            currentDateTime.year,
+            currentDateTime.monthValue - 1,
+            currentDateTime.dayOfMonth
+        )
+    }
+    
+    // Time Picker Dialog
+    val timePickerDialog = remember {
+        TimePickerDialog(
+            context,
+            R.style.CustomPickerDialog,  // Use our custom theme
+            { _, hourOfDay, minute ->
+                selectedTime = selectedTime.withHour(hourOfDay)
+                    .withMinute(minute)
+            },
+            currentDateTime.hour,
+            currentDateTime.minute,
+            false
         )
     }
 
@@ -305,16 +355,22 @@ private fun AddTransactionContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(46.dp)
+                                .clip(RoundedCornerShape(4.dp))
                                 .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
                                 .border(1.dp, Color(0xFFD5D9E2), RoundedCornerShape(4.dp))
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(bounded = true),
+                                    onClick = { datePickerDialog.show() }
+                                )
                                 .padding(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Select date",
+                                text = selectedDate.format(dateFormatter),
                                 fontSize = 16.sp,
-                                color = Color(0xFFB1BBC8),
+                                color = Color(0xFF526077),
                                 letterSpacing = 0.5.sp,
                                 lineHeight = 20.sp,
                                 modifier = Modifier.weight(1f)
@@ -345,16 +401,22 @@ private fun AddTransactionContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(46.dp)
+                                .clip(RoundedCornerShape(4.dp))
                                 .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
                                 .border(1.dp, Color(0xFFD5D9E2), RoundedCornerShape(4.dp))
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(bounded = true),
+                                    onClick = { timePickerDialog.show() }
+                                )
                                 .padding(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Select time",
+                                text = selectedTime.format(timeFormatter),
                                 fontSize = 16.sp,
-                                color = Color(0xFFB1BBC8),
+                                color = Color(0xFF526077),
                                 letterSpacing = 0.5.sp,
                                 lineHeight = 20.sp,
                                 modifier = Modifier.weight(1f)

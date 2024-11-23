@@ -2,4 +2,17 @@
 <resources>
 
     <style name="Theme.Inspend" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="CustomPickerDialog" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_primary</item>
+        <item name="android:colorAccent">@color/primary_blue</item>
+        <item name="android:colorControlActivated">@color/primary_blue</item>
+        <item name="android:colorControlHighlight">@color/primary_blue</item>
+    </style>
+
+    <style name="PickerButtonStyle">
+        <item name="android:textColor">@color/primary_blue</item>
+    </style>
 </resources>
