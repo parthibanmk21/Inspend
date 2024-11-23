@@ -41,6 +41,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -63,6 +65,8 @@ private fun AddTransactionContent(
     // Add state for amount and focus
     var amount by remember { mutableStateOf("") }
     var isFocused by remember { mutableStateOf(false) }
+    // Add state for transaction name
+    var transactionName by remember { mutableStateOf("") }
     
     // Define payment methods
     val paymentMethods = remember {
@@ -133,7 +137,7 @@ private fun AddTransactionContent(
         modifier = Modifier
             .fillMaxSize()
             .background(BGdefault)
-            .padding(top = 24.dp)
+            .padding(top = 24.dp, bottom = 16.dp)
     ) {
         // AppBar
         AppBar(
@@ -396,8 +400,12 @@ private fun AddTransactionContent(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Transaction Name",
                     placeholder = "eg. Morning dinner",
-                    value = "",
-                    onValueChange = { }
+                    value = transactionName,
+                    onValueChange = { transactionName = it },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Next
+                    )
                 )
 
                 // Date and Time Row
