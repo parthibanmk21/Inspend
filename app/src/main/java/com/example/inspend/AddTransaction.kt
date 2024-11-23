@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.inspend.components.*
 import com.example.inspend.ui.theme.*
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.foundation.interaction.MutableInteractionSource
 
 // Shared content function
 @Composable
@@ -131,8 +134,7 @@ private fun AddTransactionContent(
 
                 // Payment Method Dropdown
                 Column(
-                    modifier = Modifier
-                        .clickable { showPaymentMethodSheet = true },
+                    modifier = Modifier,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
@@ -147,8 +149,14 @@ private fun AddTransactionContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
+                            .clip(RoundedCornerShape(4.dp))
                             .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
                             .border(1.dp, Color(0xFFD5D9E2), RoundedCornerShape(4.dp))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = rememberRipple(bounded = true),
+                                onClick = { showPaymentMethodSheet = true }
+                            )
                             .padding(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -354,7 +362,7 @@ private fun AddTransactionContent(
             }
         }
 
-        // Add the bottom sheet at the end of the content
+        // Use our CustomBottomSheet
         if (showPaymentMethodSheet) {
             CustomBottomSheet(
                 onDismiss = { showPaymentMethodSheet = false }

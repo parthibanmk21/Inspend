@@ -22,14 +22,96 @@ import com.example.inspend.ui.theme.InspendTheme
 @Composable
 fun CustomBottomSheet(
     onDismiss: () -> Unit,
+    title: String? = null,
+    showDragHandle: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    // Overlay (Scrim)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+    )
 
+    // Bottom Sheet
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        dragHandle = {
+        sheetState = rememberModalBottomSheetState(),
+        dragHandle = if (showDragHandle) {
+            {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(32.dp)
+                            .height(4.dp)
+                            .background(
+                                color = Color(0xFF797E7E).copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(100.dp)
+                            )
+                    )
+                }
+            }
+        } else null,
+        containerColor = Color.White,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        tonalElevation = 0.dp,
+        modifier = Modifier.fillMaxHeight(0.7f)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            // Optional title
+            if (title != null) {
+                Text(
+                    text = title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF526077),
+                    lineHeight = 24.sp,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+            }
+            
+            content()
+        }
+    }
+}
+
+// Preview for just the overlay
+@Preview(name = "Bottom Sheet Overlay")
+@Composable
+fun BottomSheetOverlayPreview() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+    )
+}
+
+// Preview for just the bottom sheet content
+@Preview(name = "Bottom Sheet Content")
+@Composable
+fun BottomSheetContentPreview() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+            )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Drag Handle
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -46,28 +128,43 @@ fun CustomBottomSheet(
                         )
                 )
             }
-        },
-        containerColor = Color.White,
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            content()
+
+            // Content
+            Text(
+                text = "Select Payment Method",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF526077),
+                lineHeight = 24.sp
+            )
+            
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                PaymentType(
+                    icon = R.drawable.wallet,
+                    name = "Wallet",
+                    balance = "1,000",
+                    isSelected = true,
+                    onClick = {}
+                )
+                PaymentType(
+                    icon = R.drawable.trust,
+                    name = "Trust",
+                    balance = "1,000",
+                    isSelected = false,
+                    onClick = {}
+                )
+            }
         }
     }
 }
 
+// Full bottom sheet preview with overlay
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(
-    name = "Custom Bottom Sheet",
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview(name = "Full Bottom Sheet with Overlay")
 @Composable
-fun CustomBottomSheetPreview() {
+fun FullBottomSheetPreview() {
     InspendTheme {
         CustomBottomSheet(
             onDismiss = {}
@@ -101,17 +198,8 @@ fun CustomBottomSheetPreview() {
                         isSelected = false,
                         onClick = {}
                     )
-                    PaymentType(
-                        icon = R.drawable.dbs,
-                        name = "DBS",
-                        balance = "1,000",
-                        isSelected = false,
-                        onClick = {}
-                    )
                 }
             }
         }
     }
 }
-
-// Preview remains the same... 
