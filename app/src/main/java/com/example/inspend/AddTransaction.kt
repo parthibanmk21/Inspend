@@ -31,6 +31,16 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import androidx.compose.ui.platform.LocalConfiguration
 import android.content.res.Configuration
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextStyle
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -50,6 +60,9 @@ private fun AddTransactionContent(
     var selectedPaymentMethod by remember { mutableStateOf(0) }  // 0 for Wallet (default)
     // Add state for transaction type
     var isExpense by remember { mutableStateOf(true) }  // true for Expense, false for Income
+    // Add state for amount and focus
+    var amount by remember { mutableStateOf("") }
+    var isFocused by remember { mutableStateOf(false) }
     
     // Define payment methods
     val paymentMethods = remember {
@@ -179,21 +192,53 @@ private fun AddTransactionContent(
                         letterSpacing = 0.1.sp
                     )
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        modifier = Modifier
+                            .height(32.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "$",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFFB1BBC8),
-                            lineHeight = 32.sp
+                            color = if (amount.isEmpty()) Color(0xFFB1BBC8) else Color(0xFF526077),
+                            lineHeight = 28.sp
                         )
-                        Text(
-                            text = "0.00",
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFFB1BBC8),
-                            lineHeight = 32.sp
+                        BasicTextField(
+                            value = amount,
+                            onValueChange = { newValue ->
+                                // Only allow numbers and decimal point
+                                if (newValue.isEmpty() || newValue.matches(Regex("^\\d*\\.?\\d*$"))) {
+                                    amount = newValue
+                                }
+                            },
+                            textStyle = TextStyle(
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF526077),
+                                lineHeight = 28.sp,
+                                textAlign = TextAlign.Center
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            ),
+                            modifier = Modifier
+                                .width(IntrinsicSize.Min)
+                                .onFocusChanged { isFocused = it.isFocused },
+                            decorationBox = { innerTextField ->
+                                Box {
+                                    if (amount.isEmpty()) {
+                                        Text(
+                                            text = "0.00",
+                                            fontSize = 28.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFFB1BBC8),
+                                            lineHeight = 28.sp
+                                        )
+                                    }
+                                    innerTextField()
+                                }
+                            }
                         )
                     }
                 }
