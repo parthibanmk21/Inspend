@@ -147,8 +147,8 @@ private fun AddTransactionContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(vertical = 0.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Header
             Column(
@@ -180,7 +180,9 @@ private fun AddTransactionContent(
             ) {
                 // Amount Input with center alignment
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -193,13 +195,15 @@ private fun AddTransactionContent(
                     )
                     Row(
                         modifier = Modifier
-                            .height(32.dp),
+                            .wrapContentHeight()
+                            .padding(horizontal = 4.dp)
+                            .padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "$",
-                            fontSize = 28.sp,
+                            fontSize = 38.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = if (amount.isEmpty()) Color(0xFFB1BBC8) else Color(0xFF526077),
                             lineHeight = 28.sp
@@ -213,24 +217,29 @@ private fun AddTransactionContent(
                                 }
                             },
                             textStyle = TextStyle(
-                                fontSize = 28.sp,
+                                fontSize = 38.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = Color(0xFF526077),
                                 lineHeight = 28.sp,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Start
                             ),
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
                             modifier = Modifier
                                 .width(IntrinsicSize.Min)
+                                .wrapContentHeight()
                                 .onFocusChanged { isFocused = it.isFocused },
                             decorationBox = { innerTextField ->
-                                Box {
+                                Box(
+                                    modifier = Modifier
+                                        .wrapContentHeight(),
+                                    contentAlignment = Alignment.CenterStart
+                                ) {
                                     if (amount.isEmpty()) {
                                         Text(
                                             text = "0.00",
-                                            fontSize = 28.sp,
+                                            fontSize = 38.sp,
                                             fontWeight = FontWeight.SemiBold,
                                             color = Color(0xFFB1BBC8),
                                             lineHeight = 28.sp
@@ -382,6 +391,7 @@ private fun AddTransactionContent(
                     }
                 }
 
+                //Transaction Name
                 InputField(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Transaction Name",
@@ -522,7 +532,7 @@ private fun AddTransactionContent(
                         color = Color(0xFF526077),
                         lineHeight = 24.sp
                     )
-                    
+
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -532,7 +542,7 @@ private fun AddTransactionContent(
                                 name = payment.name,
                                 balance = payment.balance,
                                 isSelected = index == selectedPaymentMethod,
-                                onClick = { 
+                                onClick = {
                                     selectedPaymentMethod = index
                                     showPaymentMethodSheet = false
                                 }
