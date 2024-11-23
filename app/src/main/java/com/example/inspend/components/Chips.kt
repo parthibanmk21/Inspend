@@ -1,12 +1,18 @@
 package com.example.inspend.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,35 +30,49 @@ enum class ChipType {
 @Composable
 fun Chip(
     text: String,
-    type: ChipType = ChipType.DEFAULT,
-    modifier: Modifier = Modifier
+    type: ChipType,
+    isSelected: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
-    val (backgroundColor, textColor) = when (type) {
-        ChipType.DEFAULT -> Color(0xFFF6F7F9) to Color(0xFF526077)
-        ChipType.ERROR -> Color(0xFFFECACA) to Color(0xFFEF4444)
-        ChipType.SUCCESS -> Color(0xFFBBF7D1) to Color(0xFF16A349)
-        ChipType.INFO -> Color(0xFFC0D8F7) to Color(0xFF1F6DC3)
-        ChipType.DISABLED -> Color(0xFFF6F7F9) to Color(0xFFB1BBC8)
-    }
-
-    Row(
-        modifier = modifier
-            .width(80.dp)
-            .height(28.dp)
+    val shape = RoundedCornerShape(100.dp)
+    
+    Box(
+        modifier = Modifier
+            .clip(shape)  // Clip the ripple to pill shape
             .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(16.dp)
+                color = when {
+                    isSelected && type == ChipType.ERROR -> Color(0xFFFF9A9A)
+                    isSelected && type == ChipType.SUCCESS -> Color(0xFF83D386)
+                    else -> Color(0xFFF6F7F9)
+                },
+                shape = shape
             )
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .border(
+                width = 1.dp,
+                color = when {
+                    isSelected && type == ChipType.ERROR -> Color(0xFFB74B4B)
+                    isSelected && type == ChipType.SUCCESS -> Color(0xFF68A76B)
+                    else -> Color(0xFFD5D9E2)
+                },
+                shape = shape
+            )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(bounded = true),
+                onClick = onClick
+            )
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = textColor,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            lineHeight = 16.sp,
+            color = when {
+                isSelected && type == ChipType.ERROR -> Color(0xFF8D3E3E)
+                isSelected && type == ChipType.SUCCESS -> Color(0xFF325333)
+                else -> Color(0xFF526077)
+            },
             letterSpacing = 0.1.sp
         )
     }

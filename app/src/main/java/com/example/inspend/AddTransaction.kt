@@ -41,6 +41,8 @@ private fun AddTransactionContent(
     var showPaymentMethodSheet by remember { mutableStateOf(false) }
     // Add state for selected payment method
     var selectedPaymentMethod by remember { mutableStateOf(0) }  // 0 for Wallet (default)
+    // Add state for transaction type
+    var isExpense by remember { mutableStateOf(true) }  // true for Expense, false for Income
     
     // Define payment methods
     val paymentMethods = remember {
@@ -142,12 +144,16 @@ private fun AddTransactionContent(
                 ) {
                     Chip(
                         text = "Expense",
-                        type = ChipType.ERROR
+                        type = ChipType.ERROR,
+                        isSelected = isExpense,
+                        onClick = { isExpense = true }
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Chip(
                         text = "Income",
-                        type = ChipType.SUCCESS
+                        type = ChipType.SUCCESS,
+                        isSelected = !isExpense,
+                        onClick = { isExpense = false }
                     )
                 }
 
@@ -184,7 +190,7 @@ private fun AddTransactionContent(
                             painter = painterResource(id = paymentMethods[selectedPaymentMethod].icon),
                             contentDescription = paymentMethods[selectedPaymentMethod].name,
                             tint = Color.Unspecified,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                         Row(
                             modifier = Modifier.weight(1f),
@@ -247,10 +253,10 @@ private fun AddTransactionContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.downarrow),
+                            painter = painterResource(id = R.drawable.cakeicon),
                             contentDescription = "Category",
                             tint = Color(0xFF526077),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                         Text(
                             text = "Food",
