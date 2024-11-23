@@ -327,13 +327,13 @@ private fun AddTransactionContent(
                 }
 
                 // Note Input
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Note (Optional)",
-                    placeholder = "eg. Dinner at restaurant",
-                    value = "",
-                    onValueChange = { }
-                )
+//                InputField(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    label = "Note (Optional)",
+//                    placeholder = "eg. Dinner at restaurant",
+//                    value = "",
+//                    onValueChange = { }
+//                )
 
                 // Save Button
                 Button(
