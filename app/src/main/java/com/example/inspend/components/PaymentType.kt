@@ -2,6 +2,7 @@ package com.example.inspend.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -39,6 +40,7 @@ fun PaymentType(
                 color = if (isSelected) Color(0xFF145CB5) else Color(0xFFD5D9E2),
                 shape = RoundedCornerShape(4.dp)
             )
+            .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically

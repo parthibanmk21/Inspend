@@ -25,6 +25,13 @@ import com.example.inspend.ui.theme.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.foundation.interaction.MutableInteractionSource
 
+// Add at the top level of the file
+data class PaymentMethodOption(
+    val icon: Int,
+    val name: String,
+    val balance: String
+)
+
 // Shared content function
 @Composable
 private fun AddTransactionContent(
@@ -32,7 +39,19 @@ private fun AddTransactionContent(
 ) {
     // Add state for bottom sheet
     var showPaymentMethodSheet by remember { mutableStateOf(false) }
+    // Add state for selected payment method
+    var selectedPaymentMethod by remember { mutableStateOf(0) }  // 0 for Wallet (default)
     
+    // Define payment methods
+    val paymentMethods = remember {
+        listOf(
+            PaymentMethodOption(R.drawable.wallet, "Wallet", "1,000"),
+            PaymentMethodOption(R.drawable.trust, "Trust", "1,000"),
+            PaymentMethodOption(R.drawable.dbs, "DBS", "1,000"),
+            PaymentMethodOption(R.drawable.revolut, "Revolut", "1,000")
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,9 +181,9 @@ private fun AddTransactionContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.wallet),
-                            contentDescription = "Wallet",
-                            tint = Color(0xFF526077),
+                            painter = painterResource(id = paymentMethods[selectedPaymentMethod].icon),
+                            contentDescription = paymentMethods[selectedPaymentMethod].name,
+                            tint = Color.Unspecified,
                             modifier = Modifier.size(24.dp)
                         )
                         Row(
@@ -173,7 +192,7 @@ private fun AddTransactionContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Wallet",
+                                text = paymentMethods[selectedPaymentMethod].name,
                                 fontSize = 16.sp,
                                 color = Color(0xFF526077),
                                 letterSpacing = 0.5.sp,
@@ -188,7 +207,7 @@ private fun AddTransactionContent(
                                     lineHeight = 20.sp
                                 )
                                 Text(
-                                    text = "0",
+                                    text = paymentMethods[selectedPaymentMethod].balance,
                                     fontSize = 16.sp,
                                     color = Color(0xFF526077),
                                     letterSpacing = 0.5.sp,
@@ -382,42 +401,18 @@ private fun AddTransactionContent(
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        PaymentType(
-                            icon = R.drawable.wallet,
-                            name = "Wallet",
-                            balance = "1,000",
-                            isSelected = true,
-                            onClick = { 
-                                showPaymentMethodSheet = false
-                            }
-                        )
-                        PaymentType(
-                            icon = R.drawable.trust,
-                            name = "Trust",
-                            balance = "1,000",
-                            isSelected = false,
-                            onClick = { 
-                                showPaymentMethodSheet = false
-                            }
-                        )
-                        PaymentType(
-                            icon = R.drawable.dbs,
-                            name = "DBS",
-                            balance = "1,000",
-                            isSelected = false,
-                            onClick = { 
-                                showPaymentMethodSheet = false
-                            }
-                        )
-                        PaymentType(
-                            icon = R.drawable.revolut,
-                            name = "Revolut",
-                            balance = "1,000",
-                            isSelected = false,
-                            onClick = { 
-                                showPaymentMethodSheet = false
-                            }
-                        )
+                        paymentMethods.forEachIndexed { index, payment ->
+                            PaymentType(
+                                icon = payment.icon,
+                                name = payment.name,
+                                balance = payment.balance,
+                                isSelected = index == selectedPaymentMethod,
+                                onClick = { 
+                                    selectedPaymentMethod = index
+                                    showPaymentMethodSheet = false
+                                }
+                            )
+                        }
                     }
                 }
             }
