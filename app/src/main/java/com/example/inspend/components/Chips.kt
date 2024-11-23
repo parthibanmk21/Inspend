@@ -37,7 +37,7 @@ fun Chip(
 
     Row(
         modifier = modifier
-            .width(84.dp)
+            .width(80.dp)
             .height(28.dp)
             .background(
                 color = backgroundColor,
@@ -63,7 +63,7 @@ fun Chip(
 fun ChipsPreview() {
     Column(
         modifier = Modifier
-            .wrapContentSize()
+            .wrapContentWidth()
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally

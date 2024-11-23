@@ -10,10 +10,16 @@ import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +33,8 @@ import com.example.inspend.ui.theme.Brand100
 import com.example.inspend.ui.theme.Grey600
 import com.example.inspend.ui.theme.Grey700
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 enum class AppBarType {
     DEFAULT, HOME
@@ -103,46 +111,174 @@ private fun HomeAppBar(
     modifier: Modifier = Modifier,
     navController: NavController? = null
 ) {
+    var userName by remember { mutableStateOf("") }
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+
+    // Fetch user name immediately
+    SideEffect {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    userName = document.getString("name") ?: ""
+                }
+        }
+    }
+
     Row(
-            modifier = modifier
+        modifier = modifier
+            .fillMaxWidth()
+            .height(89.dp)
+            .background(Color.White)
+            .drawBehind {
+                val borderWidth = 1.5.dp.toPx()
+                val y = size.height - borderWidth / 2
+                drawLine(
+                    color = Color(0xFFE0E2EB),
+                    start = Offset(0f, y),
+                    end = Offset(size.width, y),
+                    strokeWidth = borderWidth
+                )
+            }
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFFECEEF2),
+                        shape = CircleShape
+                    )
+                    .clickable(onClick = onProfileClick),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.user),
+                    contentDescription = "Profile",
+                    tint = Grey600,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = userName,  // Use fetched user name
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF3A4252),
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.1.sp
+                )
+                Text(
+                    text = subtitle,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF8695AA),
+                    lineHeight = 14.sp,
+                    letterSpacing = 0.5.sp
+                )
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(0.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFFFFFFFF),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.notification),
+                    contentDescription = "Notifications",
+                    tint = Grey600,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFFFFFFFF),
+                        shape = CircleShape
+                    )
+                    .clickable {
+                        // Navigate to welcome screen on logout
+                        navController?.navigate("welcome") {
+                            popUpTo(0) // Clear the entire back stack
+                        }
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.logout),
+                    contentDescription = "Logout",
+                    tint = Grey600,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppBarPreview() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Default AppBar
+        DefaultAppBar(
+            title = "Default Title",
+            onBackClick = {}
+        )
+
+        // Home AppBar Preview - Using the base implementation without Firebase
+        Row(
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(89.dp)
                 .background(Color.White)
                 .drawBehind {
-                    val borderWidth = 1.5.dp.toPx() // Thickness of the bottom border
-                    val y = size.height - borderWidth / 2 // Position at the bottom
+                    val borderWidth = 1.5.dp.toPx()
+                    val y = size.height - borderWidth / 2
                     drawLine(
-                        color = Color(0xFFE0E2EB), // Border color
-                        start = androidx.compose.ui.geometry.Offset(
-                            0f,
-                            y
-                        ), // Start from leftmost edge
-                        end = androidx.compose.ui.geometry.Offset(
-                            size.width,
-                            y
-                        ), // End at rightmost edge
+                        color = Color(0xFFE0E2EB),
+                        start = Offset(0f, y),
+                        end = Offset(size.width, y),
                         strokeWidth = borderWidth
                     )
                 }
-                .padding(horizontal = 16.dp), // Padding for the content inside the Row
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row (
-                modifier = Modifier
-                ,
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                // Profile Button
+            ) {
                 Box(
                     modifier = Modifier
                         .size(48.dp)
                         .background(
                             color = Color(0xFFECEEF2),
                             shape = CircleShape
-                        )
-                        .clickable(onClick = onProfileClick),
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -153,20 +289,19 @@ private fun HomeAppBar(
                     )
                 }
 
-                // User Info
                 Column(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = title,  // User name
+                        text = "John Doe",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,  // Made bolder for name
+                        fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF3A4252),
                         lineHeight = 20.sp,
                         letterSpacing = 0.1.sp
                     )
                     Text(
-                        text = subtitle,  // Welcome back
+                        text = "Welcome back",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF8695AA),
@@ -176,7 +311,7 @@ private fun HomeAppBar(
                 }
             }
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -202,13 +337,7 @@ private fun HomeAppBar(
                         .background(
                             color = Color(0xFFFFFFFF),
                             shape = CircleShape
-                        )
-                        .clickable {
-                            // Navigate to welcome screen on logout
-                            navController?.navigate("welcome") {
-                                popUpTo(0) // Clear the entire back stack
-                            }
-                        },
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -220,30 +349,6 @@ private fun HomeAppBar(
                 }
             }
         }
-
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AppBarPreview() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Default AppBar
-        AppBar(
-            type = AppBarType.DEFAULT,
-            title = "Default Title",
-            onBackClick = {}
-        )
-
-        // Home AppBar
-        AppBar(
-            type = AppBarType.HOME,
-            title = "Name",
-            subtitle = "Welcome back",
-            onProfileClick = {}
-        )
     }
 }
 
