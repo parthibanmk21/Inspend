@@ -29,6 +29,8 @@ import android.app.DatePickerDialog
 import androidx.compose.ui.platform.LocalContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import androidx.compose.ui.platform.LocalConfiguration
+import android.content.res.Configuration
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -69,8 +71,18 @@ private fun AddTransactionContent(
     var selectedDate by remember { mutableStateOf(currentDateTime) }
     var selectedTime by remember { mutableStateOf(currentDateTime) }
     
-    // Date formatter
-    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd MMM yyyy") }
+    // Get screen width
+    val configuration = LocalConfiguration.current
+    val isSmallScreen = configuration.screenWidthDp <= 360
+    
+    // Date formatter based on screen size
+    val dateFormatter = remember(isSmallScreen) { 
+        if (isSmallScreen) {
+            DateTimeFormatter.ofPattern("dd MMM yy")  // Small screen: "23 Nov 24"
+        } else {
+            DateTimeFormatter.ofPattern("dd MMM yyyy")  // Large screen: "23 Nov 2024"
+        }
+    }
     val timeFormatter = remember { DateTimeFormatter.ofPattern("hh:mm a") }
     
     // Date Picker Dialog
