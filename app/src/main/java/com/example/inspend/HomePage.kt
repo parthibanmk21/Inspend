@@ -159,6 +159,12 @@ private fun HomePageContent(
     onAddTransaction: () -> Unit = {},
     navController: NavController? = null
 ) {
+    // Calculate total balance
+    val totalBalance = transactions.sumOf { transaction ->
+        val amount = transaction.amount.replace(",", "").toDoubleOrNull() ?: 0.0
+        if (transaction.isCredit) amount else -amount
+    }.toString()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -246,7 +252,7 @@ private fun HomePageContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             BalanceCard(
-                balance = transactions.firstOrNull()?.amount ?: "0.00",
+                balance = String.format("%.2f", totalBalance.toDoubleOrNull() ?: 0.0),  // Format to 2 decimal places
                 onVisibilityToggle = { }
             )
 

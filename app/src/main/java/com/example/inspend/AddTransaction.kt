@@ -278,6 +278,19 @@ private fun AddTransactionContent(
                     )
                 }
 
+                //Transaction Name
+                InputField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Transaction Name",
+                    placeholder = "eg. Morning dinner",
+                    value = transactionName,
+                    onValueChange = { transactionName = it },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
                 // Payment Method Dropdown
                 Column(
                     modifier = Modifier,
@@ -395,19 +408,6 @@ private fun AddTransactionContent(
                         )
                     }
                 }
-
-                //Transaction Name
-                InputField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = "Transaction Name",
-                    placeholder = "eg. Morning dinner",
-                    value = transactionName,
-                    onValueChange = { transactionName = it },
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Next
-                    )
-                )
 
                 // Date and Time Row
                 Row(
