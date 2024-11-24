@@ -25,7 +25,11 @@ data class TransactionData(
 
 @Composable
 fun TransactionListCard(
-    transaction: TransactionData,
+    title: String,
+    time: String,
+    amount: String,
+    isIncome: Boolean,
+    bankType: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -49,7 +53,7 @@ fun TransactionListCard(
             verticalAlignment = Alignment.CenterVertically
         ){
             // Category Icon
-            CategoryIcon(type = transaction.type)
+            CategoryIcon(type = CategoryType.INCOME)
 
             // Right Content
             Row(
@@ -67,14 +71,14 @@ fun TransactionListCard(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
-                        text = transaction.name,
+                        text = title,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1F274B),
                         lineHeight = 16.sp
                     )
                     Text(
-                        text = transaction.dateTime,
+                        text = time,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = Grey300,
@@ -99,17 +103,17 @@ fun TransactionListCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (transaction.isCredit) "+$" else "-$",
+                    text = if (isIncome) "+$" else "-$",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (transaction.isCredit) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
+                    color = if (isIncome) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
                     lineHeight = 16.sp
                 )
                 Text(
-                    text = transaction.amount,
+                    text = amount,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (transaction.isCredit) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
+                    color = if (isIncome) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
                     lineHeight = 16.sp
                 )
             }
@@ -132,26 +136,20 @@ fun TransactionListCardPreview() {
     ) {
         // Income Transaction
         TransactionListCard(
-            transaction = TransactionData(
-                type = CategoryType.INCOME,
-                name = "Salary",
-                dateTime = "Today, 10:00 AM",
-                amount = "5,000",
-                isCredit = true,
-                bankType = BankType.TRUST
-            )
+            title = "Salary",
+            time = "Today, 10:00 AM",
+            amount = "5,000",
+            isIncome = true,
+            bankType = "Trust"
         )
 
         // Expense Transaction
         TransactionListCard(
-            transaction = TransactionData(
-                type = CategoryType.EXPENSE,
-                name = "Groceries",
-                dateTime = "Yesterday, 2:30 PM",
-                amount = "150",
-                isCredit = false,
-                bankType = BankType.REVOLUT
-            )
+            title = "Groceries",
+            time = "Yesterday, 2:30 PM",
+            amount = "150",
+            isIncome = false,
+            bankType = "Revolut"
         )
     }
 } 

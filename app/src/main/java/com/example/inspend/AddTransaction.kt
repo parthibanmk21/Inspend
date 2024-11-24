@@ -30,10 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import androidx.compose.ui.platform.LocalConfiguration
-import android.content.res.Configuration
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.text.BasicTextField
@@ -43,6 +40,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.time.ZoneId
+import com.google.firebase.Timestamp
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -193,7 +194,7 @@ private fun AddTransactionContent(
                         text = "Enter Amount",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF526077),
+                        color = Color(0xFFB1BBC8),
                         lineHeight = 20.sp,
                         letterSpacing = 0.1.sp
                     )
@@ -453,7 +454,7 @@ private fun AddTransactionContent(
                             Icon(
                                 painter = painterResource(id = R.drawable.calender),
                                 contentDescription = "Calendar",
-                                tint = Color(0xFFD5D9E2),
+                                tint = Color(0xFF526077),
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -499,7 +500,7 @@ private fun AddTransactionContent(
                             Icon(
                                 painter = painterResource(id = R.drawable.clock),
                                 contentDescription = "Clock",
-                                tint = Color(0xFFD5D9E2),
+                                tint = Color(0xFF526077),
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -519,7 +520,42 @@ private fun AddTransactionContent(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Add Transaction",
-                    onClick = { }
+                    onClick = {
+                        val db = FirebaseFirestore.getInstance()
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+                        
+                        // Convert selected date and time to timestamp
+                        val dateTime = selectedDate
+                            .withHour(selectedTime.hour)
+                            .withMinute(selectedTime.minute)
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+
+                        // Create transaction data
+                        val transactionData = hashMapOf(
+                            "type" to "Other Transaction",
+                            "category" to "Food",
+                            "amount" to amount,
+                            "paymentMethod" to paymentMethods[selectedPaymentMethod].name.uppercase(),
+                            "createdAt" to Timestamp.now(),
+                            "isCredit" to !isExpense,
+                            "name" to transactionName,
+                            "transactionType" to if (isExpense) "EXPENSE" else "INCOME"
+                        )
+
+                        // Save to Firebase
+                        db.collection("users")
+                            .document(userId)
+                            .collection("transactions")
+                            .add(transactionData)
+                            .addOnSuccessListener {
+                                onBackClick()
+                            }
+                            .addOnFailureListener { e ->
+                                println("Error saving transaction: ${e.message}")
+                            }
+                    }
                 )
             }
         }

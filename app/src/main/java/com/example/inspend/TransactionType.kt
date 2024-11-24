@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import com.google.firebase.Timestamp
 
 @Composable
 fun TransactionTypeScreen(
@@ -122,13 +123,13 @@ fun TransactionTypeScreen(
                                 if (userId != null) {
                                     // Create transaction data
                                     val transactionData = hashMapOf(
-                                        "type" to "INCOME",
-                                        "name" to "Opening Balance",
+                                        "type" to "Opening Balance",
                                         "amount" to amount,
+                                        "paymentMethod" to "WALLET",
+                                        "createdAt" to Timestamp.now(),
                                         "isCredit" to true,
-                                        "bankType" to "WALLET",
-                                        "dateTime" to System.currentTimeMillis(),
-                                        "createdAt" to System.currentTimeMillis()
+                                        "name" to "Opening Balance",
+                                        "transactionType" to "INCOME"
                                     )
 
                                     // Add transaction to user's transactions collection

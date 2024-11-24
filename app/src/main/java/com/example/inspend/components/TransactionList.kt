@@ -8,26 +8,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.inspend.TransactionData
 import com.example.inspend.ui.theme.*
 
 @Composable
 fun TransactionList(
     date: String,
-    transactions: List<TransactionData>,
-    modifier: Modifier = Modifier
+    transactions: List<TransactionData>
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 12.dp)
-            .background(Color.White)
-            .wrapContentHeight(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = Color(0xFFE0E2EB),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Title
         Text(
@@ -41,9 +47,8 @@ fun TransactionList(
         // Transaction List Column
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Date
             Text(
@@ -54,20 +59,22 @@ fun TransactionList(
                 lineHeight = 14.sp
             )
 
-            // Transaction Card
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ){
+            // Transaction Cards
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 transactions.forEach { transaction ->
                     TransactionListCard(
-                        transaction = transaction
+                        title = transaction.name,
+                        time = transaction.dateTime,
+                        amount = transaction.amount,
+                        isIncome = transaction.isCredit,
+                        bankType = transaction.paymentMethod,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
-
         }
     }
 }
@@ -77,20 +84,22 @@ fun TransactionList(
 fun TransactionListPreview() {
     val sampleTransactions = listOf(
         TransactionData(
-            type = CategoryType.INCOME,
+            type = "Other Transaction",
             name = "Salary",
             dateTime = "10:00 AM",
             amount = "5,000",
+            paymentMethod = "TRUST",
             isCredit = true,
-            bankType = BankType.TRUST
+            transactionType = "INCOME"
         ),
         TransactionData(
-            type = CategoryType.EXPENSE,
+            type = "Other Transaction",
             name = "Groceries",
             dateTime = "2:30 PM",
             amount = "150",
+            paymentMethod = "REVOLUT",
             isCredit = false,
-            bankType = BankType.REVOLUT
+            transactionType = "EXPENSE"
         )
     )
 

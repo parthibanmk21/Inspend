@@ -29,9 +29,22 @@ import com.example.inspend.ui.theme.InspendTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
+
+// Add this data class at the top level
+data class TransactionData(
+    val type: String = "",            // "Opening Balance" or "Other Transaction"
+    val category: String? = null,     // Only for "Other Transaction"
+    val name: String = "",           
+    val dateTime: String = "",        
+    val amount: String = "",
+    val paymentMethod: String = "",   
+    val isCredit: Boolean = true,
+    val transactionType: String = ""  // "INCOME" or "EXPENSE"
+)
 
 @Composable
 fun HomePage(
@@ -43,6 +56,7 @@ fun HomePage(
     
     var userName by remember { mutableStateOf("") }
     var transactions by remember { mutableStateOf<List<TransactionData>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
     
     // Fetch data immediately when component is created
     SideEffect {
@@ -59,7 +73,7 @@ fun HomePage(
             db.collection("users")
                 .document(userId)
                 .collection("transactions")
-                .orderBy("dateTime", Query.Direction.DESCENDING)
+                .orderBy("createdAt", Query.Direction.DESCENDING)  // Latest first
                 .addSnapshotListener { snapshot, e ->
                     if (e != null) {
                         return@addSnapshotListener
@@ -69,17 +83,21 @@ fun HomePage(
                         transactions = snapshot.documents.mapNotNull { doc ->
                             try {
                                 TransactionData(
-                                    type = CategoryType.valueOf(doc.getString("type") ?: "INCOME"),
+                                    type = doc.getString("type") ?: "",
+                                    category = doc.getString("category"),
                                     name = doc.getString("name") ?: "",
-                                    dateTime = formatDateTime(doc.getLong("dateTime") ?: 0),
+                                    dateTime = formatDateTime((doc.getTimestamp("createdAt")?.seconds ?: 0) * 1000),
                                     amount = doc.getString("amount") ?: "0",
+                                    paymentMethod = doc.getString("paymentMethod") ?: "",
                                     isCredit = doc.getBoolean("isCredit") ?: true,
-                                    bankType = BankType.valueOf(doc.getString("bankType") ?: "WALLET")
+                                    transactionType = doc.getString("transactionType") ?: ""
                                 )
                             } catch (e: Exception) {
+                                println("Error parsing transaction: ${e.message}")
                                 null
                             }
                         }
+                        isLoading = false
                     }
                 }
         }
@@ -101,42 +119,39 @@ private fun formatDateTime(timestamp: Long): String {
     return format.format(date)
 }
 
-@Preview(
-    name = "Home Page",
-    showBackground = true,
-    device = "id:pixel_5"
-)
+@Preview
 @Composable
 fun HomePagePreview() {
     InspendTheme {
-        // Using HomePageContent with default values and no NavController
         HomePageContent(
             userName = "John Doe",
             transactions = listOf(
                 TransactionData(
-                    type = CategoryType.INCOME,
+                    type = "Other Transaction",
                     name = "Salary",
                     dateTime = "10:00 AM",
                     amount = "5,000",
+                    paymentMethod = "TRUST",
                     isCredit = true,
-                    bankType = BankType.TRUST
+                    transactionType = "INCOME"
                 ),
                 TransactionData(
-                    type = CategoryType.EXPENSE,
+                    type = "Other Transaction",
                     name = "Groceries",
                     dateTime = "2:30 PM",
                     amount = "150",
+                    paymentMethod = "REVOLUT",
                     isCredit = false,
-                    bankType = BankType.REVOLUT
+                    transactionType = "EXPENSE"
                 )
             ),
             onAddTransaction = { },
-            navController = null  // Explicitly passing null for preview
+            navController = null
         )
     }
 }
 
-// Update HomePageContent to handle null NavController
+// Update HomePageContent to use TransactionList directly
 @Composable
 private fun HomePageContent(
     userName: String = "",
@@ -221,7 +236,7 @@ private fun HomePageContent(
             )
         }
 
-        // Rest of the content remains the same
+        // Main content
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -236,23 +251,10 @@ private fun HomePageContent(
             )
 
             if (transactions.isNotEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .border(
-                            width = 1.5.dp,
-                            color = Color(0xFFE0E2EB),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                ) {
-                    TransactionList(
-                        date = "Today",
-                        transactions = transactions
-                    )
-                }
+                TransactionList(
+                    date = "Today",
+                    transactions = transactions
+                )
             }
 
             Button(
