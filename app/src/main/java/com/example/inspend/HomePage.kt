@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,10 +39,10 @@ import java.util.*
 data class TransactionData(
     val type: String = "",            // "Opening Balance" or "Other Transaction"
     val category: String? = null,     // Only for "Other Transaction"
-    val name: String = "",           
-    val dateTime: String = "",        
+    val name: String = "",
+    val dateTime: String = "",
     val amount: String = "",
-    val paymentMethod: String = "",   
+    val paymentMethod: String = "",
     val isCredit: Boolean = true,
     val transactionType: String = ""  // "INCOME" or "EXPENSE"
 )
@@ -53,11 +54,11 @@ fun HomePage(
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
-    
+
     var userName by remember { mutableStateOf("") }
     var transactions by remember { mutableStateOf<List<TransactionData>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-    
+
     // Fetch data immediately when component is created
     SideEffect {
         val userId = auth.currentUser?.uid
@@ -165,94 +166,103 @@ private fun HomePageContent(
         if (transaction.isCredit) amount else -amount
     }.toString()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 24.dp)
-            .background(BGdefault)
-    ) {
-        // Simple AppBar for preview when NavController is null
-        if (navController == null) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(89.dp)
-                    .background(Color.White)
-                    .drawBehind {
-                        val borderWidth = 1.5.dp.toPx()
-                        val y = size.height - borderWidth / 2
-                        drawLine(
-                            color = Color(0xFFE0E2EB),
-                            start = Offset(0f, y),
-                            end = Offset(size.width, y),
-                            strokeWidth = borderWidth
-                        )
-                    }
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    Scaffold(
+        topBar = {
+            // Simple AppBar for preview when NavController is null
+            if (navController == null) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(89.dp)
+                        .background(Color.White)
+                        .drawBehind {
+                            val borderWidth = 1.5.dp.toPx()
+                            val y = size.height - borderWidth / 2
+                            drawLine(
+                                color = Color(0xFFE0E2EB),
+                                start = Offset(0f, y),
+                                end = Offset(size.width, y),
+                                strokeWidth = borderWidth
+                            )
+                        }
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                color = Color(0xFFECEEF2),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.user),
-                            contentDescription = "Profile",
-                            tint = Grey600,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    color = Color(0xFFECEEF2),
+                                    shape = CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.user),
+                                contentDescription = "Profile",
+                                tint = Grey600,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
 
-                    Column(
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = userName,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF3A4252)
-                        )
-                        Text(
-                            text = "Welcome back",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF8695AA)
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = userName,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF3A4252)
+                            )
+                            Text(
+                                text = "Welcome back",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF8695AA)
+                            )
+                        }
                     }
                 }
+            } else {
+                // Real AppBar with NavController
+                AppBar(
+                    type = AppBarType.HOME,
+                    title = userName,
+                    subtitle = "Welcome back",
+                    onProfileClick = { },
+                    navController = navController
+                )
             }
-        } else {
-            // Real AppBar with NavController
-            AppBar(
-                type = AppBarType.HOME,
-                title = userName,
-                subtitle = "Welcome back",
-                onProfileClick = { },
-                navController = navController
+        },
+        bottomBar = {
+            NavigationBar(
+                currentRoute = "home",
+                onNavigate = { route ->
+                    when (route) {
+                        "add" -> navController?.navigate("addtransaction")
+                        else -> navController?.navigate(route)
+                    }
+                }
             )
-        }
-
-        // Main content
+        },
+        containerColor = BGdefault
+    ) { paddingValues ->
+        // Main content with proper padding
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)  // Add scaffold padding
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             BalanceCard(
-                balance = String.format("%.2f", totalBalance.toDoubleOrNull() ?: 0.0),  // Format to 2 decimal places
+                balance = String.format("%.2f", totalBalance.toDoubleOrNull() ?: 0.0),
                 onVisibilityToggle = { }
             )
 
@@ -262,12 +272,6 @@ private fun HomePageContent(
                     transactions = transactions
                 )
             }
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Add Transaction",
-                onClick = onAddTransaction
-            )
         }
     }
 } 

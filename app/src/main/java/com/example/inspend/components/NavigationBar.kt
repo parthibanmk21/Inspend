@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.inspend.R
 
 @Composable
-fun BottomBar(
+fun NavigationBar(
     currentRoute: String,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -26,14 +28,14 @@ fun BottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(74.dp)
+            .height(78.dp)
             .background(Color.White)
             .padding(horizontal = 24.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Home Item
-        BottomBarItem(
+        NavigationBarItem(
             icon = R.drawable.home,
             label = "Home",
             isSelected = currentRoute == "home",
@@ -41,7 +43,7 @@ fun BottomBar(
         )
 
         // Add Item
-        BottomBarItem(
+        NavigationBarItem(
             icon = R.drawable.add,
             label = "Add",
             isSelected = currentRoute == "add",
@@ -49,7 +51,7 @@ fun BottomBar(
         )
 
         // Checklist Item
-        BottomBarItem(
+        NavigationBarItem(
             icon = R.drawable.checklist,
             label = "Checklist",
             isSelected = currentRoute == "checklist",
@@ -57,7 +59,7 @@ fun BottomBar(
         )
 
         // Settings Item
-        BottomBarItem(
+        NavigationBarItem(
             icon = R.drawable.setting,
             label = "Setting",
             isSelected = currentRoute == "settings",
@@ -67,7 +69,7 @@ fun BottomBar(
 }
 
 @Composable
-private fun BottomBarItem(
+private fun NavigationBarItem(
     icon: Int,
     label: String,
     isSelected: Boolean,
@@ -117,14 +119,14 @@ private fun BottomBarItem(
     widthDp = 360
 )
 @Composable
-fun BottomBarPreview() {
+fun NavigationBarPreview() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
     ) {
         // Preview with different selected states
-        BottomBar(
+        NavigationBar(
             currentRoute = "home",  // Show home as selected
             onNavigate = { },
             modifier = Modifier
@@ -132,7 +134,7 @@ fun BottomBarPreview() {
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        BottomBar(
+        NavigationBar(
             currentRoute = "add",  // Show add as selected
             onNavigate = { },
             modifier = Modifier
@@ -140,7 +142,7 @@ fun BottomBarPreview() {
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        BottomBar(
+        NavigationBar(
             currentRoute = "checklist",  // Show checklist as selected
             onNavigate = { },
             modifier = Modifier
@@ -148,7 +150,7 @@ fun BottomBarPreview() {
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        BottomBar(
+        NavigationBar(
             currentRoute = "settings",  // Show settings as selected
             onNavigate = { },
             modifier = Modifier
