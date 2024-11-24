@@ -28,7 +28,7 @@ fun CategoryIcon(
         modifier = modifier
             .size(40.dp)
             .background(
-                color = Color(0xFFECEEF2),
+                color = Color(0xFFF6F7F9),
                 shape = CircleShape
             )
             .border(
@@ -42,8 +42,8 @@ fun CategoryIcon(
         Icon(
             painter = painterResource(
                 id = when (type) {
-                    CategoryType.INCOME -> R.drawable.uparrow
-                    CategoryType.EXPENSE -> R.drawable.downarrow
+                    CategoryType.INCOME -> R.drawable.downarrow
+                    CategoryType.EXPENSE -> R.drawable.uparrow
                 }
             ),
             contentDescription = if (type == CategoryType.INCOME) "Income" else "Expense",

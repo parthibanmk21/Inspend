@@ -3,16 +3,19 @@ package com.example.inspend.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.ui.theme.*
+import com.example.inspend.R
 
 data class TransactionData(
     val type: CategoryType,
@@ -52,8 +55,11 @@ fun TransactionListCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            // Category Icon
-            CategoryIcon(type = CategoryType.INCOME)
+            // Use CategoryIcon instead of direct Icon
+            CategoryIcon(
+                type = if (isIncome) CategoryType.INCOME else CategoryType.EXPENSE,
+                modifier = Modifier.size(40.dp)
+            )
 
             // Right Content
             Row(
@@ -72,7 +78,7 @@ fun TransactionListCard(
                 ) {
                     Text(
                         text = title,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1F274B),
                         lineHeight = 16.sp
@@ -99,19 +105,19 @@ fun TransactionListCard(
             Row(
                 modifier = Modifier
                     .wrapContentHeight(),
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = if (isIncome) "+$" else "-$",
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isIncome) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
                     lineHeight = 16.sp
                 )
                 Text(
                     text = amount,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isIncome) Color(0xFF1B6E1E) else Color(0xFFB91C1C),
                     lineHeight = 16.sp

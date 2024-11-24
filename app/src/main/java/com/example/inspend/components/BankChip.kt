@@ -1,7 +1,9 @@
 package com.example.inspend.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -40,6 +42,10 @@ fun BankChip(
                 color = Color(0xFFEFF1F5),
                 shape = RoundedCornerShape(44.dp)
             )
+            .border(
+                width = 1.dp,
+                color = Color(0xFFE4E6EE),
+                shape = CircleShape)
             .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
