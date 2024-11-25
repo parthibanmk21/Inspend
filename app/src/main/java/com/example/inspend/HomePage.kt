@@ -1,12 +1,12 @@
 package com.example.inspend
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,8 +30,6 @@ import com.example.inspend.ui.theme.InspendTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.Timestamp
-import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -167,6 +165,8 @@ private fun HomePageContent(
     }.toString()
 
     Scaffold(
+        modifier = Modifier
+            .padding(vertical = 24.dp),
         topBar = {
             // Simple AppBar for preview when NavController is null
             if (navController == null) {
@@ -214,16 +214,58 @@ private fun HomePageContent(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = userName,
+                                text = "John Doe",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF3A4252)
+                                color = Color(0xFF3A4252),
+                                lineHeight = 20.sp,
+                                letterSpacing = 0.1.sp
                             )
                             Text(
                                 text = "Welcome back",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color(0xFF8695AA)
+                                color = Color(0xFF8695AA),
+                                lineHeight = 14.sp,
+                                letterSpacing = 0.5.sp
+                            )
+                        }
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(0.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    color = Color(0xFFFFFFFF),
+                                    shape = CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.notification),
+                                contentDescription = "Notifications",
+                                tint = Grey600,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    color = Color(0xFFFFFFFF),
+                                    shape = CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.logout),
+                                contentDescription = "Logout",
+                                tint = Grey600,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }
@@ -250,6 +292,29 @@ private fun HomePageContent(
                 }
             )
         },
+        floatingActionButton = {
+            // Add FAB
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(
+                        color = Color(0xFF145CB5),  // Primary Blue color
+                        shape = CircleShape
+                    )
+                    .clickable {
+                        navController?.navigate("addtransaction")
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.add),
+                    contentDescription = "Add Transaction",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,  // Position FAB at bottom end
         containerColor = BGdefault
     ) { paddingValues ->
         // Main content with proper padding

@@ -30,6 +30,16 @@ fun NavigationBar(
             .fillMaxWidth()
             .height(78.dp)
             .background(Color.White)
+            .drawBehind {
+                val borderWidth = 1.5.dp.toPx()
+                val y = borderWidth / 2
+                drawLine(
+                    color = Color(0xFFE0E2EB),
+                    start = Offset(0f, y),
+                    end = Offset(size.width, y),
+                    strokeWidth = borderWidth
+                )
+            }
             .padding(horizontal = 24.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -42,12 +52,12 @@ fun NavigationBar(
             onClick = { onNavigate("home") }
         )
 
-        // Add Item
+        // Add Item - Changed route to "addtransaction"
         NavigationBarItem(
             icon = R.drawable.add,
             label = "Add",
-            isSelected = currentRoute == "add",
-            onClick = { onNavigate("add") }
+            isSelected = currentRoute == "addtransaction",  // Changed to match new route
+            onClick = { onNavigate("addtransaction") }  // Changed to navigate to addtransaction
         )
 
         // Checklist Item
@@ -86,7 +96,7 @@ private fun NavigationBarItem(
         Box(
             modifier = Modifier
                 .width(64.dp)
-                .height(if (isSelected) 32.dp else 28.dp)
+                .height(if (isSelected) 32.dp else 32.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(if (isSelected) Color(0xFFE3ECFB) else Color.White)
                 .padding(horizontal = if (isSelected) 16.dp else 8.dp, vertical = 4.dp),
