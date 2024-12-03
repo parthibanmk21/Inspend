@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.inspend.components.AppBar
 import com.example.inspend.components.Button
 import com.example.inspend.components.PaymentCard
@@ -44,6 +43,12 @@ fun TransactionTypeScreen(
     var isTrustOpened by remember { mutableStateOf(false) }
     var isDbsOpened by remember { mutableStateOf(false) }
     var isRevolutOpened by remember { mutableStateOf(false) }
+
+    // Add amount states for each payment method
+    var walletAmount by remember { mutableStateOf("") }
+    var trustAmount by remember { mutableStateOf("") }
+    var dbsAmount by remember { mutableStateOf("") }
+    var revolutAmount by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -96,9 +101,9 @@ fun TransactionTypeScreen(
                 ) {
                     PaymentCard(
                         title = "Wallet",
-                        amount = amount,
+                        amount = walletAmount,
                         onAmountChange = {
-                            amount = it
+                            walletAmount = it
                             amountError = false
                         },
                         isError = amountError
@@ -115,36 +120,125 @@ fun TransactionTypeScreen(
                             modifier = Modifier.padding(start = 4.dp)
                         )
                     }
+
+                    // Add Other Methods section
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Other methods",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Grey400
+                        )
+
+                        // Trust Payment Card
+                        PaymentCardWithToggle(
+                            title = "Trust",
+                            icon = R.drawable.trust,
+                            amount = trustAmount,
+                            onAmountChange = { trustAmount = it },
+                            isOpened = isTrustOpened,
+                            onToggleChange = { isTrustOpened = it }
+                        )
+
+                        // DBS Payment Card
+                        PaymentCardWithToggle(
+                            title = "DBS",
+                            icon = R.drawable.dbs,
+                            amount = dbsAmount,
+                            onAmountChange = { dbsAmount = it },
+                            isOpened = isDbsOpened,
+                            onToggleChange = { isDbsOpened = it }
+                        )
+
+                        // Revolut Payment Card
+                        PaymentCardWithToggle(
+                            title = "Revolut",
+                            icon = R.drawable.revolut,
+                            amount = revolutAmount,
+                            onAmountChange = { revolutAmount = it },
+                            isOpened = isRevolutOpened,
+                            onToggleChange = { isRevolutOpened = it }
+                        )
+                    }
                 }
             }
 
             Button(
                 text = "Continue",
                 onClick = {
-                    if (amount.isBlank()) {
+                    if (walletAmount.isBlank()) {
                         amountError = true
                     } else {
                         coroutineScope.launch {
                             try {
                                 val userId = auth.currentUser?.uid
                                 if (userId != null) {
-                                    // Create transaction data
-                                    val transactionData = hashMapOf(
-                                        "type" to "Opening Balance",
-                                        "amount" to amount,
-                                        "paymentMethod" to "WALLET",
-                                        "createdAt" to Timestamp.now(),
-                                        "isCredit" to true,
-                                        "name" to "Opening Balance",
-                                        "transactionType" to "INCOME"
+                                    // List of transactions to add
+                                    val transactions = listOfNotNull(
+                                        // Wallet transaction (always added)
+                                        hashMapOf(
+                                            "type" to "Opening Balance",
+                                            "amount" to walletAmount,
+                                            "paymentMethod" to "WALLET",
+                                            "createdAt" to Timestamp.now(),
+                                            "isCredit" to true,
+                                            "name" to "Opening Balance",
+                                            "transactionType" to "INCOME"
+                                        ),
+                                        
+                                        // Trust transaction (if opened and has amount)
+                                        if (isTrustOpened && trustAmount.isNotBlank()) {
+                                            hashMapOf(
+                                                "type" to "Opening Balance",
+                                                "amount" to trustAmount,
+                                                "paymentMethod" to "TRUST",
+                                                "createdAt" to Timestamp.now(),
+                                                "isCredit" to true,
+                                                "name" to "Opening Balance",
+                                                "transactionType" to "INCOME"
+                                            )
+                                        } else null,
+                                        
+                                        // DBS transaction (if opened and has amount)
+                                        if (isDbsOpened && dbsAmount.isNotBlank()) {
+                                            hashMapOf(
+                                                "type" to "Opening Balance",
+                                                "amount" to dbsAmount,
+                                                "paymentMethod" to "DBS",
+                                                "createdAt" to Timestamp.now(),
+                                                "isCredit" to true,
+                                                "name" to "Opening Balance",
+                                                "transactionType" to "INCOME"
+                                            )
+                                        } else null,
+                                        
+                                        // Revolut transaction (if opened and has amount)
+                                        if (isRevolutOpened && revolutAmount.isNotBlank()) {
+                                            hashMapOf(
+                                                "type" to "Opening Balance",
+                                                "amount" to revolutAmount,
+                                                "paymentMethod" to "REVOLUT",
+                                                "createdAt" to Timestamp.now(),
+                                                "isCredit" to true,
+                                                "name" to "Opening Balance",
+                                                "transactionType" to "INCOME"
+                                            )
+                                        } else null
                                     )
 
-                                    // Add transaction to user's transactions collection
-                                    db.collection("users")
-                                        .document(userId)
-                                        .collection("transactions")
-                                        .add(transactionData)
-                                        .await()
+                                    // Add all transactions
+                                    transactions.forEach { transactionData ->
+                                        db.collection("users")
+                                            .document(userId)
+                                            .collection("transactions")
+                                            .add(transactionData)
+                                            .await()
+                                    }
 
                                     // Navigate to home screen
                                     navController.navigate("home") {

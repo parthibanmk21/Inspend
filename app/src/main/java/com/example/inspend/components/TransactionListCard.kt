@@ -126,7 +126,13 @@ fun TransactionListCard(
 
             // Bank Chip
             BankChip(
-                type = BankType.WALLET
+                type = when (bankType.uppercase()) {
+                    "WALLET" -> BankType.WALLET
+                    "TRUST" -> BankType.TRUST
+                    "DBS" -> BankType.DBS
+                    "REVOLUT" -> BankType.REVOLUT
+                    else -> BankType.WALLET  // Default fallback
+                }
             )
         }
     }
