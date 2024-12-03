@@ -20,6 +20,7 @@ import com.example.inspend.ui.theme.Grey700
 import com.example.inspend.ui.theme.InspendTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.example.inspend.components.PaymentCardWithToggle
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
@@ -37,6 +38,12 @@ fun TransactionTypeScreen(
 
     var amount by remember { mutableStateOf("") }
     var amountError by remember { mutableStateOf(false) }
+    var isOpened by remember { mutableStateOf(false) }
+
+    // Individual toggle states for each payment method
+    var isTrustOpened by remember { mutableStateOf(false) }
+    var isDbsOpened by remember { mutableStateOf(false) }
+    var isRevolutOpened by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -90,13 +97,13 @@ fun TransactionTypeScreen(
                     PaymentCard(
                         title = "Wallet",
                         amount = amount,
-                        onAmountChange = { 
+                        onAmountChange = {
                             amount = it
                             amountError = false
                         },
                         isError = amountError
                     )
-                    
+
                     if (amountError) {
                         Text(
                             text = "Wallet amount can't be empty",
@@ -168,6 +175,11 @@ fun TransactionTypeScreenPreview() {
     InspendTheme {
         var amount by remember { mutableStateOf("") }
         var amountError by remember { mutableStateOf(false) }
+        
+        // Add individual toggle states for preview
+        var isTrustOpened by remember { mutableStateOf(false) }
+        var isDbsOpened by remember { mutableStateOf(false) }
+        var isRevolutOpened by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -214,7 +226,7 @@ fun TransactionTypeScreenPreview() {
                     Column (
                         modifier = Modifier
                             .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         PaymentCard(
                             title = "Wallet",
@@ -235,6 +247,49 @@ fun TransactionTypeScreenPreview() {
                                 letterSpacing = 0.1.sp,
                                 lineHeight = 16.sp,
                                 modifier = Modifier.padding(start = 4.dp)
+                            )
+                        }
+
+                        Column (
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ){
+                            Text(
+                                text = "Other methods",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Grey400
+                            )
+
+                            // Trust Payment Card
+                            PaymentCardWithToggle(
+                                title = "Trust",
+                                icon = R.drawable.trust,
+                                amount = amount,
+                                onAmountChange = { amount = it },
+                                isOpened = isTrustOpened,
+                                onToggleChange = { isTrustOpened = it }
+                            )
+
+                            // DBS Payment Card
+                            PaymentCardWithToggle(
+                                title = "DBS",
+                                icon = R.drawable.dbs,
+                                amount = amount,
+                                onAmountChange = { amount = it },
+                                isOpened = isDbsOpened,
+                                onToggleChange = { isDbsOpened = it }
+                            )
+
+                            // Revolut Payment Card
+                            PaymentCardWithToggle(
+                                title = "Revolut",
+                                icon = R.drawable.revolut,
+                                amount = amount,
+                                onAmountChange = { amount = it },
+                                isOpened = isRevolutOpened,
+                                onToggleChange = { isRevolutOpened = it }
                             )
                         }
                     }
