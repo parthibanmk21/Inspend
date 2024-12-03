@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.R
 import com.example.inspend.ui.theme.*
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.unit.max
 
 @Composable
 fun BalanceCard(
@@ -98,39 +102,30 @@ fun BalanceCard(
                     .clickable(onClick = onVisibilityToggle)
             )
         }
-        Row (
-            modifier = modifier
+        LazyRow(
+            modifier = Modifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            BankChipWithAmount(
-                type = BankType.WALLET,
-                amount = bankBalances["WALLET"] ?: "0.00"
+            contentPadding = PaddingValues(vertical = 0.dp)
+        ) {
+            // Create list of available bank chips
+            val bankChips = listOfNotNull(
+                Pair(BankType.WALLET, bankBalances["WALLET"] ?: "0.00"),
+                if (bankBalances.containsKey("TRUST")) 
+                    Pair(BankType.TRUST, bankBalances["TRUST"] ?: "0.00") else null,
+                if (bankBalances.containsKey("DBS")) 
+                    Pair(BankType.DBS, bankBalances["DBS"] ?: "0.00") else null,
+                if (bankBalances.containsKey("REVOLUT")) 
+                    Pair(BankType.REVOLUT, bankBalances["REVOLUT"] ?: "0.00") else null
             )
 
-            if (bankBalances.containsKey("TRUST")) {
+            items(bankChips) { (bankType, amount) ->
                 BankChipWithAmount(
-                    type = BankType.TRUST,
-                    amount = bankBalances["TRUST"] ?: "0.00"
-                )
-            }
-
-            if (bankBalances.containsKey("DBS")) {
-                BankChipWithAmount(
-                    type = BankType.DBS,
-                    amount = bankBalances["DBS"] ?: "0.00"
-                )
-            }
-
-            if (bankBalances.containsKey("REVOLUT")) {
-                BankChipWithAmount(
-                    type = BankType.REVOLUT,
-                    amount = bankBalances["REVOLUT"] ?: "0.00"
+                    type = bankType,
+                    amount = amount
                 )
             }
         }
-
     }
 }
 
