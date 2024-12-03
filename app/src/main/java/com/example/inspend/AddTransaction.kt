@@ -69,6 +69,10 @@ private fun AddTransactionContent(
     // Add state for transaction name
     var transactionName by remember { mutableStateOf("") }
     
+    // Add state variables for validation
+    var amountError by remember { mutableStateOf(false) }
+    var nameError by remember { mutableStateOf(false) }
+    
     // Define payment methods
     val paymentMethods = remember {
         listOf(
@@ -284,11 +288,12 @@ private fun AddTransactionContent(
                     label = "Transaction Name",
                     placeholder = "eg. Morning dinner",
                     value = transactionName,
-                    onValueChange = { transactionName = it },
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Next
-                    )
+                    onValueChange = { 
+                        transactionName = it
+                        nameError = false  // Clear error on change
+                    },
+                    isError = nameError,
+                    errorMessage = if (nameError) "Transaction name is required" else null
                 )
 
                 // Payment Method Dropdown
@@ -516,45 +521,60 @@ private fun AddTransactionContent(
 //                    onValueChange = { }
 //                )
 
-                // Save Button
+                // Add Transaction Button
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Add Transaction",
                     onClick = {
-                        val db = FirebaseFirestore.getInstance()
-                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+                        // Reset errors
+                        amountError = false
+                        nameError = false
                         
-                        // Convert selected date and time to timestamp
-                        val dateTime = selectedDate
-                            .withHour(selectedTime.hour)
-                            .withMinute(selectedTime.minute)
-                            .atZone(ZoneId.systemDefault())
-                            .toInstant()
-                            .toEpochMilli()
+                        // Validate inputs
+                        if (amount.isBlank()) {
+                            amountError = true
+                        }
+                        if (transactionName.isBlank()) {
+                            nameError = true
+                        }
+                        
+                        // Only proceed if no errors
+                        if (!amountError && !nameError) {
+                            val db = FirebaseFirestore.getInstance()
+                            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+                            
+                            // Convert selected date and time to timestamp
+                            val dateTime = selectedDate
+                                .withHour(selectedTime.hour)
+                                .withMinute(selectedTime.minute)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant()
+                                .toEpochMilli()
 
-                        // Create transaction data
-                        val transactionData = hashMapOf(
-                            "type" to "Other Transaction",
-                            "category" to "Food",
-                            "amount" to amount,
-                            "paymentMethod" to paymentMethods[selectedPaymentMethod].name.uppercase(),
-                            "createdAt" to Timestamp.now(),
-                            "isCredit" to !isExpense,
-                            "name" to transactionName,
-                            "transactionType" to if (isExpense) "EXPENSE" else "INCOME"
-                        )
+                            // Create transaction data
+                            val transactionData = hashMapOf(
+                                "type" to "Other Transaction",
+                                "category" to "Food",
+                                "amount" to amount,
+                                "paymentMethod" to paymentMethods[selectedPaymentMethod].name.uppercase(),
+                                "createdAt" to Timestamp.now(),
+                                "isCredit" to !isExpense,
+                                "name" to transactionName,
+                                "transactionType" to if (isExpense) "EXPENSE" else "INCOME"
+                            )
 
-                        // Save to Firebase
-                        db.collection("users")
-                            .document(userId)
-                            .collection("transactions")
-                            .add(transactionData)
-                            .addOnSuccessListener {
-                                onBackClick()
-                            }
-                            .addOnFailureListener { e ->
-                                println("Error saving transaction: ${e.message}")
-                            }
+                            // Save to Firebase
+                            db.collection("users")
+                                .document(userId)
+                                .collection("transactions")
+                                .add(transactionData)
+                                .addOnSuccessListener {
+                                    onBackClick()
+                                }
+                                .addOnFailureListener { e ->
+                                    println("Error saving transaction: ${e.message}")
+                                }
+                        }
                     }
                 )
             }

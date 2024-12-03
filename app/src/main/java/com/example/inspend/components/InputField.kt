@@ -28,12 +28,9 @@ fun InputField(
     value: String,
     onValueChange: (String) -> Unit,
     isError: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(
-        capitalization = KeyboardCapitalization.Sentences
-    )
+    errorMessage: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -46,48 +43,36 @@ fun InputField(
             lineHeight = 16.sp,
             letterSpacing = 0.1.sp
         )
+        
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
+                color = Color(0xFF526077),
                 letterSpacing = 0.5.sp,
-                lineHeight = 20.sp,
-                color = Color(0xFF526077)
+                lineHeight = 20.sp
             ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(46.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
-                .border(
-                    width = 1.dp,
-                    color = when {
-                        isError -> Color(0xFFFF3B3B)
-                        isFocused -> Color(0xFF526077)
-                        else -> Color(0xFFD5D9E2)
-                    },
-                    shape = RoundedCornerShape(4.dp)
-                )
-                .padding(horizontal = 12.dp)
-                .onFocusChanged { isFocused = it.isFocused },
             keyboardOptions = keyboardOptions,
             decorationBox = { innerTextField ->
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(46.dp)
+                        .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
+                        .border(
+                            width = 1.dp,
+                            color = if (isError) Color(0xFFB91C1C) else Color(0xFFD5D9E2),
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .padding(horizontal = 12.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = when {
-                                isError -> Color(0xFFB1BBC8)
-                                isFocused -> Color(0xFF8695AA)
-                                else -> Color(0xFFB1BBC8)
-                            },
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF8695AA),
                             letterSpacing = 0.5.sp,
                             lineHeight = 20.sp
                         )
@@ -96,6 +81,18 @@ fun InputField(
                 }
             }
         )
+
+        if (isError && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color(0xFFB91C1C),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 0.1.sp,
+                lineHeight = 16.sp,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
     }
 }
 

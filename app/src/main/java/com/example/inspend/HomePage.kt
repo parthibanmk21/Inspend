@@ -158,10 +158,17 @@ private fun HomePageContent(
     onAddTransaction: () -> Unit = {},
     navController: NavController? = null
 ) {
-    // Calculate total balance
-    val totalBalance = transactions.sumOf { transaction ->
-        val amount = transaction.amount.replace(",", "").toDoubleOrNull() ?: 0.0
-        if (transaction.isCredit) amount else -amount
+    // Calculate total balance and bank-wise balances
+    val bankBalances = transactions.groupBy { it.paymentMethod }
+        .mapValues { (_, transactions) ->
+            transactions.sumOf { transaction ->
+                val amount = transaction.amount.replace(",", "").toDoubleOrNull() ?: 0.0
+                if (transaction.isCredit) amount else -amount
+            }.toString()
+        }
+
+    val totalBalance = bankBalances.values.sumOf { 
+        it.toDoubleOrNull() ?: 0.0 
     }.toString()
 
     Scaffold(
@@ -328,6 +335,7 @@ private fun HomePageContent(
         ) {
             BalanceCard(
                 balance = String.format("%.2f", totalBalance.toDoubleOrNull() ?: 0.0),
+                bankBalances = bankBalances,  // Pass bank balances to BalanceCard
                 onVisibilityToggle = { }
             )
 
