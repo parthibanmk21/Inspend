@@ -25,7 +25,7 @@ fun BalanceCard(
     onVisibilityToggle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -39,56 +39,84 @@ fun BalanceCard(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
+//        horizontalArrangement = Arrangement.SpaceBetween,
+//        verticalAlignment = Alignment.Top
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Balance Column
-        Column(
+        Row (
             modifier = modifier
-                .wrapContentHeight(),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
-        ) {
-            Text(
-                text = "Total Balance",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Grey400,
-                lineHeight = 20.sp,
-                letterSpacing = 0.1.sp
-            )
-            
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ){
+            // Balance Column
+            Column(
+                modifier = modifier
+                    .wrapContentHeight(),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 Text(
-                    text = "$",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Grey600,
-                    lineHeight = 32.sp,
-                    letterSpacing = 0.sp
+                    text = "Total Balance",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Grey400,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.1.sp
                 )
-                Text(
-                    text = balance,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Grey600,
-                    lineHeight = 32.sp,
-                    letterSpacing = 0.sp
-                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Grey600,
+                        lineHeight = 32.sp,
+                        letterSpacing = 0.sp
+                    )
+                    Text(
+                        text = balance,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Grey600,
+                        lineHeight = 32.sp,
+                        letterSpacing = 0.sp
+                    )
+                }
             }
+
+            // Eye Icon
+            Icon(
+                painter = painterResource(id = R.drawable.eyeopen),
+                contentDescription = "Toggle Balance Visibility",
+                tint = Grey600,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(onClick = onVisibilityToggle)
+            )
+        }
+        Row (
+            modifier = modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            BankChip(
+                type = BankType.WALLET
+            )
+            BankChip(
+                type = BankType.TRUST
+            )
+            BankChip(
+                type = BankType.REVOLUT
+            )
+            BankChip(
+                type = BankType.DBS
+            )
         }
 
-        // Eye Icon
-        Icon(
-            painter = painterResource(id = R.drawable.eyeopen),
-            contentDescription = "Toggle Balance Visibility",
-            tint = Grey600,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable(onClick = onVisibilityToggle)
-        )
     }
 }
 
