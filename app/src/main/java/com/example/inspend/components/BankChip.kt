@@ -17,9 +17,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.R
+import com.example.inspend.ui.theme.Grey100
+import com.example.inspend.ui.theme.Grey600
 
-enum class BankType {
-    TRUST, REVOLUT, DBS, WALLET
+enum class BankType(
+    val icon: Int,
+    val backgroundColor: Color,
+    val displayName: String
+) {
+    WALLET(
+        icon = R.drawable.wallet,
+        backgroundColor = Color(0xFFF6F7F9),
+        displayName = "Wallet"
+    ),
+    TRUST(
+        icon = R.drawable.trust,
+        backgroundColor = Color(0xFFF6F7F9),
+        displayName = "Trust"
+    ),
+    DBS(
+        icon = R.drawable.dbs,
+        backgroundColor = Color(0xFFF6F7F9),
+        displayName = "DBS"
+    ),
+    REVOLUT(
+        icon = R.drawable.revolut,
+        backgroundColor = Color(0xFFF6F7F9),
+        displayName = "Revolut"
+    )
 }
 
 @Composable
@@ -27,52 +52,28 @@ fun BankChip(
     type: BankType,
     modifier: Modifier = Modifier
 ) {
-    val bankName = when (type) {
-        BankType.TRUST -> "Trust"
-        BankType.REVOLUT -> "Revolut"
-        BankType.DBS -> "DBS"
-        BankType.WALLET -> "Wallet"
-    }
-
     Row(
         modifier = modifier
-            .height(22.dp)
-            .wrapContentWidth()
             .background(
-                color = Color(0xFFEFF1F5),
-                shape = RoundedCornerShape(44.dp)
+                color = Grey100,
+                shape = RoundedCornerShape(4.dp)
             )
-            .border(
-                width = 1.dp,
-                color = Color(0xFFE4E6EE),
-                shape = CircleShape)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 6.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Bank Icon
         Icon(
-            painter = painterResource(
-                id = when (type) {
-                    BankType.TRUST -> R.drawable.trust
-                    BankType.REVOLUT -> R.drawable.revolut
-                    BankType.DBS -> R.drawable.dbs
-                    BankType.WALLET -> R.drawable.wallet
-                }
-            ),
-            contentDescription = bankName,
+            painter = painterResource(id = type.icon),
+            contentDescription = type.displayName,
             tint = Color.Unspecified,
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(16.dp)
         )
-
-        // Bank Name
         Text(
-            text = bankName,
+            text = type.displayName,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF666A87),
             lineHeight = 14.sp,
-            letterSpacing = 0.5.sp
+            fontWeight = FontWeight.Medium,
+            color = Grey600
         )
     }
 }
@@ -84,8 +85,8 @@ fun BankChipsColumn(
     Column(
         modifier = modifier
             .wrapContentWidth()
-            .height(115.dp),
-        verticalArrangement = Arrangement.spacedBy(9.dp)
+            .wrapContentHeight(),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         BankChip(
             type = BankType.TRUST

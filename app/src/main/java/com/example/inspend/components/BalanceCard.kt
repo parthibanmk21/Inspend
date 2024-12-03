@@ -22,6 +22,7 @@ import com.example.inspend.ui.theme.*
 @Composable
 fun BalanceCard(
     balance: String,
+    bankBalances: Map<String, String> = emptyMap(),
     onVisibilityToggle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -103,32 +104,86 @@ fun BalanceCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            BankChip(
-                type = BankType.WALLET
+            BankChipWithAmount(
+                type = BankType.WALLET,
+                amount = bankBalances["WALLET"] ?: "0.00"
             )
-            BankChip(
-                type = BankType.TRUST
-            )
-            BankChip(
-                type = BankType.REVOLUT
-            )
-            BankChip(
-                type = BankType.DBS
-            )
+
+            if (bankBalances.containsKey("TRUST")) {
+                BankChipWithAmount(
+                    type = BankType.TRUST,
+                    amount = bankBalances["TRUST"] ?: "0.00"
+                )
+            }
+
+            if (bankBalances.containsKey("DBS")) {
+                BankChipWithAmount(
+                    type = BankType.DBS,
+                    amount = bankBalances["DBS"] ?: "0.00"
+                )
+            }
+
+            if (bankBalances.containsKey("REVOLUT")) {
+                BankChipWithAmount(
+                    type = BankType.REVOLUT,
+                    amount = bankBalances["REVOLUT"] ?: "0.00"
+                )
+            }
         }
 
+    }
+}
+
+@Composable
+fun BankChipWithAmount(
+    type: BankType,
+    amount: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(
+                color = Grey100,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .wrapContentHeight()
+            .padding(horizontal = 6.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = type.icon),
+            contentDescription = type.name,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(
+            text = amount,
+            fontSize = 14.sp,
+            lineHeight = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Grey600
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun BalanceCardPreview() {
+    val sampleBalances = mapOf(
+        "WALLET" to "10.00",
+        "TRUST" to "20.00",
+        "DBS" to "30.00",
+        "REVOLUT" to "50.00"
+    )
+
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         BalanceCard(
-            balance = "0.00"
+            balance = "8,000.00",
+            bankBalances = sampleBalances
         )
     }
 } 
