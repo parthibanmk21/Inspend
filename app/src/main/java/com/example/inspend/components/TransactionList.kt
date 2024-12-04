@@ -33,7 +33,7 @@ fun TransactionList(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Title
         Text(
@@ -48,7 +48,7 @@ fun TransactionList(
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // Date
             Text(
