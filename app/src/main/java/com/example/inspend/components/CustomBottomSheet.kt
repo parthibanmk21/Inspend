@@ -99,6 +99,14 @@ fun BottomSheetOverlayPreview() {
 @Preview(name = "Bottom Sheet Content")
 @Composable
 fun BottomSheetContentPreview() {
+    // Sample balances for preview
+    val sampleBalances = mapOf(
+        "WALLET" to "1,250.50",
+        "TRUST" to "3,500.75",
+        "DBS" to "2,800.25",
+        "REVOLUT" to "1,750.80"
+    )
+    
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,19 +149,40 @@ fun BottomSheetContentPreview() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // Wallet Payment Type
                 PaymentType(
                     icon = R.drawable.wallet,
                     name = "Wallet",
-                    balance = "1,000",
+                    balance = sampleBalances["WALLET"] ?: "0.00",
                     isSelected = true,
-                    onClick = {}
+                    onClick = { }
                 )
+
+                // Trust Payment Type
                 PaymentType(
                     icon = R.drawable.trust,
                     name = "Trust",
-                    balance = "1,000",
+                    balance = sampleBalances["TRUST"] ?: "0.00",
                     isSelected = false,
-                    onClick = {}
+                    onClick = { }
+                )
+
+                // DBS Payment Type
+                PaymentType(
+                    icon = R.drawable.dbs,
+                    name = "DBS",
+                    balance = sampleBalances["DBS"] ?: "0.00",
+                    isSelected = false,
+                    onClick = { }
+                )
+
+                // Revolut Payment Type
+                PaymentType(
+                    icon = R.drawable.revolut,
+                    name = "Revolut",
+                    balance = sampleBalances["REVOLUT"] ?: "0.00",
+                    isSelected = false,
+                    onClick = { }
                 )
             }
         }
@@ -166,40 +195,42 @@ fun BottomSheetContentPreview() {
 @Composable
 fun FullBottomSheetPreview() {
     InspendTheme {
+        // Sample balances for preview
+        val sampleBalances = mapOf(
+            "WALLET" to "1,250.50",
+            "TRUST" to "3,500.75",
+            "DBS" to "2,800.25",
+            "REVOLUT" to "1,750.80"
+        )
+
         CustomBottomSheet(
-            onDismiss = {}
+            onDismiss = {},
+            title = "Select Payment Method"
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Select Payment Method",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF526077),
-                    lineHeight = 24.sp
-                )
-                
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    PaymentType(
-                        icon = R.drawable.wallet,
-                        name = "Wallet",
-                        balance = "1,000",
-                        isSelected = true,
-                        onClick = {}
-                    )
-                    PaymentType(
-                        icon = R.drawable.trust,
-                        name = "Trust",
-                        balance = "1,000",
-                        isSelected = false,
-                        onClick = {}
-                    )
-                }
-            }
+            PaymentBottomSheetContent(
+                bankBalances = sampleBalances,
+                selectedPayment = "Wallet",
+                onPaymentSelected = {}
+            )
         }
+    }
+}
+
+@Composable
+fun PaymentSelectionSheet(
+    bankBalances: Map<String, String>,
+    selectedPayment: String?,
+    onPaymentSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    CustomBottomSheet(
+        onDismiss = onDismiss,
+        title = "Select Payment Method"
+    ) {
+        PaymentBottomSheetContent(
+            bankBalances = bankBalances,
+            selectedPayment = selectedPayment,
+            onPaymentSelected = onPaymentSelected
+        )
     }
 }

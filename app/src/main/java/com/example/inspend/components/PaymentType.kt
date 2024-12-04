@@ -97,31 +97,68 @@ fun PaymentType(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PaymentTypePreview() {
+fun PaymentBottomSheetContent(
+    bankBalances: Map<String, String> = emptyMap(),
+    selectedPayment: String? = null,
+    onPaymentSelected: (String) -> Unit = {}
+) {
     Column(
         modifier = Modifier
-            .width(328.dp)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Default State
+        // Wallet Payment Type
         PaymentType(
             icon = R.drawable.wallet,
             name = "Wallet",
-            balance = "0",
-            isSelected = false,
-            onClick = { }
+            balance = bankBalances["WALLET"] ?: "0.00",
+            isSelected = selectedPayment == "Wallet",
+            onClick = { onPaymentSelected("Wallet") }
         )
 
-        // Selected State
+        // Trust Payment Type
         PaymentType(
-            icon = R.drawable.wallet,
-            name = "Wallet",
-            balance = "1,000",
-            isSelected = true,
-            onClick = { }
+            icon = R.drawable.trust,
+            name = "Trust",
+            balance = bankBalances["TRUST"] ?: "0.00",
+            isSelected = selectedPayment == "Trust",
+            onClick = { onPaymentSelected("Trust") }
+        )
+
+        // DBS Payment Type
+        PaymentType(
+            icon = R.drawable.dbs,
+            name = "DBS",
+            balance = bankBalances["DBS"] ?: "0.00",
+            isSelected = selectedPayment == "DBS",
+            onClick = { onPaymentSelected("DBS") }
+        )
+
+        // Revolut Payment Type
+        PaymentType(
+            icon = R.drawable.revolut,
+            name = "Revolut",
+            balance = bankBalances["REVOLUT"] ?: "0.00",
+            isSelected = selectedPayment == "Revolut",
+            onClick = { onPaymentSelected("Revolut") }
         )
     }
+}
+
+// Update the preview to show how it looks with sample balances
+@Preview(showBackground = true)
+@Composable
+fun PaymentTypePreview() {
+    val sampleBalances = mapOf(
+        "WALLET" to "1,250.50",
+        "TRUST" to "3,500.75",
+        "DBS" to "2,800.25",
+        "REVOLUT" to "1,750.80"
+    )
+
+    PaymentBottomSheetContent(
+        bankBalances = sampleBalances,
+        selectedPayment = "Wallet"
+    )
 } 

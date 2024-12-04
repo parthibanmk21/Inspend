@@ -73,13 +73,23 @@ private fun AddTransactionContent(
     var amountError by remember { mutableStateOf(false) }
     var nameError by remember { mutableStateOf(false) }
     
-    // Define payment methods
+    // Define bank balances first
+    val bankBalances = remember {
+        mapOf(
+            "WALLET" to "1,250.50",
+            "TRUST" to "3,500.75",
+            "DBS" to "2,800.25",
+            "REVOLUT" to "1,750.80"
+        )
+    }
+    
+    // Define payment methods using the bank balances
     val paymentMethods = remember {
         listOf(
-            PaymentMethodOption(R.drawable.wallet, "Wallet", "1,000"),
-            PaymentMethodOption(R.drawable.trust, "Trust", "1,000"),
-            PaymentMethodOption(R.drawable.dbs, "DBS", "1,000"),
-            PaymentMethodOption(R.drawable.revolut, "Revolut", "1,000")
+            PaymentMethodOption(R.drawable.wallet, "Wallet", bankBalances["WALLET"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.trust, "Trust", bankBalances["TRUST"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.dbs, "DBS", bankBalances["DBS"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.revolut, "Revolut", bankBalances["REVOLUT"] ?: "0.00")
         )
     }
 
@@ -582,39 +592,16 @@ private fun AddTransactionContent(
 
         // Use our CustomBottomSheet
         if (showPaymentMethodSheet) {
-            CustomBottomSheet(
+            PaymentSelectionSheet(
+                bankBalances = bankBalances,
+                selectedPayment = paymentMethods[selectedPaymentMethod].name,
+                onPaymentSelected = { selectedName ->
+                    // Update selectedPaymentMethod based on the selected name
+                    selectedPaymentMethod = paymentMethods.indexOfFirst { it.name == selectedName }
+                    showPaymentMethodSheet = false
+                },
                 onDismiss = { showPaymentMethodSheet = false }
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Select Payment Method",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFF526077),
-                        lineHeight = 24.sp
-                    )
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        paymentMethods.forEachIndexed { index, payment ->
-                            PaymentType(
-                                icon = payment.icon,
-                                name = payment.name,
-                                balance = payment.balance,
-                                isSelected = index == selectedPaymentMethod,
-                                onClick = {
-                                    selectedPaymentMethod = index
-                                    showPaymentMethodSheet = false
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+            )
         }
     }
 }
