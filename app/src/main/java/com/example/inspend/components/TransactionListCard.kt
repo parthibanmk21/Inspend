@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +82,11 @@ fun TransactionListCard(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF1F274B),
-                        lineHeight = 16.sp
+                        lineHeight = 16.sp,
+                        maxLines = 1, // Single line only
+                        overflow = TextOverflow.Ellipsis, // Add ellipsis
+                        modifier = Modifier
+                            .widthIn(max = 179.dp), // Restrict max width
                     )
                     Text(
                         text = time,

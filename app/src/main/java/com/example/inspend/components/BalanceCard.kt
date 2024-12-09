@@ -22,6 +22,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.unit.max
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
 
 @Composable
 fun BalanceCard(
@@ -30,6 +35,8 @@ fun BalanceCard(
     onVisibilityToggle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var isVisible by remember { mutableStateOf(true) }
+    var bankChipsVisibility by remember { mutableStateOf(true) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -82,7 +89,7 @@ fun BalanceCard(
                         letterSpacing = 0.sp
                     )
                     Text(
-                        text = balance,
+                        text = if (isVisible) balance else "(O_O)",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Grey600,
@@ -99,7 +106,11 @@ fun BalanceCard(
                 tint = Grey600,
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable(onClick = onVisibilityToggle)
+                    .clickable {
+                        isVisible = !isVisible
+                        bankChipsVisibility = !bankChipsVisibility
+                        onVisibilityToggle()
+                    }
             )
         }
         LazyRow(
@@ -110,19 +121,19 @@ fun BalanceCard(
         ) {
             // Create list of available bank chips
             val bankChips = listOfNotNull(
-                Pair(BankType.WALLET, bankBalances["WALLET"] ?: "0.00"),
-                if (bankBalances.containsKey("TRUST")) 
-                    Pair(BankType.TRUST, bankBalances["TRUST"] ?: "0.00") else null,
+                Pair(BankType.WALLET, String.format("%.2f", bankBalances["WALLET"]?.toFloatOrNull() ?: 0.00f)),
+                if (bankBalances.containsKey("TRUST"))
+                    Pair(BankType.TRUST, String.format("%.2f", bankBalances["TRUST"]?.toFloatOrNull() ?: 0.00f)) else null,
                 if (bankBalances.containsKey("DBS")) 
-                    Pair(BankType.DBS, bankBalances["DBS"] ?: "0.00") else null,
+                    Pair(BankType.DBS, String.format("%.2f", bankBalances["DBS"]?.toFloatOrNull() ?: 0.00f)) else null,
                 if (bankBalances.containsKey("REVOLUT")) 
-                    Pair(BankType.REVOLUT, bankBalances["REVOLUT"] ?: "0.00") else null
+                    Pair(BankType.REVOLUT, String.format("%.2f", bankBalances["REVOLUT"]?.toFloatOrNull() ?: 0.00f)) else null
             )
 
             items(bankChips) { (bankType, amount) ->
                 BankChipWithAmount(
                     type = bankType,
-                    amount = amount
+                    amount = if (bankChipsVisibility) amount else "(O_O)",
                 )
             }
         }
