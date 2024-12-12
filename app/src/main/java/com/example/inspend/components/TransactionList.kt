@@ -14,6 +14,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.TransactionData
 import com.example.inspend.ui.theme.*
+import java.text.SimpleDateFormat
+import java.util.*
+
+private fun formatDisplayDate(dateStr: String): String {
+    try {
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateStr)
+        val today = Calendar.getInstance()
+        val yesterday = Calendar.getInstance()
+        yesterday.add(Calendar.DAY_OF_YEAR, -1)
+        
+        val dateCalendar = Calendar.getInstance()
+        dateCalendar.time = date!!
+
+        return when {
+            isSameDay(dateCalendar, today) -> "Today"
+            isSameDay(dateCalendar, yesterday) -> "Yesterday"
+            else -> SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(date)
+        }
+    } catch (e: Exception) {
+        return dateStr
+    }
+}
+
+private fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+}
 
 @Composable
 fun TransactionList(
@@ -21,6 +48,7 @@ fun TransactionList(
 ) {
     // Group transactions by date
     val groupedTransactions = transactions.groupBy { it.dateTime.split(" ")[0] }
+        .toSortedMap(reverseOrder()) // Sort by date in descending order
 
     Column(
         modifier = Modifier
@@ -54,7 +82,7 @@ fun TransactionList(
             ) {
                 // Date header
                 Text(
-                    text = date,
+                    text = formatDisplayDate(date),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Grey400,
@@ -76,6 +104,18 @@ fun TransactionList(
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
+                }
+                
+                // Add divider after each group except the last one
+                if (date != groupedTransactions.keys.last()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Color(0xFFE0E2EB))
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
