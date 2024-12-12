@@ -104,13 +104,14 @@ fun PaymentBottomSheetContent(
     selectedPayment: String?,
     onPaymentSelected: (String) -> Unit
 ) {
-    // Calculate total balance for each payment type
+    // Calculate total balance for each payment type with 2 decimal places
     val paymentBalances = transactions.groupBy { it.paymentMethod }
         .mapValues { (_, txns) ->
-            txns.sumOf { txn ->
+            val total = txns.sumOf { txn ->
                 val amount = txn.amount.toDoubleOrNull() ?: 0.0
                 if (txn.isCredit) amount else -amount
-            }.toString()
+            }
+            String.format("%.2f", total) // Round to 2 decimal places
         }
 
     Column(

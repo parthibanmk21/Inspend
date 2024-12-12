@@ -118,13 +118,23 @@ private fun AddTransactionContent(
         )
     }
     
-    // Define payment methods using the bank balances
-    val paymentMethods = remember {
+    // Calculate payment balances from transactions
+    val paymentBalances = transactions.groupBy { it.paymentMethod }
+        .mapValues { (_, txns) ->
+            val total = txns.sumOf { txn ->
+                val amount = txn.amount.toDoubleOrNull() ?: 0.0
+                if (txn.isCredit) amount else -amount
+            }
+            String.format("%.2f", total)
+        }
+
+    // Update payment methods to use calculated balances
+    val paymentMethods = remember(paymentBalances) {
         listOf(
-            PaymentMethodOption(R.drawable.wallet, "Wallet", bankBalances["WALLET"] ?: "0.00"),
-            PaymentMethodOption(R.drawable.trust, "Trust", bankBalances["TRUST"] ?: "0.00"),
-            PaymentMethodOption(R.drawable.dbs, "DBS", bankBalances["DBS"] ?: "0.00"),
-            PaymentMethodOption(R.drawable.revolut, "Revolut", bankBalances["REVOLUT"] ?: "0.00")
+            PaymentMethodOption(R.drawable.wallet, "Wallet", paymentBalances["WALLET"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.trust, "Trust", paymentBalances["TRUST"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.dbs, "DBS", paymentBalances["DBS"] ?: "0.00"),
+            PaymentMethodOption(R.drawable.revolut, "Revolut", paymentBalances["REVOLUT"] ?: "0.00")
         )
     }
 
