@@ -36,6 +36,24 @@ fun TransactionListCard(
     bankType: String,
     modifier: Modifier = Modifier
 ) {
+    // Format time to include AM/PM
+    val formattedTime = try {
+        // Split time into hours and minutes
+        val timeParts = time.split(":")
+        val hour = timeParts[0].toInt()
+        val minute = timeParts[1]
+        
+        // Convert to 12-hour format with AM/PM
+        when {
+            hour == 0 -> "12:$minute AM"
+            hour < 12 -> "$hour:$minute AM"
+            hour == 12 -> "12:$minute PM"
+            else -> "${hour-12}:$minute PM"
+        }
+    } catch (e: Exception) {
+        time // If parsing fails, use original time
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -89,7 +107,7 @@ fun TransactionListCard(
                             .widthIn(max = 179.dp), // Restrict max width
                     )
                     Text(
-                        text = time,
+                        text = formattedTime,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = Grey300,
