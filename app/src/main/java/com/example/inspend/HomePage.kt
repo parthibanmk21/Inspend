@@ -221,20 +221,20 @@ private fun HomePageContent(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "John Doe",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF3A4252),
-                                lineHeight = 20.sp,
-                                letterSpacing = 0.1.sp
-                            )
-                            Text(
                                 text = "Welcome back",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = Color(0xFF8695AA),
                                 lineHeight = 14.sp,
                                 letterSpacing = 0.5.sp
+                            )
+                            Text(
+                                text = "John Doe",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF3A4252),
+                                lineHeight = 20.sp,
+                                letterSpacing = 0.1.sp
                             )
                         }
                     }

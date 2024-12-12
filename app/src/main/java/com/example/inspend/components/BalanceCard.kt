@@ -35,8 +35,8 @@ fun BalanceCard(
     onVisibilityToggle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var isVisible by remember { mutableStateOf(true) }
-    var bankChipsVisibility by remember { mutableStateOf(true) }
+    var isVisible by remember { mutableStateOf(false) }
+    var bankChipsVisibility by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -89,7 +89,7 @@ fun BalanceCard(
                         letterSpacing = 0.sp
                     )
                     Text(
-                        text = if (isVisible) balance else "(O_O)",
+                        text = if (isVisible) balance else "(0_0)",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Grey600,
@@ -101,8 +101,10 @@ fun BalanceCard(
 
             // Eye Icon
             Icon(
-                painter = painterResource(id = R.drawable.eyeopen),
-                contentDescription = "Toggle Balance Visibility",
+                painter = painterResource(
+                    id = if (isVisible) R.drawable.eyeopen else R.drawable.eyeclose
+                ),
+                contentDescription = if (isVisible) "Hide Balance" else "Show Balance",
                 tint = Grey600,
                 modifier = Modifier
                     .size(24.dp)
@@ -133,7 +135,7 @@ fun BalanceCard(
             items(bankChips) { (bankType, amount) ->
                 BankChipWithAmount(
                     type = bankType,
-                    amount = if (bankChipsVisibility) amount else "(O_O)",
+                    amount = if (bankChipsVisibility) amount else "(0_0)",
                 )
             }
         }
