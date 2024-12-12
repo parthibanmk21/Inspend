@@ -17,9 +17,11 @@ import com.example.inspend.ui.theme.*
 
 @Composable
 fun TransactionList(
-    date: String,
     transactions: List<TransactionData>
 ) {
+    // Group transactions by date
+    val groupedTransactions = transactions.groupBy { it.dateTime.split(" ")[0] }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,35 +46,36 @@ fun TransactionList(
             lineHeight = 18.sp
         )
 
-        // Transaction List Column
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            // Date
-            Text(
-                text = date,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Grey300,
-                lineHeight = 14.sp
-            )
-
-            // Transaction Cards
+        // Iterate through grouped transactions
+        groupedTransactions.forEach { (date, transactionsForDate) ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                transactions.forEach { transaction ->
-                    TransactionListCard(
-                        title = transaction.name,
-                        time = transaction.dateTime,
-                        amount = transaction.amount,
-                        isIncome = transaction.isCredit,
-                        bankType = transaction.paymentMethod,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                // Date header
+                Text(
+                    text = date,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Grey400,
+                    lineHeight = 14.sp
+                )
+
+                // Transactions for this date
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    transactionsForDate.forEach { transaction ->
+                        TransactionListCard(
+                            title = transaction.name,
+                            time = transaction.dateTime.split(" ")[1], // Show only time part
+                            amount = transaction.amount,
+                            isIncome = transaction.isCredit,
+                            bankType = transaction.paymentMethod,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
@@ -86,7 +89,7 @@ fun TransactionListPreview() {
         TransactionData(
             type = "Other Transaction",
             name = "Salary",
-            dateTime = "10:00 AM",
+            dateTime = "2024-03-20 10:00 AM",  // Updated datetime format
             amount = "5,000",
             paymentMethod = "TRUST",
             isCredit = true,
@@ -95,9 +98,18 @@ fun TransactionListPreview() {
         TransactionData(
             type = "Other Transaction",
             name = "Groceries",
-            dateTime = "2:30 PM",
+            dateTime = "2024-03-20 2:30 PM",   // Same date
             amount = "150",
             paymentMethod = "REVOLUT",
+            isCredit = false,
+            transactionType = "EXPENSE"
+        ),
+        TransactionData(
+            type = "Other Transaction",
+            name = "Coffee",
+            dateTime = "2024-03-21 9:00 AM",   // Different date
+            amount = "50",
+            paymentMethod = "DBS",
             isCredit = false,
             transactionType = "EXPENSE"
         )
@@ -116,9 +128,6 @@ fun TransactionListPreview() {
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
-        TransactionList(
-            date = "Today",
-            transactions = sampleTransactions
-        )
+        TransactionList(transactions = sampleTransactions)
     }
 } 

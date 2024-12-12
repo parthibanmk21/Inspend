@@ -114,7 +114,7 @@ fun HomePage(
 // Helper function to format timestamp to readable time
 private fun formatDateTime(timestamp: Long): String {
     val date = Date(timestamp)
-    val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    val format = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
     return format.format(date)
 }
 
@@ -128,7 +128,7 @@ fun HomePagePreview() {
                 TransactionData(
                     type = "Other Transaction",
                     name = "Salary",
-                    dateTime = "10:00 AM",
+                    dateTime = "2024-03-20 10:00 AM",
                     amount = "5,000",
                     paymentMethod = "TRUST",
                     isCredit = true,
@@ -137,7 +137,7 @@ fun HomePagePreview() {
                 TransactionData(
                     type = "Other Transaction",
                     name = "Groceries",
-                    dateTime = "2:30 PM",
+                    dateTime = "2024-03-20 2:30 PM",
                     amount = "150",
                     paymentMethod = "REVOLUT",
                     isCredit = false,
@@ -341,7 +341,6 @@ private fun HomePageContent(
 
             if (transactions.isNotEmpty()) {
                 TransactionList(
-                    date = "Today",
                     transactions = transactions
                 )
             }
