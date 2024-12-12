@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.R
+import com.example.inspend.data.Transaction
 
 @Composable
 fun PaymentType(
@@ -99,20 +100,27 @@ fun PaymentType(
 
 @Composable
 fun PaymentBottomSheetContent(
-    bankBalances: Map<String, String> = emptyMap(),
-    selectedPayment: String? = null,
-    onPaymentSelected: (String) -> Unit = {}
+    transactions: List<Transaction>,
+    selectedPayment: String?,
+    onPaymentSelected: (String) -> Unit
 ) {
+    // Calculate total balance for each payment type
+    val paymentBalances = transactions.groupBy { it.paymentMethod }
+        .mapValues { (_, txns) ->
+            txns.sumOf { txn ->
+                val amount = txn.amount.toDoubleOrNull() ?: 0.0
+                if (txn.isCredit) amount else -amount
+            }.toString()
+        }
+
     Column(
-        modifier = Modifier
-            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Wallet Payment Type
         PaymentType(
             icon = R.drawable.wallet,
             name = "Wallet",
-            balance = bankBalances["WALLET"] ?: "0.00",
+            balance = paymentBalances["WALLET"] ?: "0.00",
             isSelected = selectedPayment == "Wallet",
             onClick = { onPaymentSelected("Wallet") }
         )
@@ -121,7 +129,7 @@ fun PaymentBottomSheetContent(
         PaymentType(
             icon = R.drawable.trust,
             name = "Trust",
-            balance = bankBalances["TRUST"] ?: "0.00",
+            balance = paymentBalances["TRUST"] ?: "0.00",
             isSelected = selectedPayment == "Trust",
             onClick = { onPaymentSelected("Trust") }
         )
@@ -130,7 +138,7 @@ fun PaymentBottomSheetContent(
         PaymentType(
             icon = R.drawable.dbs,
             name = "DBS",
-            balance = bankBalances["DBS"] ?: "0.00",
+            balance = paymentBalances["DBS"] ?: "0.00",
             isSelected = selectedPayment == "DBS",
             onClick = { onPaymentSelected("DBS") }
         )
@@ -139,7 +147,7 @@ fun PaymentBottomSheetContent(
         PaymentType(
             icon = R.drawable.revolut,
             name = "Revolut",
-            balance = bankBalances["REVOLUT"] ?: "0.00",
+            balance = paymentBalances["REVOLUT"] ?: "0.00",
             isSelected = selectedPayment == "Revolut",
             onClick = { onPaymentSelected("Revolut") }
         )
@@ -150,15 +158,32 @@ fun PaymentBottomSheetContent(
 @Preview(showBackground = true)
 @Composable
 fun PaymentTypePreview() {
-    val sampleBalances = mapOf(
-        "WALLET" to "1,250.50",
-        "TRUST" to "3,500.75",
-        "DBS" to "2,800.25",
-        "REVOLUT" to "1,750.80"
+    val sampleTransactions = listOf(
+        Transaction(
+            amount = "1250.50",
+            paymentMethod = "WALLET",
+            isCredit = true
+        ),
+        Transaction(
+            amount = "3500.75",
+            paymentMethod = "TRUST",
+            isCredit = false
+        ),
+        Transaction(
+            amount = "2800.25",
+            paymentMethod = "DBS",
+            isCredit = true
+        ),
+        Transaction(
+            amount = "1750.80",
+            paymentMethod = "REVOLUT",
+            isCredit = false
+        )
     )
 
     PaymentBottomSheetContent(
-        bankBalances = sampleBalances,
-        selectedPayment = "Wallet"
+        transactions = sampleTransactions,
+        selectedPayment = "Wallet",
+        onPaymentSelected = {}
     )
 } 

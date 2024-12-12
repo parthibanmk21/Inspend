@@ -44,6 +44,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.ZoneId
 import com.google.firebase.Timestamp
+import com.example.inspend.data.Transaction
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -57,6 +61,37 @@ data class PaymentMethodOption(
 private fun AddTransactionContent(
     onBackClick: () -> Unit = {}
 ) {
+    // Add state for transactions
+    var transactions by remember { mutableStateOf<List<Transaction>>(emptyList()) }
+    
+    // Fetch transactions from Firebase
+    LaunchedEffect(Unit) {
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@LaunchedEffect
+        
+        db.collection("users")
+            .document(userId)
+            .collection("transactions")
+            .get()
+            .addOnSuccessListener { documents ->
+                transactions = documents.map { doc ->
+                    Transaction(
+                        id = doc.id,
+                        amount = doc.getString("amount") ?: "0.00",
+                        paymentMethod = doc.getString("paymentMethod") ?: "",
+                        isCredit = doc.getBoolean("isCredit") ?: false,
+                        name = doc.getString("name") ?: "",
+                        type = doc.getString("type") ?: "",
+                        category = doc.getString("category") ?: "",
+                        createdAt = doc.getTimestamp("createdAt")?.seconds ?: 0L
+                    )
+                }
+            }
+            .addOnFailureListener { e ->
+                println("Error fetching transactions: ${e.message}")
+            }
+    }
+
     // Add state for bottom sheet
     var showPaymentMethodSheet by remember { mutableStateOf(false) }
     // Add state for selected payment method
@@ -593,10 +628,9 @@ private fun AddTransactionContent(
         // Use our CustomBottomSheet
         if (showPaymentMethodSheet) {
             PaymentSelectionSheet(
-                bankBalances = bankBalances,
+                transactions = transactions,
                 selectedPayment = paymentMethods[selectedPaymentMethod].name,
                 onPaymentSelected = { selectedName ->
-                    // Update selectedPaymentMethod based on the selected name
                     selectedPaymentMethod = paymentMethods.indexOfFirst { it.name == selectedName }
                     showPaymentMethodSheet = false
                 },

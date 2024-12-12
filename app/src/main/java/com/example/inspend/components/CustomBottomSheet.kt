@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inspend.R
 import com.example.inspend.ui.theme.InspendTheme
+import com.example.inspend.data.Transaction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -195,12 +196,28 @@ fun BottomSheetContentPreview() {
 @Composable
 fun FullBottomSheetPreview() {
     InspendTheme {
-        // Sample balances for preview
-        val sampleBalances = mapOf(
-            "WALLET" to "1,250.50",
-            "TRUST" to "3,500.75",
-            "DBS" to "2,800.25",
-            "REVOLUT" to "1,750.80"
+        // Sample transactions for preview
+        val sampleTransactions = listOf(
+            Transaction(
+                amount = "1250.50",
+                paymentMethod = "WALLET",
+                isCredit = true
+            ),
+            Transaction(
+                amount = "3500.75",
+                paymentMethod = "TRUST",
+                isCredit = false
+            ),
+            Transaction(
+                amount = "2800.25",
+                paymentMethod = "DBS",
+                isCredit = true
+            ),
+            Transaction(
+                amount = "1750.80",
+                paymentMethod = "REVOLUT",
+                isCredit = false
+            )
         )
 
         CustomBottomSheet(
@@ -208,7 +225,7 @@ fun FullBottomSheetPreview() {
             title = "Select Payment Method"
         ) {
             PaymentBottomSheetContent(
-                bankBalances = sampleBalances,
+                transactions = sampleTransactions,
                 selectedPayment = "Wallet",
                 onPaymentSelected = {}
             )
@@ -218,7 +235,7 @@ fun FullBottomSheetPreview() {
 
 @Composable
 fun PaymentSelectionSheet(
-    bankBalances: Map<String, String>,
+    transactions: List<Transaction>,
     selectedPayment: String?,
     onPaymentSelected: (String) -> Unit,
     onDismiss: () -> Unit
@@ -228,7 +245,7 @@ fun PaymentSelectionSheet(
         title = "Select Payment Method"
     ) {
         PaymentBottomSheetContent(
-            bankBalances = bankBalances,
+            transactions = transactions,
             selectedPayment = selectedPayment,
             onPaymentSelected = onPaymentSelected
         )
