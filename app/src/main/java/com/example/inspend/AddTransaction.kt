@@ -48,7 +48,6 @@ import com.example.inspend.data.Transaction
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
-import android.widget.Toast
 
 // Add at the top level of the file
 data class PaymentMethodOption(
@@ -623,23 +622,9 @@ private fun AddTransactionContent(
                                 .collection("transactions")
                                 .add(transactionData)
                                 .addOnSuccessListener {
-                                    // Show success toast
-                                    Toast.makeText(
-                                        context,
-                                        "Transaction added successfully",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    
-                                    // Navigate back
                                     onBackClick()
                                 }
                                 .addOnFailureListener { e ->
-                                    // Show error toast
-                                    Toast.makeText(
-                                        context,
-                                        "Failed to add transaction",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
                                     println("Error saving transaction: ${e.message}")
                                 }
                         }
@@ -668,18 +653,8 @@ private fun AddTransactionContent(
 fun AddTransactionScreen(
     navController: NavController
 ) {
-    val context = LocalContext.current
-    
     AddTransactionContent(
-        onBackClick = { 
-            // Show toast before navigating
-            Toast.makeText(
-                context,
-                "Transaction added successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-            navController.navigateUp() 
-        }
+        onBackClick = { navController.navigateUp() }
     )
 }
 

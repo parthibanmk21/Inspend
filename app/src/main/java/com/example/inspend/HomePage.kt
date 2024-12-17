@@ -1,6 +1,5 @@
 package com.example.inspend
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -48,9 +47,7 @@ data class TransactionData(
 
 @Composable
 fun HomePage(
-    navController: NavController,
-    showSuccessToast: Boolean = false,
-    onToastShown: () -> Unit = {}
+    navController: NavController
 ) {
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
@@ -59,18 +56,6 @@ fun HomePage(
     var userName by remember { mutableStateOf("") }
     var transactions by remember { mutableStateOf<List<TransactionData>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-
-    // Show toast when showSuccessToast is true
-    LaunchedEffect(showSuccessToast) {
-        if (showSuccessToast) {
-            Toast.makeText(
-                context,
-                "Transaction added successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-            onToastShown()  // Reset the flag
-        }
-    }
 
     // Fetch data immediately when component is created
     SideEffect {
