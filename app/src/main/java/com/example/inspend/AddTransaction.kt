@@ -598,21 +598,19 @@ private fun AddTransactionContent(
                             val db = FirebaseFirestore.getInstance()
                             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
                             
-                            // Convert selected date and time to timestamp
-                            val dateTime = selectedDate
+                            // Convert selected date and time to Timestamp
+                            val selectedDateTime = selectedDate
                                 .withHour(selectedTime.hour)
                                 .withMinute(selectedTime.minute)
                                 .atZone(ZoneId.systemDefault())
-                                .toInstant()
-                                .toEpochMilli()
-
-                            // Create transaction data
+                            
+                            // Create transaction data with selected datetime
                             val transactionData = hashMapOf(
                                 "type" to "Other Transaction",
                                 "category" to "Food",
                                 "amount" to amount,
                                 "paymentMethod" to paymentMethods[selectedPaymentMethod].name.uppercase(),
-                                "createdAt" to Timestamp.now(),
+                                "createdAt" to Timestamp(selectedDateTime.toEpochSecond(), 0), // Use selected datetime
                                 "isCredit" to !isExpense,
                                 "name" to transactionName,
                                 "transactionType" to if (isExpense) "EXPENSE" else "INCOME"
