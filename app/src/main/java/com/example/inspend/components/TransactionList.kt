@@ -48,7 +48,7 @@ fun TransactionList(
 ) {
     // Group transactions by date
     val groupedTransactions = transactions.groupBy { it.dateTime.split(" ")[0] }
-        .toSortedMap(reverseOrder()) // Sort by date in descending order
+        .toSortedMap(reverseOrder())
 
     Column(
         modifier = Modifier
@@ -95,9 +95,17 @@ fun TransactionList(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     transactionsForDate.forEach { transaction ->
+                        // Get both time and AM/PM parts
+                        val timeParts = transaction.dateTime.split(" ")
+                        val timeWithAmPm = if (timeParts.size >= 3) {
+                            "${timeParts[1]} ${timeParts[2]}"  // Include both time and AM/PM
+                        } else {
+                            "12:00 AM" // fallback
+                        }
+                        
                         TransactionListCard(
                             title = transaction.name,
-                            time = transaction.dateTime.split(" ")[1], // Show only time part
+                            time = timeWithAmPm,  // Pass both time and AM/PM
                             amount = transaction.amount,
                             isIncome = transaction.isCredit,
                             bankType = transaction.paymentMethod,

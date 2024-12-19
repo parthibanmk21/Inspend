@@ -36,19 +36,25 @@ fun TransactionListCard(
     bankType: String,
     modifier: Modifier = Modifier
 ) {
-    // Format time to include AM/PM
+    // Just use the time as is since it already includes AM/PM
     val formattedTime = try {
-        // Split time into hours and minutes
-        val timeParts = time.split(":")
-        val hour = timeParts[0].toInt()
-        val minute = timeParts[1]
-        
-        // Convert to 12-hour format with AM/PM
-        when {
-            hour == 0 -> "12:$minute AM"
-            hour < 12 -> "$hour:$minute AM"
-            hour == 12 -> "12:$minute PM"
-            else -> "${hour-12}:$minute PM"
+        val parts = time.split(" ")
+        if (parts.size >= 2) {
+            // If time has hours, minutes and AM/PM
+            val timePart = parts[0]
+            val amPm = parts[1]
+            val timeComponents = timePart.split(":")
+            val hour = timeComponents[0].toInt()
+            val minute = timeComponents[1]
+            
+            // Format hour but keep original AM/PM
+            when {
+                hour == 0 -> "12:$minute $amPm"
+                hour <= 12 -> "$hour:$minute $amPm"
+                else -> "${hour-12}:$minute $amPm"
+            }
+        } else {
+            time // Keep original if format is unexpected
         }
     } catch (e: Exception) {
         time // If parsing fails, use original time
