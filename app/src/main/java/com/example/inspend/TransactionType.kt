@@ -50,6 +50,10 @@ fun TransactionTypeScreen(
     var dbsAmount by remember { mutableStateOf("") }
     var revolutAmount by remember { mutableStateOf("") }
 
+    var trustAmountError by remember { mutableStateOf(false) }
+    var dbsAmountError by remember { mutableStateOf(false) }
+    var revolutAmountError by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -140,9 +144,13 @@ fun TransactionTypeScreen(
                             title = "Trust",
                             icon = R.drawable.trust,
                             amount = trustAmount,
-                            onAmountChange = { trustAmount = it },
+                            onAmountChange = { 
+                                trustAmount = it 
+                                trustAmountError = false
+                            },
                             isOpened = isTrustOpened,
-                            onToggleChange = { isTrustOpened = it }
+                            onToggleChange = { isTrustOpened = it },
+                            isError = trustAmountError
                         )
 
                         // DBS Payment Card
@@ -150,9 +158,13 @@ fun TransactionTypeScreen(
                             title = "DBS",
                             icon = R.drawable.dbs,
                             amount = dbsAmount,
-                            onAmountChange = { dbsAmount = it },
+                            onAmountChange = { 
+                                dbsAmount = it 
+                                dbsAmountError = false
+                            },
                             isOpened = isDbsOpened,
-                            onToggleChange = { isDbsOpened = it }
+                            onToggleChange = { isDbsOpened = it },
+                            isError = dbsAmountError
                         )
 
                         // Revolut Payment Card
@@ -160,9 +172,13 @@ fun TransactionTypeScreen(
                             title = "Revolut",
                             icon = R.drawable.revolut,
                             amount = revolutAmount,
-                            onAmountChange = { revolutAmount = it },
+                            onAmountChange = { 
+                                revolutAmount = it 
+                                revolutAmountError = false
+                            },
                             isOpened = isRevolutOpened,
-                            onToggleChange = { isRevolutOpened = it }
+                            onToggleChange = { isRevolutOpened = it },
+                            isError = revolutAmountError
                         )
                     }
                 }
@@ -171,9 +187,24 @@ fun TransactionTypeScreen(
             Button(
                 text = "Continue",
                 onClick = {
+                    var hasError = false
                     if (walletAmount.isBlank()) {
                         amountError = true
-                    } else {
+                        hasError = true
+                    }
+                    if (isTrustOpened && trustAmount.isBlank()) {
+                        trustAmountError = true
+                        hasError = true
+                    }
+                    if (isDbsOpened && dbsAmount.isBlank()) {
+                        dbsAmountError = true
+                        hasError = true
+                    }
+                    if (isRevolutOpened && revolutAmount.isBlank()) {
+                        revolutAmountError = true
+                        hasError = true
+                    }
+                    if (!hasError) {
                         coroutineScope.launch {
                             try {
                                 val userId = auth.currentUser?.uid
@@ -399,4 +430,4 @@ fun TransactionTypeScreenPreview() {
             }
         }
     }
-} 
+}

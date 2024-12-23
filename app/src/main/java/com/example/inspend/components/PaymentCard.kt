@@ -164,7 +164,11 @@ fun PaymentCardWithToggle(
             )
             .border(
                 width = 1.dp,
-                color = if (isError) Color(0xFFB91C1C) else Color(0xFFD5D9E2),
+                color = when {
+                    isError -> Color(0xFFB91C1C)
+                    isOpened -> Grey700
+                    else -> Grey400
+                },
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(horizontal = 14.dp, vertical = 12.dp),
@@ -306,4 +310,4 @@ fun PaymentCardPreview() {
             onToggleChange = { isRevolutOpened = it }  // Only changes Revolut state
         )
     }
-} 
+}
