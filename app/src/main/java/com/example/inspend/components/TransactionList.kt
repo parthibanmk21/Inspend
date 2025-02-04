@@ -5,13 +5,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.inspend.R
 import com.example.inspend.TransactionData
 import com.example.inspend.ui.theme.*
 import java.text.SimpleDateFormat
@@ -109,6 +112,7 @@ fun TransactionList(
                             amount = transaction.amount,
                             isIncome = transaction.isCredit,
                             bankType = transaction.paymentMethod,
+                            categoryType = transaction.categoryType,  // Pass the categoryType
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -137,29 +141,32 @@ fun TransactionListPreview() {
         TransactionData(
             type = "Other Transaction",
             name = "Salary",
-            dateTime = "2024-03-20 10:00 AM",  // Updated datetime format
+            dateTime = "2024-03-20 10:00 AM",
             amount = "5,000",
             paymentMethod = "TRUST",
             isCredit = true,
-            transactionType = "INCOME"
+            transactionType = "INCOME",
+            categoryType = "TRANSFER"
         ),
         TransactionData(
             type = "Other Transaction",
             name = "Groceries",
-            dateTime = "2024-03-20 2:30 PM",   // Same date
+            dateTime = "2024-03-20 2:30 PM",
             amount = "150",
             paymentMethod = "REVOLUT",
             isCredit = false,
-            transactionType = "EXPENSE"
+            transactionType = "EXPENSE",
+            categoryType = "FOOD"
         ),
         TransactionData(
             type = "Other Transaction",
             name = "Coffee",
-            dateTime = "2024-03-21 9:00 AM",   // Different date
+            dateTime = "2024-03-21 9:00 AM",
             amount = "50",
             paymentMethod = "DBS",
             isCredit = false,
-            transactionType = "EXPENSE"
+            transactionType = "EXPENSE",
+            categoryType = "FOOD"
         )
     )
 
@@ -178,4 +185,23 @@ fun TransactionListPreview() {
     ) {
         TransactionList(transactions = sampleTransactions)
     }
+}
+
+@Composable
+fun CategoryIcon(categoryType: String) {
+    val iconRes = when(categoryType.uppercase()) {
+        "FOOD" -> R.drawable.food
+        "TRAVEL" -> R.drawable.travel
+        "SHOPPING" -> R.drawable.shopping
+        "TRANSFER" -> R.drawable.transfer
+        "OTHER" -> R.drawable.other
+        else -> R.drawable.other
+    }
+
+    Icon(
+        painter = painterResource(id = iconRes),
+        contentDescription = "Category Icon",
+        tint = Color(0xFF526077),
+        modifier = Modifier.size(24.dp)
+    )
 } 

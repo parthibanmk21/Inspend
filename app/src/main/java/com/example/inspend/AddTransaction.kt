@@ -61,6 +61,11 @@ data class PaymentMethodOption(
 private fun AddTransactionContent(
     onBackClick: () -> Unit = {}
 ) {
+    // Add state variables inside the composable
+    var showCategorySheet by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }  // Changed to nullable
+    var categoryError by remember { mutableStateOf(false) }  // Add error state
+    
     // Add state for transactions
     var transactions by remember { mutableStateOf<List<Transaction>>(emptyList()) }
     
@@ -83,6 +88,7 @@ private fun AddTransactionContent(
                         name = doc.getString("name") ?: "",
                         type = doc.getString("type") ?: "",
                         category = doc.getString("category") ?: "",
+                        categoryType = doc.getString("categoryType") ?: "",
                         createdAt = doc.getTimestamp("createdAt")?.seconds ?: 0L
                     )
                 }
@@ -215,23 +221,23 @@ private fun AddTransactionContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Header
-            Column(
-                verticalArrangement = Arrangement.spacedBy(0.dp)
-            ) {
-                Text(
-                    text = "Add new Transaction",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF434E61)
-                )
-                Text(
-                    text = "Lorem Ipsum Subtext",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF8695AA).copy(alpha = 0.75f),
-                    letterSpacing = 0.15.sp
-                )
-            }
+//            Column(
+//                verticalArrangement = Arrangement.spacedBy(0.dp)
+//            ) {
+//                Text(
+//                    text = "Add new Transaction",
+//                    fontSize = 22.sp,
+//                    fontWeight = FontWeight.SemiBold,
+//                    color = Color(0xFF434E61)
+//                )
+//                Text(
+//                    text = "Lorem Ipsum Subtext",
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Medium,
+//                    color = Color(0xFF8695AA).copy(alpha = 0.75f),
+//                    letterSpacing = 0.15.sp
+//                )
+//            }
 
             // New Transaction Card
             Column(
@@ -424,9 +430,9 @@ private fun AddTransactionContent(
                     }
                 }
 
-                // Category Dropdown
+                // Category Input
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = "Category",
@@ -436,36 +442,69 @@ private fun AddTransactionContent(
                         lineHeight = 16.sp,
                         letterSpacing = 0.1.sp
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                            .background(Color(0xFFF6F7F9), RoundedCornerShape(4.dp))
-                            .border(1.dp, Color(0xFFD5D9E2), RoundedCornerShape(4.dp))
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.cakeicon),
-                            contentDescription = "Category",
-                            tint = Color(0xFF526077),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(
-                            text = "Food",
-                            fontSize = 16.sp,
-                            color = Color(0xFF526077),
-                            letterSpacing = 0.5.sp,
-                            lineHeight = 20.sp,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.chevrondown),
-                            contentDescription = "Expand",
-                            tint = Color(0xFFD5D9E2),
-                            modifier = Modifier.size(20.dp)
-                        )
+                        // First Row - Food, Travel, Shopping
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CategoryChip(
+                                iconRes = R.drawable.food,
+                                categoryName = "Food",
+                                isSelected = selectedCategory == "Food",
+                                onClick = { selectedCategory = "Food" }
+                            )
+                            CategoryChip(
+                                iconRes = R.drawable.travel,
+                                categoryName = "Travel",
+                                isSelected = selectedCategory == "Travel",
+                                onClick = { selectedCategory = "Travel" }
+                            )
+                            CategoryChip(
+                                iconRes = R.drawable.other,
+                                categoryName = "Other",
+                                isSelected = selectedCategory == "Other",
+                                onClick = { selectedCategory = "Other" }
+                            )
+                        }
+
+                        // Second Row - Transfer, Other
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+//                            .padding(start = 32.dp),  // Combine modifiers into one chain
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CategoryChip(
+                                iconRes = R.drawable.shopping,
+                                categoryName = "Shopping",
+                                isSelected = selectedCategory == "Shopping",
+                                onClick = { selectedCategory = "Shopping" }
+                            )
+                            CategoryChip(
+                                iconRes = R.drawable.transfer,
+                                categoryName = "Transfer",
+                                isSelected = selectedCategory == "Transfer",
+                                onClick = { selectedCategory = "Transfer" }
+                            )
+
+                        }
+
+                        // Error message with updated properties
+                        if (categoryError) {
+                            Text(
+                                text = "Please select a category",
+                                color = Color(0xFFDC2626),  // Same red color
+                                fontSize = 14.sp,           // Same font size
+                                fontWeight = FontWeight.Medium,  // Same font weight
+                                letterSpacing = 0.1.sp,     // Same letter spacing
+                                lineHeight = 16.sp,         // Same line height
+                                modifier = Modifier.padding(start = 4.dp)  // Same padding
+                            )
+                        }
                     }
                 }
 
@@ -584,6 +623,7 @@ private fun AddTransactionContent(
                         // Reset errors
                         amountError = false
                         nameError = false
+                        categoryError = false  // Reset category error
                         
                         // Validate inputs
                         if (amount.isBlank()) {
@@ -592,9 +632,12 @@ private fun AddTransactionContent(
                         if (transactionName.isBlank()) {
                             nameError = true
                         }
+                        if (selectedCategory == null) {  // Check if category is selected
+                            categoryError = true
+                        }
                         
                         // Only proceed if no errors
-                        if (!amountError && !nameError) {
+                        if (!amountError && !nameError && !categoryError) {
                             val db = FirebaseFirestore.getInstance()
                             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
                             
@@ -607,10 +650,11 @@ private fun AddTransactionContent(
                             // Create transaction data with selected datetime
                             val transactionData = hashMapOf(
                                 "type" to "Other Transaction",
-                                "category" to "Food",
+                                "category" to (selectedCategory ?: ""),  // Category name
+                                "categoryType" to (selectedCategory ?: "").uppercase(),  // Add categoryType for consistent lookup
                                 "amount" to amount,
                                 "paymentMethod" to paymentMethods[selectedPaymentMethod].name.uppercase(),
-                                "createdAt" to Timestamp(selectedDateTime.toEpochSecond(), 0), // Use selected datetime
+                                "createdAt" to Timestamp(selectedDateTime.toEpochSecond(), 0),
                                 "isCredit" to !isExpense,
                                 "name" to transactionName,
                                 "transactionType" to if (isExpense) "EXPENSE" else "INCOME"
@@ -643,6 +687,18 @@ private fun AddTransactionContent(
                     showPaymentMethodSheet = false
                 },
                 onDismiss = { showPaymentMethodSheet = false }
+            )
+        }
+
+        // Add CategoryBottomSheet at the bottom of AddTransactionContent
+        if (showCategorySheet) {
+            CategoryBottomSheet(
+                selectedCategory = selectedCategory ?: "Food",  // Provide default value
+                onCategorySelected = { category ->
+                    selectedCategory = category
+                    showCategorySheet = false
+                },
+                onDismiss = { showCategorySheet = false }
             )
         }
     }

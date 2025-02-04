@@ -32,18 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
-
-// Add this data class at the top level
-data class TransactionData(
-    val type: String = "",            // "Opening Balance" or "Other Transaction"
-    val category: String? = null,     // Only for "Other Transaction"
-    val name: String = "",
-    val dateTime: String = "",
-    val amount: String = "",
-    val paymentMethod: String = "",
-    val isCredit: Boolean = true,
-    val transactionType: String = ""  // "INCOME" or "EXPENSE"
-)
+import com.example.inspend.TransactionData  // Add this import
 
 @Composable
 fun HomePage(
@@ -89,7 +78,8 @@ fun HomePage(
                                     amount = doc.getString("amount") ?: "0",
                                     paymentMethod = doc.getString("paymentMethod") ?: "",
                                     isCredit = doc.getBoolean("isCredit") ?: true,
-                                    transactionType = doc.getString("transactionType") ?: ""
+                                    transactionType = doc.getString("transactionType") ?: "",
+                                    categoryType = doc.getString("categoryType") ?: ""
                                 )
                             } catch (e: Exception) {
                                 println("Error parsing transaction: ${e.message}")

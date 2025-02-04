@@ -8,5 +8,6 @@ data class Transaction(
     val name: String = "",
     val type: String = "",
     val category: String = "",
+    val categoryType: String = "",
     val createdAt: Long = 0L
 ) 

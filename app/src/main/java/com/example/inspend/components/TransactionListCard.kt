@@ -34,6 +34,7 @@ fun TransactionListCard(
     amount: String,
     isIncome: Boolean,
     bankType: String,
+    categoryType: String = "",
     modifier: Modifier = Modifier
 ) {
     // Just use the time as is since it already includes AM/PM
@@ -63,65 +64,38 @@ fun TransactionListCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(vertical = 4.dp)
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(0.dp),
+            .height(48.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row (
-            modifier = Modifier
-                .wrapContentWidth()
-                .height(46.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        // Left section with icon and text
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
-            // Use CategoryIcon instead of direct Icon
-            CategoryIcon(
-                type = if (isIncome) CategoryType.INCOME else CategoryType.EXPENSE,
-                modifier = Modifier.size(40.dp)
-            )
-
-            // Right Content
-            Row(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .height(46.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Use CategoryIcon instead of up/down arrow
+            CategoryIcon(categoryType = categoryType)
+            
+            // Title and time
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                // Transaction Details
-                Column(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .wrapContentHeight(),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        text = title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1F274B),
-                        lineHeight = 16.sp,
-                        maxLines = 1, // Single line only
-                        overflow = TextOverflow.Ellipsis, // Add ellipsis
-                        modifier = Modifier
-                            .widthIn(max = 179.dp), // Restrict max width
-                    )
-                    Text(
-                        text = formattedTime,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Grey300,
-                        lineHeight = 14.sp
-                    )
-                }
+                Text(
+                    text = title,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF526077),
+                    lineHeight = 16.sp
+                )
+                Text(
+                    text = time,
+                    fontSize = 12.sp,
+                    color = Color(0xFF8695AA),
+                    lineHeight = 14.sp
+                )
+            }
         }
-        }
+        
         // Amount and Bank
         Column(
             modifier = Modifier
@@ -181,7 +155,8 @@ fun TransactionListCardPreview() {
             time = "Today, 10:00 AM",
             amount = "5,000",
             isIncome = true,
-            bankType = "Trust"
+            bankType = "Trust",
+            categoryType = ""
         )
 
         // Expense Transaction
@@ -190,7 +165,8 @@ fun TransactionListCardPreview() {
             time = "Yesterday, 2:30 PM",
             amount = "150",
             isIncome = false,
-            bankType = "Revolut"
+            bankType = "Revolut",
+            categoryType = ""
         )
     }
 } 
