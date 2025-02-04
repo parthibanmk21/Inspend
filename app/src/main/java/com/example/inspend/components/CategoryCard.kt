@@ -7,6 +7,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,9 +18,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.clickable
 import com.example.inspend.R
 import com.example.inspend.TransactionData
-import androidx.compose.ui.tooling.preview.Preview
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class CategorySummary(
     val name: String,
@@ -25,10 +32,48 @@ data class CategorySummary(
     val percentage: String
 )
 
+enum class TimeFilter {
+    TODAY,
+    THIS_WEEK,
+    THIS_MONTH,
+    ALL
+}
+
 @Composable
 fun CategoryCard(transactions: List<TransactionData>) {
+    var selectedTimeFilter by remember { mutableStateOf(TimeFilter.TODAY) }
+
+    // Filter transactions based on selected time
+    val filteredTransactions = transactions.filter { transaction ->
+        val transactionDate = SimpleDateFormat("yyyy-MM-dd HH:mm a", Locale.getDefault())
+            .parse(transaction.dateTime)?.time ?: 0L
+        val now = System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+
+        when (selectedTimeFilter) {
+            TimeFilter.TODAY -> {
+                calendar.timeInMillis = now
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                transactionDate >= calendar.timeInMillis
+            }
+            TimeFilter.THIS_WEEK -> {
+                calendar.timeInMillis = now
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+                transactionDate >= calendar.timeInMillis
+            }
+            TimeFilter.THIS_MONTH -> {
+                calendar.timeInMillis = now
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
+                transactionDate >= calendar.timeInMillis
+            }
+            TimeFilter.ALL -> true
+            else -> true  // Add else branch
+        }
+    }
+
     // Calculate totals by category for expenses only
-    val categoryTotals = transactions
+    val categoryTotals = filteredTransactions
         .filter { !it.isCredit && it.transactionType == "EXPENSE" }  // Only expenses
         .groupBy { it.categoryType.uppercase() }  // Group by category type
         .mapValues { (_, txns) ->
@@ -90,7 +135,7 @@ fun CategoryCard(transactions: List<TransactionData>) {
             .background(Color.White, RoundedCornerShape(8.dp))
             .border(2.dp, Color(0xFFE0E2EB), RoundedCornerShape(8.dp))
             .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Header
         Text(
@@ -99,6 +144,33 @@ fun CategoryCard(transactions: List<TransactionData>) {
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF394371)
         )
+
+        // Time filter row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            TimeFilterChip(
+                text = "Today",
+                isSelected = selectedTimeFilter == TimeFilter.TODAY,
+                onClick = { selectedTimeFilter = TimeFilter.TODAY }
+            )
+            TimeFilterChip(
+                text = "This Week",
+                isSelected = selectedTimeFilter == TimeFilter.THIS_WEEK,
+                onClick = { selectedTimeFilter = TimeFilter.THIS_WEEK }
+            )
+            TimeFilterChip(
+                text = "This Month",
+                isSelected = selectedTimeFilter == TimeFilter.THIS_MONTH,
+                onClick = { selectedTimeFilter = TimeFilter.THIS_MONTH }
+            )
+            TimeFilterChip(
+                text = "All",
+                isSelected = selectedTimeFilter == TimeFilter.ALL,
+                onClick = { selectedTimeFilter = TimeFilter.ALL }
+            )
+        }
 
         // Category List
         Column(
@@ -226,5 +298,33 @@ private fun CategoryCardPreview() {
         modifier = Modifier.padding(16.dp)
     ) {
         CategoryCard(transactions = sampleTransactions)
+    }
+}
+
+@Composable
+private fun TimeFilterChip(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .height(22.dp)
+            .background(
+                color = if (isSelected) Color(0xFF114993) else Color(0xFFECEEF2),
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            color = if (isSelected) Color.White else Color(0xFF526077),
+            letterSpacing = 0.15.sp,
+            lineHeight = 14.sp
+        )
     }
 } 

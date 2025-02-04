@@ -283,17 +283,17 @@ private fun HomePageContent(
                 )
             }
         },
-        bottomBar = {
-            NavigationBar(
-                currentRoute = "home",
-                onNavigate = { route ->
-                    when (route) {
-                        "add" -> navController?.navigate("addtransaction")
-                        else -> navController?.navigate(route)
-                    }
-                }
-            )
-        },
+//        bottomBar = {
+//            NavigationBar(
+//                currentRoute = "home",
+//                onNavigate = { route ->
+//                    when (route) {
+//                        "add" -> navController?.navigate("addtransaction")
+//                        else -> navController?.navigate(route)
+//                    }
+//                }
+//            )
+//        },
         floatingActionButton = {
             // Add FAB
             Box(
