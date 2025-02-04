@@ -92,6 +92,11 @@ fun HomePage(
         }
     }
 
+    // Call update function once
+    LaunchedEffect(Unit) {
+        updateTransactionCategories()
+    }
+
     // UI Content
     HomePageContent(
         userName = userName,
@@ -336,4 +341,55 @@ private fun HomePageContent(
             }
         }
     }
+}
+
+// Add this function after HomePage composable
+private fun updateTransactionCategories() {
+    val db = FirebaseFirestore.getInstance()
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+    db.collection("users")
+        .document(userId)
+        .collection("transactions")
+        .get()
+        .addOnSuccessListener { documents ->
+            for (doc in documents) {
+                val name = doc.getString("name")?.lowercase() ?: ""
+                val categoryType = when {
+                    // Food related
+                    name.contains("groceries") || 
+                    name.contains("kolambu") ||
+                    name.contains("snack") ||
+                    name.contains("maggie") ||
+                    name.contains("chips") ||
+                    name.contains("parota") ||
+                    name.contains("muruku") -> "FOOD"
+
+                    // Travel related
+                    name.contains("mrt") ||
+                    name.contains("causeway") ||
+                    name.contains("bus") ||
+                    name.contains("lendcauseway") -> "TRAVEL"
+
+                    // Transfer related
+                    name.contains("gave") ||
+                    name.contains("transfer") ||
+                    name.contains("send") ||
+                    name.contains("received") ||
+                    name.contains("rent") -> "TRANSFER"
+
+                    // Other
+                    name.contains("recharge") -> "OTHER"
+
+                    // Keep existing categoryType if no match
+                    else -> doc.getString("categoryType") ?: ""
+                }
+
+                // Update document
+                doc.reference.update(mapOf(
+                    "category" to null,  // Remove category field
+                    "categoryType" to categoryType  // Add/update categoryType
+                ))
+            }
+        }
 } 
