@@ -323,16 +323,19 @@ private fun HomePageContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)  // Add scaffold padding
+                .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BalanceCard(
                 balance = String.format("%.2f", totalBalance.toDoubleOrNull() ?: 0.0),
-                bankBalances = bankBalances,  // Pass bank balances to BalanceCard
+                bankBalances = bankBalances,
                 onVisibilityToggle = { }
             )
+
+            // Add CategoryCard here
+            CategoryCard(transactions = transactions)
 
             if (transactions.isNotEmpty()) {
                 TransactionList(
