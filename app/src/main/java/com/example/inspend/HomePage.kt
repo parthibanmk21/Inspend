@@ -168,7 +168,7 @@ private fun HomePageContent(
 
     Scaffold(
         modifier = Modifier
-            .padding(vertical = 24.dp),
+            .padding(top = 24.dp),
         topBar = {
             // Simple AppBar for preview when NavController is null
             if (navController == null) {

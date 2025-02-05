@@ -78,7 +78,7 @@ private fun DefaultAppBar(
             .height(64.dp)
             .background(BGdefault)
             .padding(horizontal = 4.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Leading Icon
@@ -100,6 +100,14 @@ private fun DefaultAppBar(
                 modifier = Modifier.size(24.dp)
             )
         }
+        Text(
+            text = "Add Transaction",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF3A4252),
+            lineHeight = 20.sp,
+            letterSpacing = 0.1.sp
+        )
     }
 }
 
@@ -264,7 +272,7 @@ fun AppBarPreview() {
                         strokeWidth = borderWidth
                     )
                 }
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
