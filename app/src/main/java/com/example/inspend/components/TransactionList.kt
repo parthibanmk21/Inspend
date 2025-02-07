@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -19,6 +20,7 @@ import com.example.inspend.TransactionData
 import com.example.inspend.ui.theme.*
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.foundation.clickable
 
 private fun formatDisplayDate(dateStr: String): String {
     try {
@@ -47,7 +49,9 @@ private fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
 
 @Composable
 fun TransactionList(
-    transactions: List<TransactionData>
+    transactions: List<TransactionData>,
+    showViewAll: Boolean = false,
+    onViewAllClick: () -> Unit = {}
 ) {
     // Group transactions by date
     val groupedTransactions = transactions.groupBy { it.dateTime.split(" ")[0] }
@@ -68,14 +72,29 @@ fun TransactionList(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Title
-        Text(
-            text = "Transaction",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF394371),
-            lineHeight = 18.sp
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Transaction",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF394371),
+                lineHeight = 18.sp
+            )
+            
+            if (showViewAll) {
+                Text(
+                    text = "View All",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF145CB5),
+                    modifier = Modifier.clickable { onViewAllClick() }
+                )
+            }
+        }
 
         // Iterate through grouped transactions
         groupedTransactions.forEach { (date, transactionsForDate) ->

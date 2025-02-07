@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -36,6 +38,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.example.inspend.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,237 +64,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             InspendTheme {
-                val navController = rememberNavController()
-                val navigationOrder = remember { mutableIntStateOf(0) }
-                
-                // Check if user is already logged in
-                val auth = FirebaseAuth.getInstance()
-                val startDestination = if (auth.currentUser != null) {
-                    "home"  // User is logged in, go to home
-                } else {
-                    "welcome"  // User is not logged in, go to welcome
-                }
-
-                NavHost(
-                    navController = navController,
-                    startDestination = startDestination
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    composable(
-                        route = "welcome",
-                        enterTransition = {
-                            if (navigationOrder.value > 0) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                null
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        WelcomeScreen(
-                            onEmailLoginClick = {
-                                navController.navigate("login")
-                            },
-                            onCreateAccountClick = {
-                                navController.navigate("signin")
-                            }
-                        )
-                    }
-                    composable(
-                        route = "login",
-                        enterTransition = {
-                            if (navigationOrder.value > 1) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                    animationSpec = tween(0)
-                                )
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        LogInScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "signin",
-                        enterTransition = {
-                            if (navigationOrder.value > 2) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                    animationSpec = tween(0)
-                                )
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        SignInScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "resetpassword",
-                        enterTransition = {
-                            if (navigationOrder.value > 3) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                    animationSpec = tween(0)
-                                )
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        ResetPasswordScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "verifyotp",
-                        enterTransition = {
-                            if (navigationOrder.value > 4) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                    animationSpec = tween(0)
-                                )
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        VerifyOTPScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "forgotpassword",
-                        enterTransition = {
-                            if (navigationOrder.value > 5) {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(0)
-                                )
-                            } else {
-                                slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                    animationSpec = tween(0)
-                                )
-                            }
-                        },
-                        exitTransition = {
-                            navigationOrder.value++
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        ForgotPasswordScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "setsecuritypin",
-                        enterTransition = {
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        },
-                        exitTransition = {
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        SetSecurityPINScreen(
-                            navController = navController
-                        )
-                    }
-                    composable("transactiontype") {
-                        TransactionTypeScreen(
-                            navController = navController
-                        )
-                    }
-                    composable("home") {
-                        BackHandler {
-                            moveTaskToBack(true)
-                        }
-                        
-                        HomePage(
-                            navController = navController
-                        )
-                    }
-                    composable(
-                        route = "addtransaction",
-                        enterTransition = {
-                            slideIntoContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(0)
-                            )
-                        },
-                        exitTransition = {
-                            slideOutOfContainer(
-                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(0)
-                            )
-                        }
-                    ) {
-                        AddTransactionScreen(
-                            navController = navController
-                        )
-                    }
+                    Navigation()
                 }
             }
         }

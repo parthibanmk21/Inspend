@@ -33,6 +33,7 @@ import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.inspend.TransactionData  // Add this import
+import com.example.inspend.navigation.NavigationRoutes
 
 @Composable
 fun HomePage(
@@ -304,7 +305,7 @@ private fun HomePageContent(
                         shape = CircleShape
                     )
                     .clickable {
-                        navController?.navigate("addtransaction")
+                        navController?.navigate(NavigationRoutes.ADD_TRANSACTION)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -338,8 +339,14 @@ private fun HomePageContent(
             CategoryCard(transactions = transactions)
 
             if (transactions.isNotEmpty()) {
+                // Show only recent 10 transactions
                 TransactionList(
-                    transactions = transactions
+                    transactions = transactions.take(5),
+                    showViewAll = transactions.size > 5,
+                    onViewAllClick = {
+                        // Use NavigationRoutes constant instead of hardcoded string
+                        navController?.navigate(NavigationRoutes.ALL_TRANSACTIONS)
+                    }
                 )
             }
         }
