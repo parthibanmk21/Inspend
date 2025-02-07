@@ -28,7 +28,7 @@ private fun formatDisplayDate(dateStr: String): String {
         val today = Calendar.getInstance()
         val yesterday = Calendar.getInstance()
         yesterday.add(Calendar.DAY_OF_YEAR, -1)
-        
+
         val dateCalendar = Calendar.getInstance()
         dateCalendar.time = date!!
 
@@ -84,7 +84,7 @@ fun TransactionList(
                 color = Color(0xFF394371),
                 lineHeight = 18.sp
             )
-            
+
             if (showViewAll) {
                 Text(
                     text = "View All",
@@ -124,7 +124,7 @@ fun TransactionList(
                         } else {
                             "12:00 AM" // fallback
                         }
-                        
+
                         TransactionListCard(
                             title = transaction.name,
                             time = timeWithAmPm,  // Pass both time and AM/PM
@@ -136,7 +136,7 @@ fun TransactionList(
                         )
                     }
                 }
-                
+
                 // Add divider after each group except the last one
                 if (date != groupedTransactions.keys.last()) {
                     Spacer(modifier = Modifier.height(8.dp))

@@ -35,6 +35,7 @@ import java.util.*
 import com.example.inspend.TransactionData  // Add this import
 import com.example.inspend.navigation.NavigationRoutes
 
+
 @Composable
 fun HomePage(
     navController: NavController
@@ -94,9 +95,9 @@ fun HomePage(
     }
 
     // Call update function once
-    LaunchedEffect(Unit) {
-        updateTransactionCategories()
-    }
+//    LaunchedEffect(Unit) {
+//        updateTransactionCategories()
+//    }
 
     // UI Content
     HomePageContent(
@@ -163,8 +164,8 @@ private fun HomePageContent(
             }.toString()
         }
 
-    val totalBalance = bankBalances.values.sumOf { 
-        it.toDoubleOrNull() ?: 0.0 
+    val totalBalance = bankBalances.values.sumOf {
+        it.toDoubleOrNull() ?: 0.0
     }.toString()
 
     Scaffold(
@@ -305,7 +306,7 @@ private fun HomePageContent(
                         shape = CircleShape
                     )
                     .clickable {
-                        navController?.navigate(NavigationRoutes.ADD_TRANSACTION)
+                        navController?.navigate("addtransaction")
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -345,16 +346,15 @@ private fun HomePageContent(
                     showViewAll = transactions.size > 5,
                     onViewAllClick = {
                         // Use NavigationRoutes constant instead of hardcoded string
-                        navController?.navigate(NavigationRoutes.ALL_TRANSACTIONS)
+                        navController?.navigate("alltransactions")
                     }
                 )
-            }
         }
     }
 }
 
 // Add this function after HomePage composable
-private fun updateTransactionCategories() {
+fun updateTransactionCategories() {
     val db = FirebaseFirestore.getInstance()
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -367,26 +367,26 @@ private fun updateTransactionCategories() {
                 val name = doc.getString("name")?.lowercase() ?: ""
                 val categoryType = when {
                     // Food related
-                    name.contains("groceries") || 
-                    name.contains("kolambu") ||
-                    name.contains("snack") ||
-                    name.contains("maggie") ||
-                    name.contains("chips") ||
-                    name.contains("parota") ||
-                    name.contains("muruku") -> "FOOD"
+                    name.contains("groceries") ||
+                            name.contains("kolambu") ||
+                            name.contains("snack") ||
+                            name.contains("maggie") ||
+                            name.contains("chips") ||
+                            name.contains("parota") ||
+                            name.contains("muruku") -> "FOOD"
 
                     // Travel related
                     name.contains("mrt") ||
-                    name.contains("causeway") ||
-                    name.contains("bus") ||
-                    name.contains("lendcauseway") -> "TRAVEL"
+                            name.contains("causeway") ||
+                            name.contains("bus") ||
+                            name.contains("lendcauseway") -> "TRAVEL"
 
                     // Transfer related
                     name.contains("gave") ||
-                    name.contains("transfer") ||
-                    name.contains("send") ||
-                    name.contains("received") ||
-                    name.contains("rent") -> "TRANSFER"
+                            name.contains("transfer") ||
+                            name.contains("send") ||
+                            name.contains("received") ||
+                            name.contains("rent") -> "TRANSFER"
 
                     // Other
                     name.contains("recharge") -> "OTHER"
@@ -402,4 +402,5 @@ private fun updateTransactionCategories() {
                 ))
             }
         }
+    }
 } 

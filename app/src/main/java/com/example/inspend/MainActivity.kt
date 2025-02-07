@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+
+
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -38,15 +38,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.example.inspend.navigation.Navigation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
-        
+
         // Handle back press to minimize app
         onBackPressedDispatcher.addCallback(
             this,
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-        
+
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = android.graphics.Color.parseColor("#434E61")
@@ -64,11 +64,237 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             InspendTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                val navController = rememberNavController()
+                val navigationOrder = remember { mutableIntStateOf(0) }
+
+                // Check if user is already logged in
+                val auth = FirebaseAuth.getInstance()
+                val startDestination = if (auth.currentUser != null) {
+                    "home"  // User is logged in, go to home
+                } else {
+                    "welcome"  // User is not logged in, go to welcome
+                }
+
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination
                 ) {
-                    Navigation()
+                    composable(
+                        route = "welcome",
+                        enterTransition = {
+                            if (navigationOrder.value > 0) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                null
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        WelcomeScreen(
+                            onEmailLoginClick = {
+                                navController.navigate("login")
+                            },
+                            onCreateAccountClick = {
+                                navController.navigate("signin")
+                            }
+                        )
+                    }
+                    composable(
+                        route = "login",
+                        enterTransition = {
+                            if (navigationOrder.value > 1) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        LogInScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "signin",
+                        enterTransition = {
+                            if (navigationOrder.value > 2) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        SignInScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "resetpassword",
+                        enterTransition = {
+                            if (navigationOrder.value > 3) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        ResetPasswordScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "verifyotp",
+                        enterTransition = {
+                            if (navigationOrder.value > 4) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        VerifyOTPScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "forgotpassword",
+                        enterTransition = {
+                            if (navigationOrder.value > 5) {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(0)
+                                )
+                            } else {
+                                slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(0)
+                                )
+                            }
+                        },
+                        exitTransition = {
+                            navigationOrder.value++
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        ForgotPasswordScreen(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "setsecuritypin",
+                        enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        SetSecurityPINScreen(
+                            navController = navController
+                        )
+                    }
+                    composable("transactiontype") {
+                        TransactionTypeScreen(
+                            navController = navController
+                        )
+                    }
+                    composable("home") {
+                        BackHandler {
+                            moveTaskToBack(true)
+                        }
+
+                        HomePage(
+                            navController = navController
+                        )
+                    }
+                    composable(
+                        route = "addtransaction",
+                        enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        AddTransactionScreen(
+                            navController = navController
+                        )
+                    }
                 }
             }
         }
@@ -79,179 +305,179 @@ fun WelcomeScreen(
     onEmailLoginClick: () -> Unit,
     onCreateAccountClick: () -> Unit
 ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(BGdefault)
+            .padding(horizontal = 16.dp, vertical = 40.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Brand Column
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(BGdefault)
-                .padding(horizontal = 16.dp, vertical = 40.dp),
-            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.width(328.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Brand Column
-            Column(
-                modifier = Modifier.width(328.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            // Logo and Brand Name
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Logo and Brand Name
+                Image(
+                    painter = painterResource(id = R.drawable.welcomelogo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(40.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Inspend",
+                    color = Color(0xFF145CB5),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 26.sp
+                )
+            }
+
+            // Welcome Content
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(0.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.welcomelogo),
-                        contentDescription = "Logo",
-                        modifier = Modifier.size(40.dp)
+                    Text(
+                        text = "Track",
+                        color = Brand500,
+                        fontSize = 38.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 0.5.sp,
+                        lineHeight = 46.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Inspend",
-                        color = Color(0xFF145CB5),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        lineHeight = 26.sp
-                    )
-                }
-
-                // Welcome Content
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(0.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Text(
-                            text = "Track",
-                            color = Brand500,
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 0.5.sp,
-                            lineHeight = 46.sp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Your",
-                            color = (Grey600).copy(alpha = 0.5f),
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 0.5.sp,
-                            lineHeight = 46.sp
-                        )
-                    }
-                    Text(
-                        text = "Spending, Own",
+                        text = "Your",
                         color = (Grey600).copy(alpha = 0.5f),
                         fontSize = 38.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 0.5.sp,
-                        lineHeight = 46.sp,
-                        modifier = Modifier.fillMaxWidth()
+                        lineHeight = 46.sp
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Text(
-                            text = "Your",
-                            color = (Grey600).copy(alpha = 0.5f),
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 0.5.sp,
-                            lineHeight = 46.sp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Finances.",
-                            color = Brand500,
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 0.5.sp,
-                            lineHeight = 46.sp
-                        )
-                    }
                 }
-            }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Button Column
-            Column(
-                modifier = Modifier.width(328.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    text = "Log in with Email",
-                    onClick = onEmailLoginClick,
-                    icon = painterResource(id = R.drawable.mail),
-                    iconPosition = IconPosition.LEFT
+                Text(
+                    text = "Spending, Own",
+                    color = (Grey600).copy(alpha = 0.5f),
+                    fontSize = 38.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 0.5.sp,
+                    lineHeight = 46.sp,
+                    modifier = Modifier.fillMaxWidth()
                 )
-
-                // Divider with "or"
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    HorizontalDivider(
-                        modifier = Modifier.weight(1f),
-                        thickness = 2.dp,
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
-                    )
                     Text(
-                        text = "or",
-                        color = Color(0xFF526077).copy(alpha = 0.75f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        letterSpacing = 0.25.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        text = "Your",
+                        color = (Grey600).copy(alpha = 0.5f),
+                        fontSize = 38.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 0.5.sp,
+                        lineHeight = 46.sp
                     )
-                    HorizontalDivider(
-                        modifier = Modifier.weight(1f),
-                        thickness = 2.dp,
-                        color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Finances.",
+                        color = Brand500,
+                        fontSize = 38.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 0.5.sp,
+                        lineHeight = 46.sp
                     )
                 }
-
-                Button(
-                    text = "Log in with Google",
-                    onClick = { /* TODO */ },
-                    type = ButtonType.SECONDARY,
-                    icon = painterResource(id = R.drawable.google),
-                    iconPosition = IconPosition.LEFT
-                )
-            }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // New User Text
-            Row(
-                modifier = Modifier
-                    .width(328.dp)
-                    .clickable { onCreateAccountClick() },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "New User? ",
-                    color = Color(0xFF868EA1).copy(alpha = 0.75f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    letterSpacing = 0.15.sp
-                )
-                Text(
-                    text = "Create Account",
-                    color = Color(0xFF1F274B).copy(alpha = 0.75f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.15.sp,
-                    modifier = Modifier
-                        .wrapContentWidth()
-                )
             }
         }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // Button Column
+        Column(
+            modifier = Modifier.width(328.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                text = "Log in with Email",
+                onClick = onEmailLoginClick,
+                icon = painterResource(id = R.drawable.mail),
+                iconPosition = IconPosition.LEFT
+            )
+
+            // Divider with "or"
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    thickness = 2.dp,
+                    color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
+                )
+                Text(
+                    text = "or",
+                    color = Color(0xFF526077).copy(alpha = 0.75f),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    letterSpacing = 0.25.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    thickness = 2.dp,
+                    color = Color(0xFFD5D9E2).copy(alpha = 0.5f)
+                )
+            }
+
+            Button(
+                text = "Log in with Google",
+                onClick = { /* TODO */ },
+                type = ButtonType.SECONDARY,
+                icon = painterResource(id = R.drawable.google),
+                iconPosition = IconPosition.LEFT
+            )
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // New User Text
+        Row(
+            modifier = Modifier
+                .width(328.dp)
+                .clickable { onCreateAccountClick() },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "New User? ",
+                color = Color(0xFF868EA1).copy(alpha = 0.75f),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 0.15.sp
+            )
+            Text(
+                text = "Create Account",
+                color = Color(0xFF1F274B).copy(alpha = 0.75f),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.15.sp,
+                modifier = Modifier
+                    .wrapContentWidth()
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -264,4 +490,3 @@ fun WelcomeScreenFullPreview() {
         )
     }
 }
-
