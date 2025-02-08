@@ -340,15 +340,19 @@ private fun HomePageContent(
             CategoryCard(transactions = transactions)
 
             if (transactions.isNotEmpty()) {
-                // Show only recent 10 transactions
+                // All transaction
                 TransactionList(
-                    transactions = transactions.take(5),
-                    showViewAll = transactions.size > 5,
-                    onViewAllClick = {
-                        // Use NavigationRoutes constant instead of hardcoded string
-                        navController?.navigate("alltransactions")
-                    }
+                    transactions = transactions
                 )
+                // Show only recent 10 transactions
+//                TransactionList(
+//                    transactions = transactions.take(5),
+//                    showViewAll = transactions.size > 5,
+//                    onViewAllClick = {
+//                        // Use NavigationRoutes constant instead of hardcoded string
+//                        navController?.navigate("alltransactions")
+//                    }
+//                )
         }
     }
 }
