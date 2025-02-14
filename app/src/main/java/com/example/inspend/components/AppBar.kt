@@ -300,14 +300,7 @@ fun AppBarPreview() {
                 Column(
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "Welcome back",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFF8695AA),
-                        lineHeight = 14.sp,
-                        letterSpacing = 0.5.sp
-                    )
+
                     Text(
                         text = "John Doe",
                         fontSize = 20.sp,
@@ -316,6 +309,14 @@ fun AppBarPreview() {
                         lineHeight = 20.sp,
                         letterSpacing = 0.1.sp
                     )
+                    Text(
+                        text = "Welcome back",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF8695AA),
+                        lineHeight = 14.sp,
+                        letterSpacing = 0.5.sp
+                    )
                 }
             }
 
@@ -323,6 +324,22 @@ fun AppBarPreview() {
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+//                Box(
+//                    modifier = Modifier
+//                        .size(48.dp)
+//                        .background(
+//                            color = Color(0xFFFFFFFF),
+//                            shape = CircleShape
+//                        ),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.notification),
+//                        contentDescription = "Notifications",
+//                        tint = Grey600,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -333,23 +350,7 @@ fun AppBarPreview() {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.notification),
-                        contentDescription = "Notifications",
-                        tint = Grey600,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.logout),
+                        painter = painterResource(id = R.drawable.setting),
                         contentDescription = "Logout",
                         tint = Grey600,
                         modifier = Modifier.size(24.dp)
