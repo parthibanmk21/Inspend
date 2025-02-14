@@ -8,11 +8,13 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import com.example.inspend.HomePage
 import com.example.inspend.AllTransactions
+import com.example.inspend.SettingsScreen
 
-object NavigationRoutes {
-    const val HOME = "home"
-    const val ALL_TRANSACTIONS = "alltransactions"
-    const val ADD_TRANSACTION = "addtransaction"
+sealed class NavigationRoutes(val route: String) {
+    object Home : NavigationRoutes("home")
+    object Settings : NavigationRoutes("settings")
+    object AddTransaction : NavigationRoutes("addtransaction")
+    object AllTransactions : NavigationRoutes("alltransactions")
 }
 
 @Composable
@@ -21,14 +23,14 @@ fun Navigation() {
     
     NavHost(
         navController = navController,
-        startDestination = NavigationRoutes.HOME
+        startDestination = NavigationRoutes.Home.route
     ) {
-        composable(NavigationRoutes.HOME) {
+        composable(NavigationRoutes.Home.route) {
             HomePage(navController = navController)
         }
         
         composable(
-            route = NavigationRoutes.ALL_TRANSACTIONS,
+            route = NavigationRoutes.AllTransactions.route,
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
@@ -45,7 +47,11 @@ fun Navigation() {
             AllTransactions(navController = navController)
         }
 
-        composable(NavigationRoutes.ADD_TRANSACTION) {
+        composable(NavigationRoutes.Settings.route) {
+            SettingsScreen()
+        }
+
+        composable(NavigationRoutes.AddTransaction.route) {
             // TODO: Add AddTransaction screen when it's created
             // AddTransaction(navController = navController)
         }

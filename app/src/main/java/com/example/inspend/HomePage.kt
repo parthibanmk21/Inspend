@@ -32,9 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.inspend.TransactionData  // Add this import
+import com.example.inspend.TransactionData
 import com.example.inspend.navigation.NavigationRoutes
-
 
 @Composable
 fun HomePage(
@@ -173,117 +172,105 @@ private fun HomePageContent(
             .padding(top = 24.dp),
         topBar = {
             // Simple AppBar for preview when NavController is null
-            if (navController == null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(89.dp)
+                    .background(Color.White)
+                    .drawBehind {
+                        val borderWidth = 1.5.dp.toPx()
+                        val y = size.height - borderWidth / 2
+                        drawLine(
+                            color = Color(0xFFE0E2EB),
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = borderWidth
+                        )
+                    }
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(89.dp)
-                        .background(Color.White)
-                        .drawBehind {
-                            val borderWidth = 1.5.dp.toPx()
-                            val y = size.height - borderWidth / 2
-                            drawLine(
-                                color = Color(0xFFE0E2EB),
-                                start = Offset(0f, y),
-                                end = Offset(size.width, y),
-                                strokeWidth = borderWidth
-                            )
-                        }
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = Color(0xFFECEEF2),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    color = Color(0xFFECEEF2),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.user),
-                                contentDescription = "Profile",
-                                tint = Grey600,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-
-                        Column(
-                            verticalArrangement = Arrangement.Center
-                        ) {
-
-                            Text(
-                                text = "John Doe",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF3A4252),
-                                lineHeight = 20.sp,
-                                letterSpacing = 0.1.sp
-                            )
-                            Text(
-                                text = "Welcome back",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color(0xFF8695AA),
-                                lineHeight = 14.sp,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.user),
+                            contentDescription = "Profile",
+                            tint = Grey600,
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(0.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    color = Color(0xFFFFFFFF),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.notification),
-                                contentDescription = "Notifications",
-                                tint = Grey600,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .background(
-                                    color = Color(0xFFFFFFFF),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.logout),
-                                contentDescription = "Logout",
-                                tint = Grey600,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
+                        Text(
+                            text = userName,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF3A4252),
+                            lineHeight = 20.sp,
+                            letterSpacing = 0.1.sp
+                        )
+                        Text(
+                            text = "Welcome back",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF8695AA),
+                            lineHeight = 14.sp,
+                            letterSpacing = 0.5.sp
+                        )
                     }
                 }
-            } else {
-                // Real AppBar with NavController
-                AppBar(
-                    type = AppBarType.HOME,
-                    title = userName,
-                    subtitle = "Welcome back",
-                    onProfileClick = { },
-                    navController = navController
-                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(0.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+//                Box(
+//                    modifier = Modifier
+//                        .size(48.dp)
+//                        .background(
+//                            color = Color(0xFFFFFFFF),
+//                            shape = CircleShape
+//                        ),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.notification),
+//                        contentDescription = "Notifications",
+//                        tint = Grey600,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = Color(0xFFFFFFFF),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.setting),
+                            contentDescription = "Logout",
+                            tint = Grey600,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
             }
         },
 //        bottomBar = {
@@ -354,6 +341,7 @@ private fun HomePageContent(
 //                        navController?.navigate("alltransactions")
 //                    }
 //                )
+            }
         }
     }
 }
@@ -408,4 +396,3 @@ fun updateTransactionCategories() {
             }
         }
     }
-} 

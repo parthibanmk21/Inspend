@@ -301,8 +301,9 @@ fun AppBarPreview() {
                     verticalArrangement = Arrangement.Center
                 ) {
 
+                    var userName by remember { mutableStateOf("") }
                     Text(
-                        text = "John Doe",
+                        text = userName,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF3A4252),
