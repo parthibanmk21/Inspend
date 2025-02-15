@@ -69,8 +69,8 @@ fun TransactionList(
                 color = Color(0xFFE0E2EB),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(top=12.dp, bottom = 12.dp, start = 12.dp, end = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -79,7 +79,7 @@ fun TransactionList(
         ) {
             Text(
                 text = "Transaction",
-                fontSize = 18.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF394371),
                 lineHeight = 18.sp
@@ -96,11 +96,112 @@ fun TransactionList(
             }
         }
 
+        //Search design
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFFE0E2EB),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(top=12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            Icon(
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = "Back",
+                tint = Grey300,
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+                text = "Search here",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color(0xFFB1BBC8),
+                lineHeight = 20.sp,
+                letterSpacing = 0.1.sp
+            )
+
+            //Clear icon
+//            Icon(
+//            painter = painterResource(id = R.drawable.close),
+//            contentDescription = "Back",
+//            tint = Grey300,
+//            modifier = Modifier.size(20.dp)
+//            )
+        }
+
+        // Transaction filter row
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//            var selectedTimeFilter by remember { mutableStateOf(TimeFilter.TODAY) }
+//
+//            // Filter transactions based on selected time
+//            val filteredTransactions = transactions.filter { transaction ->
+//                val transactionDate = SimpleDateFormat("yyyy-MM-dd HH:mm a", Locale.getDefault())
+//                    .parse(transaction.dateTime)?.time ?: 0L
+//                val now = System.currentTimeMillis()
+//                val calendar = Calendar.getInstance()
+//
+//                when (selectedTimeFilter) {
+//                    TimeFilter.TODAY -> {
+//                        calendar.timeInMillis = now
+//                        calendar.set(Calendar.HOUR_OF_DAY, 0)
+//                        calendar.set(Calendar.MINUTE, 0)
+//                        transactionDate >= calendar.timeInMillis
+//                    }
+//                    TimeFilter.THIS_WEEK -> {
+//                        calendar.timeInMillis = now
+//                        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+//                        transactionDate >= calendar.timeInMillis
+//                    }
+//                    TimeFilter.THIS_MONTH -> {
+//                        calendar.timeInMillis = now
+//                        calendar.set(Calendar.DAY_OF_MONTH, 1)
+//                        transactionDate >= calendar.timeInMillis
+//                    }
+//                    TimeFilter.ALL -> true
+//                    else -> true  // Add else branch
+//                }
+//            }
+//            TimeFilterChip(
+//                text = "Today",
+//                isSelected = selectedTimeFilter == TimeFilter.TODAY,
+//                onClick = { selectedTimeFilter = TimeFilter.TODAY }
+//            )
+//            TimeFilterChip(
+//                text = "This Week",
+//                isSelected = selectedTimeFilter == TimeFilter.THIS_WEEK,
+//                onClick = { selectedTimeFilter = TimeFilter.THIS_WEEK }
+//            )
+//            TimeFilterChip(
+//                text = "This Month",
+//                isSelected = selectedTimeFilter == TimeFilter.THIS_MONTH,
+//                onClick = { selectedTimeFilter = TimeFilter.THIS_MONTH }
+//            )
+//            TimeFilterChip(
+//                text = "All",
+//                isSelected = selectedTimeFilter == TimeFilter.ALL,
+//                onClick = { selectedTimeFilter = TimeFilter.ALL }
+//            )
+//        }
+
         // Iterate through grouped transactions
         groupedTransactions.forEach { (date, transactionsForDate) ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 // Date header
                 Text(

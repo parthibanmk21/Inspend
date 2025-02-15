@@ -302,7 +302,7 @@ private fun CategoryCardPreview() {
 }
 
 @Composable
-private fun TimeFilterChip(
+fun TimeFilterChip(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit

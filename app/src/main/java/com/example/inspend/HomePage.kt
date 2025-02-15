@@ -32,14 +32,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.inspend.TransactionData
-import com.example.inspend.navigation.NavigationRoutes
 
 @Composable
 fun HomePage(
     navController: NavController
 ) {
-    val context = LocalContext.current
+    LocalContext.current
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
 
@@ -102,7 +100,6 @@ fun HomePage(
     HomePageContent(
         userName = userName,
         transactions = transactions,
-        onAddTransaction = { navController.navigate("addtransaction") },
         navController = navController
     )
 }
@@ -140,7 +137,6 @@ fun HomePagePreview() {
                     transactionType = "EXPENSE"
                 )
             ),
-            onAddTransaction = { },
             navController = null
         )
     }
@@ -151,7 +147,6 @@ fun HomePagePreview() {
 private fun HomePageContent(
     userName: String = "",
     transactions: List<TransactionData> = emptyList(),
-    onAddTransaction: () -> Unit = {},
     navController: NavController? = null
 ) {
     // Calculate total balance and bank-wise balances
@@ -175,7 +170,7 @@ private fun HomePageContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(89.dp)
+                    .height(90.dp)
                     .background(Color.White)
                     .drawBehind {
                         val borderWidth = 1.5.dp.toPx()
