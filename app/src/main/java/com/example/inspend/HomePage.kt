@@ -262,7 +262,12 @@ private fun HomePageContent(
                             painter = painterResource(id = R.drawable.setting),
                             contentDescription = "Logout",
                             tint = Grey600,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    navController?.navigate("settings")
+                                }
+
                         )
                     }
                 }
@@ -310,7 +315,7 @@ private fun HomePageContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BalanceCard(

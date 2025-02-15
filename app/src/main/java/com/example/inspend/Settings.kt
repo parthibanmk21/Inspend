@@ -32,7 +32,7 @@ fun SettingsScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(73.dp)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -64,7 +64,7 @@ fun SettingsScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFECEEF2))
-                .padding(16.dp),
+                .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // General Section
@@ -103,6 +103,16 @@ fun SettingsScreen() {
                     showDivider = true
                 )
                 SettingsItem(
+                    iconResId = R.drawable.language,
+                    title = "Language",
+                    showDivider = true
+                )
+                SettingsItem(
+                    iconResId = R.drawable.currency,
+                    title = "Currency",
+                    showDivider = true
+                )
+                SettingsItem(
                     iconResId = R.drawable.report_a_bug,
                     title = "Report a bug",
                     showDivider = true
@@ -126,13 +136,23 @@ fun SettingsScreen() {
             }
 
             // Version
-            Text(
-                text = "Version 1.0.0",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF8695AA),
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = "Version 1.0.0",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF8695AA),
+                    modifier = Modifier
+                        .wrapContentWidth(),
+                )
+            }
+
         }
     }
 }
@@ -217,10 +237,10 @@ private fun SettingsItem(
         }
         
         if (showDivider) {
-            Divider(
-                color = Color(0xFFD5D9E2),
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,
-                modifier = Modifier.fillMaxWidth()
+                color = Color(0xFFD5D9E2)
             )
         }
     }
