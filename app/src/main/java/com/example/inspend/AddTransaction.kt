@@ -203,7 +203,8 @@ private fun AddTransactionContent(
         modifier = Modifier
             .fillMaxSize()
             .background(BGdefault)
-            .padding(top = 24.dp, bottom = 16.dp)
+            .padding(top = 24.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // AppBar
         AppBar(

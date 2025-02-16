@@ -16,8 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
-import com.example.inspend.ui.theme.Grey700
+import com.example.inspend.ui.theme.Grey100
+import com.example.inspend.ui.theme.Grey600
 
 @Composable
 fun SettingsScreen() {
@@ -42,39 +47,47 @@ fun SettingsScreen() {
                     .clip(CircleShape)
                     .background(Color(0xFFECEEF2))
             )
-            
+
             Column {
+                var userName by remember { mutableStateOf("") }
                 Text(
-                    text = "John Doe",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF3A4252)
+                    //Testing name
+                    text = "Parthiban MK",
+//                    text = userName,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF3A4252),
+                    lineHeight = 16.sp,
                 )
                 Text(
-                    text = "Member since Jan 2024",
+                    text = "Member since November 2024",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF8695AA)
+                    color = Color(0xFF8695AA),
+                    lineHeight = 16.sp,
+
                 )
             }
         }
 
         // Settings Body
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFECEEF2))
                 .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // General Section
             Text(
                 text = "General",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF3A4252)
+                color = Color(0xFF3A4252),
+                lineHeight = 16.sp,
             )
-            
+
             SettingsSection {
                 SettingsItem(
                     iconResId = R.drawable.usericon,
@@ -90,12 +103,13 @@ fun SettingsScreen() {
 
             // App Settings Section
             Text(
-                text = "App Settings",
-                fontSize = 16.sp,
+                text = "App settings",
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF3A4252)
+                color = Color(0xFF3A4252),
+                lineHeight = 16.sp,
             )
-            
+
             SettingsSection {
                 SettingsItem(
                     iconResId = R.drawable.security,
@@ -113,6 +127,11 @@ fun SettingsScreen() {
                     showDivider = true
                 )
                 SettingsItem(
+                    iconResId = R.drawable.share,
+                    title = "Share the app",
+                    showDivider = true
+                )
+                SettingsItem(
                     iconResId = R.drawable.report_a_bug,
                     title = "Report a bug",
                     showDivider = true
@@ -120,8 +139,20 @@ fun SettingsScreen() {
                 SettingsItem(
                     iconResId = R.drawable.feedback,
                     title = "Feedback",
-                    showDivider = true
+                    showDivider = false
                 )
+            }
+
+            // General Section
+            Text(
+                text = "Account",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF3A4252),
+                lineHeight = 16.sp,
+            )
+
+            SettingsSection {
                 SettingsItem(
                     iconResId = R.drawable.logout,
                     title = "Log out",
@@ -139,7 +170,7 @@ fun SettingsScreen() {
             Column (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -185,14 +216,14 @@ private fun SettingsSection(
 private fun SettingsItem(
     iconResId: Int,
     title: String,
-    textColor: Color = Color(0xFF526077),
+    textColor: Color = Grey600,
     showDivider: Boolean = false
 ) {
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp),
+                .height(48.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -205,7 +236,7 @@ private fun SettingsItem(
                 Icon(
                     painter = painterResource(id = iconResId),
                     contentDescription = title,
-                    tint = Grey700,
+                    tint = Grey600,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -229,7 +260,7 @@ private fun SettingsItem(
                     Icon(
                         painter = painterResource(id = R.drawable.chevronright),
                         contentDescription = "",
-                        tint = Grey700,
+                        tint = Grey600,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -240,7 +271,7 @@ private fun SettingsItem(
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,
-                color = Color(0xFFD5D9E2)
+                color = Grey100
             )
         }
     }

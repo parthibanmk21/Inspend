@@ -260,7 +260,7 @@ private fun HomePageContent(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.setting),
-                            contentDescription = "Logout",
+                            contentDescription = "Settings",
                             tint = Grey600,
                             modifier = Modifier
                                 .size(24.dp)
