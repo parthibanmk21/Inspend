@@ -22,6 +22,9 @@
       <SelectionState runConfigName="ProfilePreview - Profile Screen">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="ManageAccountPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

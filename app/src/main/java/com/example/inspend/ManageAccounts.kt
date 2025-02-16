@@ -61,50 +61,58 @@ private fun AddTransactionContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(96.dp)
-                        .background(Grey50, RoundedCornerShape(100.dp))
-                        .border(2.dp, Color(0xFFE0E2EB), RoundedCornerShape(100.dp))
-                        .padding(16.dp)
-                        .clip(CircleShape),
-                    painter = painterResource(id = R.drawable.user),
-                    tint = Grey300,
-                    contentDescription = stringResource(id = R.string.app_name)
-                )
-
                 Text(
-                    text = "Tap to change profile picture",
-                    fontSize = 14.sp,
+                    text = "Existing accounts",
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Grey300,
+                    color = Grey600,
                     lineHeight = 16.sp,
                     modifier = Modifier
-                        .wrapContentWidth(),
-                )
-                //User id it will generate automaticacly
-                var user_id by remember { mutableStateOf("") }
-                InputField(
-                    label = "User id",
-                    placeholder = "@parthibanmk21",
-                    value = user_id,
-                    onValueChange = { user_id = it }
-                )
-                var name by remember { mutableStateOf("") }
-                InputField(
-                    label = "Full name",
-                    placeholder = "Parthiban MK",
-                    value = name,
-                    onValueChange = { name = it }
-                )
-                var email by remember { mutableStateOf("") }
-                InputField(
-                    label = "Email",
-                    placeholder = "parthibanmk21@gmail.com",
-                    value = email,
-                    onValueChange = { email = it }
+                        .fillMaxWidth(),
                 )
 
+                //Existing accounts card design comes here
+                var amount = "0.00"
+                PaymentCard(
+                    title = "Wallet",
+                    amount = amount,
+                    onAmountChange = { amount = it }
+                )
+                var isTrustOpened by remember { mutableStateOf(false) }
+                PaymentCardWithToggle(
+                    title = "Trust",
+                    icon = R.drawable.trust,
+                    amount = amount,
+                    onAmountChange = { amount = it },
+                    isOpened = isTrustOpened,
+                    onToggleChange = { isTrustOpened = it }  // Only changes Trust state
+                )
+
+                var isDbsOpened by remember { mutableStateOf(false) }
+                PaymentCardWithToggle(
+                    title = "DBS",
+                    icon = R.drawable.dbs,
+                    amount = amount,
+                    onAmountChange = { amount = it },
+                    isOpened = isDbsOpened,
+                    onToggleChange = { isDbsOpened = it }  // Only changes DBS state
+                )
+
+                var isRevolutOpened by remember { mutableStateOf(false) }
+                PaymentCardWithToggle(
+                    title = "Revolut",
+                    icon = R.drawable.revolut,
+                    amount = amount,
+                    onAmountChange = { amount = it },
+                    isOpened = isRevolutOpened,
+                    onToggleChange = { isRevolutOpened = it }  // Only changes Revolut state
+                )
+
+                Button(
+                    text = "Add new account",
+                    onClick = { },
+                    type = ButtonType.SECONDARY
+                )
                 Button(
                     text = "Save",
                     onClick = { }
@@ -116,7 +124,7 @@ private fun AddTransactionContent(
 
 @Preview(showBackground = true)
 @Composable
-fun ProfilePreview() {
+fun ManageAccountPreview() {
     InspendTheme {
         AddTransactionContent()
     }
