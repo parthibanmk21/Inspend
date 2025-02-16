@@ -221,25 +221,6 @@ private fun AddTransactionContent(
                 .padding(vertical = 0.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header
-//            Column(
-//                verticalArrangement = Arrangement.spacedBy(0.dp)
-//            ) {
-//                Text(
-//                    text = "Add new Transaction",
-//                    fontSize = 22.sp,
-//                    fontWeight = FontWeight.SemiBold,
-//                    color = Color(0xFF434E61)
-//                )
-//                Text(
-//                    text = "Lorem Ipsum Subtext",
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Medium,
-//                    color = Color(0xFF8695AA).copy(alpha = 0.75f),
-//                    letterSpacing = 0.15.sp
-//                )
-//            }
-
             // New Transaction Card
             Column(
                 modifier = Modifier

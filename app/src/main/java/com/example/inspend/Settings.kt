@@ -96,7 +96,7 @@ fun SettingsScreen() {
                 )
                 SettingsItem(
                     iconResId = R.drawable.accounts,
-                    title = "Accounts",
+                    title = "Manage accounts",
                     showDivider = false
                 )
             }
