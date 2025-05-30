@@ -1,7 +1,9 @@
 package com.example.inspend
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,9 +28,74 @@ import com.example.inspend.ui.theme.Grey600
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import com.example.inspend.components.AppBar
+import com.example.inspend.components.Button
+import com.example.inspend.components.ButtonType
+import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController? = null) {
+    var showLogoutSheet by remember { mutableStateOf(false) }
+    val auth = FirebaseAuth.getInstance()
+
+    if (showLogoutSheet) {
+        AlertDialog(
+            onDismissRequest = { showLogoutSheet = false },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(8.dp),
+            title = {
+                Text(
+                    text = "Logging out",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF526077),
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.1.sp
+                )
+            },
+            text = {
+                Text(
+                    text = "Just making sure you didn't tap Log out by accident.",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF526077),
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.1.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        text = "Cancel",
+                        onClick = { showLogoutSheet = false },
+                        type = ButtonType.SECONDARY,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Button(
+                        text = "Yes, Log out",
+                        onClick = {
+                            auth.signOut()
+                            navController?.navigate("welcome") {
+                                popUpTo("welcome") {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        type = ButtonType.PRIMARY,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,43 +107,6 @@ fun SettingsScreen() {
             title = "Settings",
 //            onBackClick = onBackClick
         )
-        // Profile Header
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(73.dp)
-//                .padding(horizontal = 12.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .size(48.dp)
-//                    .clip(CircleShape)
-//                    .background(Color(0xFFECEEF2))
-//            )
-//
-//            Column {
-//                var userName by remember { mutableStateOf("") }
-//                Text(
-//                    //Testing name
-//                    text = "Parthiban MK",
-////                    text = userName,
-//                    fontSize = 22.sp,
-//                    fontWeight = FontWeight.SemiBold,
-//                    color = Color(0xFF3A4252),
-//                    lineHeight = 16.sp,
-//                )
-//                Text(
-//                    text = "Member since November 2024",
-//                    fontSize = 12.sp,
-//                    fontWeight = FontWeight.Medium,
-//                    color = Color(0xFF8695AA),
-//                    lineHeight = 16.sp,
-//
-//                )
-//            }
-//        }
 
         // Settings Body
         val scrollState = rememberScrollState()
@@ -169,7 +199,8 @@ fun SettingsScreen() {
                     SettingsItem(
                         iconResId = R.drawable.logout,
                         title = "Log out",
-                        showDivider = true
+                        showDivider = true,
+                        onClick = { showLogoutSheet = true }
                     )
                     SettingsItem(
                         iconResId = R.drawable.trash,
@@ -230,13 +261,21 @@ private fun SettingsItem(
     iconResId: Int,
     title: String,
     textColor: Color = Grey600,
-    showDivider: Boolean = false
+    showDivider: Boolean = false,
+    onClick: (() -> Unit)? = null
 ) {
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
+                .height(48.dp)
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(onClick = onClick)
+                    } else {
+                        Modifier
+                    }
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
