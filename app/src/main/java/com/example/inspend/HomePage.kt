@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -233,29 +235,17 @@ private fun HomePageContent(
                     horizontalArrangement = Arrangement.spacedBy(0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-//                Box(
-//                    modifier = Modifier
-//                        .size(48.dp)
-//                        .background(
-//                            color = Color(0xFFFFFFFF),
-//                            shape = CircleShape
-//                        ),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.notification),
-//                        contentDescription = "Notifications",
-//                        tint = Grey600,
-//                        modifier = Modifier.size(24.dp)
-//                    )
-//                }
                     Box(
                         modifier = Modifier
                             .size(48.dp)
                             .background(
                                 color = Color(0xFFFFFFFF),
-                                shape = CircleShape
-                            ),
+                                  shape = androidx.compose.foundation.shape.CircleShape
+                            )
+                            .clip(shape)
+                            .clickable {
+                                navController?.navigate("settings")
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -264,10 +254,6 @@ private fun HomePageContent(
                             tint = Grey600,
                             modifier = Modifier
                                 .size(24.dp)
-                                .clickable {
-                                    navController?.navigate("settings")
-                                }
-
                         )
                     }
                 }

@@ -329,10 +329,146 @@ private fun SettingsItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SettingsScreenPreview() {
     MaterialTheme {
-        SettingsScreen()
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color.White
+        ) {
+            // Preview version without Firebase
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(top = 0.dp),
+            ) {
+                // AppBar
+                AppBar(
+                    title = "Settings"
+                )
+
+                // Settings Body
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFECEEF2))
+                        .verticalScroll(scrollState)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // General Section
+                        Text(
+                            text = "General",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF3A4252),
+                            lineHeight = 16.sp,
+                        )
+
+                        SettingsSection {
+                            SettingsItem(
+                                iconResId = R.drawable.usericon,
+                                title = "Profile",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.accounts,
+                                title = "Manage accounts",
+                                showDivider = false
+                            )
+                        }
+
+                        // App Settings Section
+                        Text(
+                            text = "App settings",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF3A4252),
+                            lineHeight = 16.sp,
+                        )
+
+                        SettingsSection {
+                            SettingsItem(
+                                iconResId = R.drawable.security,
+                                title = "Security",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.language,
+                                title = "Language",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.currency,
+                                title = "Currency",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.share,
+                                title = "Share the app",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.report_a_bug,
+                                title = "Report a bug",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.feedback,
+                                title = "Feedback",
+                                showDivider = false
+                            )
+                        }
+
+                        // Account Section
+                        Text(
+                            text = "Account",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF3A4252),
+                            lineHeight = 16.sp,
+                        )
+
+                        SettingsSection {
+                            SettingsItem(
+                                iconResId = R.drawable.logout,
+                                title = "Log out",
+                                showDivider = true
+                            )
+                            SettingsItem(
+                                iconResId = R.drawable.trash,
+                                title = "Delete account",
+                                textColor = Color(0xFFDC2626),
+                                showDivider = false
+                            )
+                        }
+
+                        // Version
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Version 1.0.0",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF8695AA),
+                                modifier = Modifier.wrapContentWidth()
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 } 
