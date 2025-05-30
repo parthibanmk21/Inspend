@@ -47,6 +47,9 @@ class MainActivity : ComponentActivity() {
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
 
+        // Clear any existing auth state for testing
+        FirebaseAuth.getInstance().signOut()
+
         // Handle back press to minimize app
         onBackPressedDispatcher.addCallback(
             this,
@@ -275,6 +278,23 @@ class MainActivity : ComponentActivity() {
                         HomePage(
                             navController = navController
                         )
+                    }
+                    composable(
+                        route = "settings",
+                        enterTransition = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(0)
+                            )
+                        },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                animationSpec = tween(0)
+                            )
+                        }
+                    ) {
+                        SettingsScreen()
                     }
                     composable(
                         route = "addtransaction",

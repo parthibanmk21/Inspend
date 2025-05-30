@@ -76,7 +76,17 @@ private fun DefaultAppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(BGdefault)
+            .background(Color.White)
+            .drawBehind {
+                val borderWidth = 1.5.dp.toPx()
+                val y = size.height - borderWidth / 2
+                drawLine(
+                    color = Color(0xFFE0E2EB),
+                    start = Offset(0f, y),
+                    end = Offset(size.width, y),
+                    strokeWidth = borderWidth
+                )
+            }
             .padding(horizontal = 4.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -85,7 +95,7 @@ private fun DefaultAppBar(
         Box(
             modifier = Modifier
                 .background(
-                    color = BGdefault,
+                    color = Color.White,
                     shape = androidx.compose.foundation.shape.CircleShape
                 )
                 .clip(shape)
@@ -101,7 +111,7 @@ private fun DefaultAppBar(
             )
         }
         Text(
-            text = "Add Transaction",
+            text = title,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF3A4252),

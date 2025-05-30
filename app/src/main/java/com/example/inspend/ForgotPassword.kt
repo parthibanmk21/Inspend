@@ -47,6 +47,7 @@ fun ForgotPasswordScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
+                .padding(top = 16.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {

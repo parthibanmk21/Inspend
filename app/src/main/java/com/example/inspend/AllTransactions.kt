@@ -140,7 +140,7 @@ fun AllTransactionsPreview() {
         // Create a preview-specific composable that doesn't depend on Firebase
         Scaffold(
             modifier = Modifier
-                .padding(top = 24.dp),
+                .padding(0.dp),
             topBar = {
                 AppBar(
                     modifier = Modifier
@@ -157,7 +157,7 @@ fun AllTransactionsPreview() {
                     .fillMaxSize()
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
-                    .padding( start = 16.dp, end = 16.dp),
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 TransactionList(

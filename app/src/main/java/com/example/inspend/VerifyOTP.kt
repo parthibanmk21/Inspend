@@ -73,7 +73,7 @@ fun VerifyOTPScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(horizontal = 0.dp),
+                .padding(top = 16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
