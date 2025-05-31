@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+if you are creating a new android kotlin file for the app screen, you should add a proper route and navigation

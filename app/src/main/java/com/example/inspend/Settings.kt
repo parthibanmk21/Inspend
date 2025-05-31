@@ -33,10 +33,134 @@ import com.example.inspend.components.ButtonType
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
+data class Currency(
+    val code: String,
+    val name: String,
+    val symbol: String
+)
+
+object CurrencyManager {
+    var selectedCurrency by mutableStateOf(
+        Currency("USD", "US Dollar", "$")
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController? = null) {
     var showLogoutSheet by remember { mutableStateOf(false) }
+    var showLanguageSheet by remember { mutableStateOf(false) }
+    var showCurrencySheet by remember { mutableStateOf(false) }
     val auth = FirebaseAuth.getInstance()
+
+    val currencies = listOf(
+        Currency("USD", "US Dollar", "$"),
+        Currency("INR", "Indian Rupee", "₹"),
+        Currency("EUR", "Euro", "€"),
+        Currency("GBP", "British Pound", "£"),
+        Currency("JPY", "Japanese Yen", "¥")
+    )
+
+    if (showCurrencySheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showCurrencySheet = false },
+            dragHandle = { 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(32.dp)
+                            .height(4.dp),
+                        shape = RoundedCornerShape(2.dp),
+                        color = Color(0xFFD5D9E2)
+                    ) {}
+                }
+            },
+            containerColor = Color.White
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Select Currency",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF3A4252)
+                )
+
+                currencies.forEach { currency ->
+                    CurrencyOption(
+                        currency = "${currency.code} - ${currency.name}",
+                        isSelected = currency.code == CurrencyManager.selectedCurrency.code,
+                        onClick = {
+                            CurrencyManager.selectedCurrency = currency
+                            showCurrencySheet = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    if (showLanguageSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showLanguageSheet = false },
+            dragHandle = { 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(32.dp)
+                            .height(4.dp),
+                        shape = RoundedCornerShape(2.dp),
+                        color = Color(0xFFD5D9E2)
+                    ) {}
+                }
+            },
+            containerColor = Color.White
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Select Language",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF3A4252)
+                )
+
+                LanguageOption(
+                    language = "English",
+                    isSelected = true,
+                    onClick = { showLanguageSheet = false }
+                )
+                LanguageOption(
+                    language = "தமிழ்",
+                    isSelected = false,
+                    onClick = { showLanguageSheet = false }
+                )
+                LanguageOption(
+                    language = "हिंदी",
+                    isSelected = false,
+                    onClick = { showLanguageSheet = false }
+                )
+            }
+        }
+    }
 
     if (showLogoutSheet) {
         AlertDialog(
@@ -162,12 +286,14 @@ fun SettingsScreen(navController: NavController? = null) {
                     SettingsItem(
                         iconResId = R.drawable.language,
                         title = "Language",
-                        showDivider = true
+                        showDivider = true,
+                        onClick = { showLanguageSheet = true }
                     )
                     SettingsItem(
                         iconResId = R.drawable.currency,
                         title = "Currency",
-                        showDivider = true
+                        showDivider = true,
+                        onClick = { showCurrencySheet = true }
                     )
                     SettingsItem(
                         iconResId = R.drawable.share,
@@ -329,6 +455,68 @@ private fun SettingsItem(
     }
 }
 
+@Composable
+private fun LanguageOption(
+    language: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = language,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF3A4252)
+        )
+        Icon(
+            painter = painterResource(
+                id = if (isSelected) R.drawable.radio_checked else R.drawable.radio_unchecked
+            ),
+            contentDescription = if (isSelected) "Selected" else "Not selected",
+            tint = Color(0xFF3A4252),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+@Composable
+private fun CurrencyOption(
+    currency: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = currency,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF3A4252)
+        )
+        Icon(
+            painter = painterResource(
+                id = if (isSelected) R.drawable.radio_checked else R.drawable.radio_unchecked
+            ),
+            contentDescription = if (isSelected) "Selected" else "Not selected",
+            tint = Color(0xFF3A4252),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SettingsScreenPreview() {
@@ -346,7 +534,8 @@ fun SettingsScreenPreview() {
             ) {
                 // AppBar
                 AppBar(
-                    title = "Settings"
+                    title = "Settings",
+                    onBackClick = { }
                 )
 
                 // Settings Body
